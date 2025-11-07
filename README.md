@@ -106,8 +106,9 @@ frontend_keboen/
 │   ├── services/
 │   │   └── dashboard_service.dart # Service layer untuk API calls & JWT
 │   ├── views/
-│   │   ├── dashboard_eksekutif_view.dart  # UI untuk Modul 1
-│   │   └── dashboard_operasional_view.dart # UI untuk Modul 2
+│   │   ├── dashboard_eksekutif_view.dart   # UI untuk Modul 1
+│   │   ├── dashboard_operasional_view.dart # UI untuk Modul 2
+│   │   └── dashboard_teknis_view.dart      # UI untuk Modul 3
 │   └── main.dart                  # Entry point aplikasi
 ├── context/
 │   └── ... (Dokumentasi & Laporan Verifikasi)
@@ -129,8 +130,9 @@ frontend_keboen/
 ┌─────────────────────────────────────────────┐
 │         Service Layer (Services)            │
 │  (dashboard_service.dart)                   │
-│    * fetchKpiEksekutif(token)             │
-│    * fetchDashboardOperasional(token)     │
+│    * fetchKpiEksekutif(token)               │
+│    * fetchDashboardOperasional(token)       │
+│    * fetchDashboardTeknis(token)            │
 └────────────────┬────────────────────────────┘
                  │ (Menggunakan HTTP Client)
                  ▼
