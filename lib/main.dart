@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'views/dashboard_eksekutif_view.dart';
 import 'views/dashboard_operasional_view.dart';
+import 'views/dashboard_teknis_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -86,6 +87,30 @@ class HomeMenuView extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const DashboardOperasionalView(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Dashboard Teknis Button
+              _buildDashboardCard(
+                context,
+                title: 'Dashboard Teknis',
+                subtitle: 'Matriks & Distribusi NDRE',
+                icon: Icons.science,
+                color: Colors.purple,
+                onTap: () {
+                  // TODO: Generate JWT token untuk MANDOR/ASISTEN/ADMIN
+                  // Untuk testing, hardcode token di sini
+                  const testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9waWhhayI6ImEwZWViYzk5LTljMGItNGVmOC1iYjZkLTZiYjliZDM4MGExMiIsIm5hbWFfcGloYWsiOiJNYW5kb3IgQnVkaSIsInJvbGUiOiJNQU5ET1IiLCJpYXQiOjE3MzA4NDAwMDAsImV4cCI6MTczMDkyNjQwMH0.SIGNATURE';
+                  
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DashboardTeknisView(
+                        token: testToken,
+                      ),
                     ),
                   );
                 },
