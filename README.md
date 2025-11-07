@@ -1,767 +1,1531 @@
-# Frontend POAC - Dashboard Manajemen Perkebunan# Frontend Keboen - Dashboard POAC
+# Frontend Keboen - Dashboard POAC# Frontend POAC - Dashboard Manajemen Perkebunan# Frontend Keboen - Dashboard POAC
 
 
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)](https://flutter.dev)Frontend Dashboard berbasis **Flutter Web** untuk sistem manajemen POAC (Plan, Organize, Actuate, Control) perkebunan.
+[![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)](https://flutter.dev)
 
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
 
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)## 📋 Status Development
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)[![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)](https://flutter.dev)Frontend Dashboard berbasis **Flutter Web** untuk sistem manajemen POAC (Plan, Organize, Actuate, Control) perkebunan.
 
 
 
-Frontend Dashboard berbasis **Flutter Web (Pure)** untuk sistem manajemen POAC (Plan, Organize, Actuate, Control) perkebunan. Aplikasi ini menyediakan visualisasi data real-time untuk monitoring KPI, operasional harian, dan analisis teknis.- ✅ **Fase 1-3**: Backend API Development (100% Complete)
-
-- ✅ **Fase 3.5**: RBAC Implementation (100% Complete) �
-
----- �🚀 **Fase 4**: Frontend UI Development (In Progress)
-
-  - ✅ **Modul 1: Dashboard Eksekutif** (100% Complete)
-
-## 📋 Status Development    - ✅ M-1.1: Lampu KRI (Indikator Persentase)
-
-    - ✅ M-1.2: Grafik Tren KPI
-
-### ✅ Phase Completed    - ✅ **RBAC Integration**: JWT Authentication ✅ 🔐
+Frontend Dashboard berbasis **Flutter Web (Pure)** untuk sistem manajemen POAC (Plan, Organize, Actuate, Control) perkebunan. Aplikasi ini menyediakan visualisasi data real-time untuk monitoring KPI, operasional harian, dan analisis teknis.[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
 
 
 
-| Phase | Module | Features | Status |## 🏗️ Arsitektur
+---[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)## 📋 Status Development
+
+
+
+## 📋 Status Development
+
+
+
+| Phase | Module | Features | Status |Frontend Dashboard berbasis **Flutter Web (Pure)** untuk sistem manajemen POAC (Plan, Organize, Actuate, Control) perkebunan. Aplikasi ini menyediakan visualisasi data real-time untuk monitoring KPI, operasional harian, dan analisis teknis.- ✅ **Fase 1-3**: Backend API Development (100% Complete)
 
 |-------|--------|----------|--------|
 
-| **Fase 1-3** | Backend API Development | REST API + Database | ✅ 100% |### Tech Stack
+| **Fase 1-3** | Backend API Development | REST API + Database | ✅ 100% |- ✅ **Fase 3.5**: RBAC Implementation (100% Complete) �
 
-| **Fase 3.5** | RBAC Implementation | JWT Auth + Role-based Access | ✅ 100% 🔐 |- **Framework**: Flutter Web (Pure, no HTML/JS embed)
+| **Fase 3.5** | RBAC Implementation | JWT Auth + Role-based Access | ✅ 100% |
 
-| **Fase 4.1** | **Modul 1: Dashboard Eksekutif** | M-1.1 + M-1.2 | ✅ 100% |- **HTTP Client**: `http` package
+| **Fase 4.1** | **Modul 1: Dashboard Eksekutif** | M-1.1 + M-1.2 | ✅ 100% |---- �🚀 **Fase 4**: Frontend UI Development (In Progress)
 
-| **Fase 4.2** | **Modul 2: Dashboard Operasional** | M-2.1 + M-2.2 | ✅ 100% |- **Charts**: `fl_chart` package
+| **Fase 4.2** | **Modul 2: Dashboard Operasional** | M-2.1 + M-2.2 | ✅ 100% |
 
-- **Indicators**: `percent_indicator` package
+| **Fase 4.3** | Modul 3: Dashboard Teknis | M-3.1 + M-3.2 | ⏳ Pending |  - ✅ **Modul 1: Dashboard Eksekutif** (100% Complete)
 
-### 🚀 Current Phase: Frontend UI Development- **Backend API**: Node.js + Express + Supabase
+| **Fase 4.4** | Modul 4: Form SPK | M-4.1 + M-4.2 | ⏳ Pending |
 
+## 📋 Status Development    - ✅ M-1.1: Lampu KRI (Indikator Persentase)
 
+**Progress: 4/7 Features (57%)**
 
-**Progress: 4/7 Features (57%)**### Struktur Folder
+    - ✅ M-1.2: Grafik Tren KPI
 
-```
+---
 
-- ✅ **Modul 1: Dashboard Eksekutif** (100% Complete)lib/
+### ✅ Phase Completed    - ✅ **RBAC Integration**: JWT Authentication ✅ 🔐
 
-  - ✅ M-1.1: Lampu KRI (2 Circular Indicators)├── config/
-
-  - ✅ M-1.2: Grafik Tren KPI (2 Line Charts)│   └── app_config.dart          # Konfigurasi aplikasi (API URL, timeout, dll)
-
-  - ✅ RBAC JWT Authentication Integration├── services/
-
-  │   └── dashboard_service.dart   # Service layer untuk API calls
-
-- ✅ **Modul 2: Dashboard Operasional** (100% Complete)├── views/
-
-  - ✅ M-2.1: Corong Alur Kerja (3 Progress Bars)│   └── dashboard_eksekutif_view.dart  # UI Dashboard Eksekutif
-
-  - ✅ M-2.2: Papan Peringkat Tim (DataTable)└── main.dart                    # Entry point aplikasi
-
-  - ✅ RBAC JWT Authentication Integration```
+## 🏗️ Arsitektur
 
 
-
-- ⏳ **Modul 3: Dashboard Teknis** (Pending)## 🚀 Cara Menjalankan
-
-  - ⏳ M-3.1: Matriks Kebingungan
-
-  - ⏳ M-3.2: Data Distribusi NDRE### Prerequisites
-
-1. Flutter SDK (^3.9.2)
-
-- ⏳ **Modul 4: Form SPK** (Pending)2. Backend API sudah running di `http://localhost:3000`
-
-  - ⏳ M-4: Form Surat Perintah Kerja3. **🔐 JWT Token** (untuk RBAC - lihat section Authentication di bawah)
-
-
-
----### Install Dependencies
-
-```bash
-
-## 🏗️ Arsitektur Aplikasiflutter pub get
-
-```
 
 ### Tech Stack
 
-### Run Development
+| Phase | Module | Features | Status |## 🏗️ Arsitektur
 
-| Category | Technology | Version | Purpose |```bash
+| Category | Technology | Version | Purpose |
 
-|----------|-----------|---------|---------|# Web (Chrome)
+|----------|-----------|---------|---------||-------|--------|----------|--------|
 
-| **Framework** | Flutter Web | ^3.9.2 | UI Framework (Pure - no HTML/JS) |flutter run -d chrome
+| **Framework** | Flutter Web | ^3.9.2 | UI Framework (Pure - no HTML/JS) |
 
-| **Language** | Dart | 3.x | Programming Language |
+| **Language** | Dart | 3.x | Programming Language || **Fase 1-3** | Backend API Development | REST API + Database | ✅ 100% |### Tech Stack
 
-| **HTTP Client** | http | ^1.1.0 | REST API Communication |# Web (Edge)
+| **HTTP Client** | http | ^1.1.0 | REST API Communication |
 
-| **Charts** | fl_chart | ^0.68.0 | Line Charts & Data Visualization |flutter run -d edge
+| **Charts** | fl_chart | ^0.68.0 | Line Charts & Data Visualization || **Fase 3.5** | RBAC Implementation | JWT Auth + Role-based Access | ✅ 100% 🔐 |- **Framework**: Flutter Web (Pure, no HTML/JS embed)
 
 | **Progress Indicators** | percent_indicator | ^4.2.3 | Circular & Linear Progress |
 
-| **Backend** | Node.js + Express | - | REST API Server |# Web dengan port custom
+| **Backend** | Node.js + Express | - | REST API Server || **Fase 4.1** | **Modul 1: Dashboard Eksekutif** | M-1.1 + M-1.2 | ✅ 100% |- **HTTP Client**: `http` package
 
-| **Database** | Supabase (PostgreSQL) | - | Data Persistence |flutter run -d chrome --web-port=8080
+| **Database** | Supabase (PostgreSQL) | - | Data Persistence |
 
-| **Authentication** | JWT | - | Role-Based Access Control |```
+| **Authentication** | JWT | - | Role-Based Access Control || **Fase 4.2** | **Modul 2: Dashboard Operasional** | M-2.1 + M-2.2 | ✅ 100% |- **Charts**: `fl_chart` package
 
 
 
-### Struktur Folder### Build Production
+### Arsitektur Pattern- **Indicators**: `percent_indicator` package
 
-```bash
 
-```# Build untuk web production
 
-frontend_keboen/flutter build web
+```### 🚀 Current Phase: Frontend UI Development- **Backend API**: Node.js + Express + Supabase
 
-├── lib/
+┌─────────────────────────────────────────────┐
 
-│   ├── config/# Output akan ada di folder: build/web/
+│            UI Layer (Views)                 │
 
-│   │   └── app_config.dart                # Konfigurasi API URL, timeout```
+│  - DashboardEksekutifView                  │
 
-│   ├── services/
-
-│   │   └── dashboard_service.dart         # Service layer untuk API calls## 📊 Fitur Dashboard Eksekutif
-
-│   ├── views/
-
-│   │   ├── dashboard_eksekutif_view.dart  # Modul 1: Dashboard Eksekutif### M-1.1: Lampu KRI (Key Risk Indicators)
-
-│   │   └── dashboard_operasional_view.dart # Modul 2: Dashboard Operasional
-
-│   └── main.dart                          # Entry point + Home Menu**1. KRI Lead Time APH**
-
-├── context/- Menampilkan waktu rata-rata penanganan dari deteksi hingga tindakan
-
-│   ├── LAPORAN_EKSEKUSI_Frontend_RBAC_1.md- Visual: Circular Progress Indicator
-
-│   ├── LAPORAN_EKSEKUSI_Frontend_Modul_2.md- Target: ≤ 3 hari
-
-│   ├── LAPORAN_PERBAIKAN_Response_Format_Fix.md- Formula: Semakin rendah semakin baik
-
-│   ├── VERIFICATION_CHECKPOINT_RBAC.md
-
-│   └── VERIFICATION_CHECKPOINT_Modul_2.md**2. KRI Kepatuhan SOP** ⚠️ **WAJIB TEPAT**
-
-├── pubspec.yaml                           # Dependencies- Menampilkan persentase kepatuhan terhadap SOP
-
-├── analysis_options.yaml                  # Linter configuration- Visual: Circular Progress Indicator
-
-└── README.md                              # This file- Target: ≥ 75%
-
-```- Formula: `kri_kepatuhan_sop = Selesai / (Selesai + Dikerjakan) * 100`
-
-- **PENTING**: Perhitungan menggunakan basis 75% sebagai target 100%
-
-### Arsitektur Pattern
-
-### M-1.2: Grafik Tren KPI
-
-```
-
-┌─────────────────────────────────────────────┐**1. Tren Insidensi Baru (Kasus G1)**
-
-│            UI Layer (Views)                 │- Line Chart menampilkan tren kasus Ganoderma Awal (G1)
-
-│  - DashboardEksekutifView                  │- Data 6 bulan terakhir
-
-│  - DashboardOperasionalView                │- Warna: Orange
+│  - DashboardOperasionalView                │**Progress: 4/7 Features (57%)**### Struktur Folder
 
 │  - HomeMenuView                            │
 
-└────────────────┬────────────────────────────┘**2. Tren Pohon Mati Aktif (G4)**
-
-                 │- Line Chart menampilkan tren pohon status G4 (Mati)
-
-                 ▼- Data 6 bulan terakhir
-
-┌─────────────────────────────────────────────┐- Warna: Red
-
-│         Service Layer (Services)            │
-
-│  - DashboardService                        │## 🔌 API Integration
-
-│    * fetchKpiEksekutif(token)             │
-
-│    * fetchDashboardOperasional(token)     │### 🔐 Authentication (RBAC Fase 2)
-
-└────────────────┬────────────────────────────┘
-
-                 │**PENTING:** Semua endpoint Dashboard sekarang memerlukan **JWT Authentication**.
-
-                 ▼
-
-┌─────────────────────────────────────────────┐#### Mendapatkan JWT Token
-
-│      HTTP Client Layer (http package)       │
-
-│  - JWT Authentication                      │**Option 1: Generate Token (Testing)**
-
-│  - Error Handling (401/403/5xx)           │```bash
-
-│  - Response Parsing                        │# Di backend repository, jalankan:
-
-└────────────────┬────────────────────────────┘node scripts/generate-token-only.js
+└────────────────┬────────────────────────────┘```
 
                  │
 
-                 ▼# Output contoh untuk role ASISTEN:
+                 ▼- ✅ **Modul 1: Dashboard Eksekutif** (100% Complete)lib/
 
-┌─────────────────────────────────────────────┐eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhc2lzdGVuMSIsInJvbGUiOiJBU0lTVEVOIiwiaWF0IjoxNzMwODQwMDAwLCJleHAiOjE3MzA5MjY0MDB9.SIGNATURE
+┌─────────────────────────────────────────────┐
 
-│         Backend REST API (Node.js)          │```
+│         Service Layer (Services)            │  - ✅ M-1.1: Lampu KRI (2 Circular Indicators)├── config/
+
+│  - DashboardService                        │
+
+│    * fetchKpiEksekutif(token)             │  - ✅ M-1.2: Grafik Tren KPI (2 Line Charts)│   └── app_config.dart          # Konfigurasi aplikasi (API URL, timeout, dll)
+
+│    * fetchDashboardOperasional(token)     │
+
+└────────────────┬────────────────────────────┘  - ✅ RBAC JWT Authentication Integration├── services/
+
+                 │
+
+                 ▼  │   └── dashboard_service.dart   # Service layer untuk API calls
+
+┌─────────────────────────────────────────────┐
+
+│      HTTP Client Layer (http package)       │- ✅ **Modul 2: Dashboard Operasional** (100% Complete)├── views/
+
+│  - JWT Authentication                      │
+
+│  - Error Handling (401/403/5xx)           │  - ✅ M-2.1: Corong Alur Kerja (3 Progress Bars)│   └── dashboard_eksekutif_view.dart  # UI Dashboard Eksekutif
+
+│  - Response Parsing                        │
+
+└────────────────┬────────────────────────────┘  - ✅ M-2.2: Papan Peringkat Tim (DataTable)└── main.dart                    # Entry point aplikasi
+
+                 │
+
+                 ▼  - ✅ RBAC JWT Authentication Integration```
+
+┌─────────────────────────────────────────────┐
+
+│         Backend REST API (Node.js)          │
 
 │  - GET /api/v1/dashboard/kpi-eksekutif    │
 
-│  - GET /api/v1/dashboard/operasional      │**Option 2: Login API (Production)**
+│  - GET /api/v1/dashboard/operasional      │- ⏳ **Modul 3: Dashboard Teknis** (Pending)## 🚀 Cara Menjalankan
 
-│  - RBAC Middleware                         │```dart
+│  - RBAC Middleware                         │
 
-└─────────────────────────────────────────────┘// TODO: Implement login screen
-
-```POST /api/v1/auth/login
-
-Body: { "username": "asisten1", "password": "password123" }
-
-**Prinsip:**Response: { "token": "eyJhbGc..." }
-
-- **Separation of Concerns**: UI ↔ Service ↔ API```
-
-- **Type Safety**: Explicit type casting
-
-- **Error Handling**: Comprehensive error coverage#### Menggunakan Token
-
-- **Null Safety**: Dart 3.x null-safety enabled
-
-```dart
-
----// Di main.dart atau auth provider
-
-const String token = 'YOUR_JWT_TOKEN_HERE';
-
-## 🚀 Quick Start
-
-// Pass ke DashboardEksekutifView
-
-### Prerequisiteshome: DashboardEksekutifView(token: token),
+└─────────────────────────────────────────────┘  - ⏳ M-3.1: Matriks Kebingungan
 
 ```
 
-1. **Flutter SDK** (≥3.9.2)
+  - ⏳ M-3.2: Data Distribusi NDRE### Prerequisites
 
-   ```bash### Endpoint yang Digunakan
+**Prinsip:**
 
-   flutter --version
+- **Separation of Concerns**: UI ↔ Service ↔ API1. Flutter SDK (^3.9.2)
 
-   # Flutter 3.9.2 • channel stable**GET /api/v1/dashboard/kpi-eksekutif** 🔐
+- **Type Safety**: Explicit type casting
+
+- **Error Handling**: Comprehensive error coverage- ⏳ **Modul 4: Form SPK** (Pending)2. Backend API sudah running di `http://localhost:3000`
+
+- **Null Safety**: Dart 3.x null-safety enabled
+
+  - ⏳ M-4: Form Surat Perintah Kerja3. **🔐 JWT Token** (untuk RBAC - lihat section Authentication di bawah)
+
+### Struktur Folder
+
+
+
+```
+
+lib/---### Install Dependencies
+
+├── config/
+
+│   └── app_config.dart          # Konfigurasi API URL, timeout, dll```bash
+
+├── services/
+
+│   └── dashboard_service.dart   # Service layer untuk API calls## 🏗️ Arsitektur Aplikasiflutter pub get
+
+├── views/
+
+│   ├── dashboard_eksekutif_view.dart   # Modul 1: Dashboard Eksekutif```
+
+│   └── dashboard_operasional_view.dart # Modul 2: Dashboard Operasional
+
+└── main.dart                    # Entry point aplikasi### Tech Stack
+
+
+
+context/### Run Development
+
+├── LAPORAN_EKSEKUSI_Frontend_1.md
+
+├── LAPORAN_EKSEKUSI_Frontend_Modul_2.md| Category | Technology | Version | Purpose |```bash
+
+├── LAPORAN_EKSEKUSI_Frontend_RBAC_1.md
+
+├── VERIFICATION_CHECKPOINT_RBAC.md|----------|-----------|---------|---------|# Web (Chrome)
+
+└── VERIFICATION_CHECKPOINT_Modul_2.md
+
+| **Framework** | Flutter Web | ^3.9.2 | UI Framework (Pure - no HTML/JS) |flutter run -d chrome
+
+pubspec.yaml                     # Dependencies
+
+analysis_options.yaml            # Linter configuration| **Language** | Dart | 3.x | Programming Language |
+
+README.md                        # This file
+
+```| **HTTP Client** | http | ^1.1.0 | REST API Communication |# Web (Edge)
+
+
+
+---| **Charts** | fl_chart | ^0.68.0 | Line Charts & Data Visualization |flutter run -d edge
+
+
+
+## 🚀 Quick Start| **Progress Indicators** | percent_indicator | ^4.2.3 | Circular & Linear Progress |
+
+
+
+### Prerequisites| **Backend** | Node.js + Express | - | REST API Server |# Web dengan port custom
+
+
+
+1. **Flutter SDK** (≥3.9.2)| **Database** | Supabase (PostgreSQL) | - | Data Persistence |flutter run -d chrome --web-port=8080
+
+   ```bash
+
+   flutter --version| **Authentication** | JWT | - | Role-Based Access Control |```
+
+   # Flutter 3.9.2 • channel stable
 
    ```
 
-**Headers (WAJIB):**
+
+
+2. **Backend API Running**### Struktur Folder### Build Production
+
+   - URL: `http://localhost:3000`
+
+   - Endpoints available:```bash
+
+     - `GET /api/v1/dashboard/kpi-eksekutif`
+
+     - `GET /api/v1/dashboard/operasional````# Build untuk web production
+
+
+
+3. **JWT Token** (for authentication)frontend_keboen/flutter build web
+
+   - Generate from backend: `node scripts/generate-token-only.js`
+
+   - Or use hardcoded test token (development only)├── lib/
+
+
+
+### Installation│   ├── config/# Output akan ada di folder: build/web/
+
+
+
+```bash│   │   └── app_config.dart                # Konfigurasi API URL, timeout```
+
+# Clone repository
+
+git clone https://github.com/mastoroshadiq-prog/frontend-poac.git│   ├── services/
+
+cd frontend-poac
+
+│   │   └── dashboard_service.dart         # Service layer untuk API calls## 📊 Fitur Dashboard Eksekutif
+
+# Install dependencies
+
+flutter pub get│   ├── views/
+
+
+
+# Verify no issues│   │   ├── dashboard_eksekutif_view.dart  # Modul 1: Dashboard Eksekutif### M-1.1: Lampu KRI (Key Risk Indicators)
+
+flutter doctor
+
+```│   │   └── dashboard_operasional_view.dart # Modul 2: Dashboard Operasional
+
+
+
+### Run Development Server│   └── main.dart                          # Entry point + Home Menu**1. KRI Lead Time APH**
+
+
+
+```bash├── context/- Menampilkan waktu rata-rata penanganan dari deteksi hingga tindakan
+
+# Run on Chrome
+
+flutter run -d chrome│   ├── LAPORAN_EKSEKUSI_Frontend_RBAC_1.md- Visual: Circular Progress Indicator
+
+
+
+# Run on Edge│   ├── LAPORAN_EKSEKUSI_Frontend_Modul_2.md- Target: ≤ 3 hari
+
+flutter run -d edge
+
+│   ├── LAPORAN_PERBAIKAN_Response_Format_Fix.md- Formula: Semakin rendah semakin baik
+
+# Run with custom port
+
+flutter run -d chrome --web-port=8080│   ├── VERIFICATION_CHECKPOINT_RBAC.md
+
+
+
+# Hot reload: Press 'r' in terminal│   └── VERIFICATION_CHECKPOINT_Modul_2.md**2. KRI Kepatuhan SOP** ⚠️ **WAJIB TEPAT**
+
+# Hot restart: Press 'R' in terminal
+
+```├── pubspec.yaml                           # Dependencies- Menampilkan persentase kepatuhan terhadap SOP
+
+
+
+### Build for Production├── analysis_options.yaml                  # Linter configuration- Visual: Circular Progress Indicator
+
+
+
+```bash└── README.md                              # This file- Target: ≥ 75%
+
+# Build optimized web app
+
+flutter build web --release```- Formula: `kri_kepatuhan_sop = Selesai / (Selesai + Dikerjakan) * 100`
+
+
+
+# Output location: build/web/- **PENTING**: Perhitungan menggunakan basis 75% sebagai target 100%
+
+# Deploy this folder to your web server
+
+### Arsitektur Pattern
+
+# Build with base href (for subdirectory deployment)
+
+flutter build web --base-href /dashboard/### M-1.2: Grafik Tren KPI
+
+```
+
+```
+
+---
+
+┌─────────────────────────────────────────────┐**1. Tren Insidensi Baru (Kasus G1)**
+
+## 📊 Features & Modules
+
+│            UI Layer (Views)                 │- Line Chart menampilkan tren kasus Ganoderma Awal (G1)
+
+### 🎯 Modul 1: Dashboard Eksekutif
+
+│  - DashboardEksekutifView                  │- Data 6 bulan terakhir
+
+**Endpoint:** `GET /api/v1/dashboard/kpi-eksekutif` 🔐  
+
+**Roles:** ASISTEN, MANAJER, ADMIN│  - DashboardOperasionalView                │- Warna: Orange
+
+
+
+#### M-1.1: Lampu KRI (Key Risk Indicators)│  - HomeMenuView                            │
+
+
+
+Visual indikator performa menggunakan **Circular Progress Indicators**.└────────────────┬────────────────────────────┘**2. Tren Pohon Mati Aktif (G4)**
+
+
+
+**1. KRI Lead Time APH**                 │- Line Chart menampilkan tren pohon status G4 (Mati)
+
+- **Deskripsi:** Waktu rata-rata dari deteksi hingga tindakan APH
+
+- **Visual:** Circular Percent Indicator (Orange)                 ▼- Data 6 bulan terakhir
+
+- **Target:** ≤ 3 hari
+
+- **Formula:** `Σ(tanggal_aph - tanggal_validasi) / jumlah_pohon`┌─────────────────────────────────────────────┐- Warna: Red
+
+- **Interpretasi:** Semakin rendah semakin baik
+
+│         Service Layer (Services)            │
+
+**2. KRI Kepatuhan SOP** ⚠️ **CRITICAL**
+
+- **Deskripsi:** Persentase kepatuhan pelaksanaan SOP│  - DashboardService                        │## 🔌 API Integration
+
+- **Visual:** Circular Percent Indicator (Green)
+
+- **Target:** ≥ 75%│    * fetchKpiEksekutif(token)             │
+
+- **Formula:** `(Selesai / (Selesai + Dikerjakan)) × 100`
+
+- **Perhitungan Display:** `(value / 75.0)` untuk normalisasi ke skala 100%│    * fetchDashboardOperasional(token)     │### 🔐 Authentication (RBAC Fase 2)
+
+- **Interpretasi:**
+
+  - 🟢 ≥80%: Excellent└────────────────┬────────────────────────────┘
+
+  - 🟠 60-79%: Good
+
+  - 🔴 <60%: Need Improvement                 │**PENTING:** Semua endpoint Dashboard sekarang memerlukan **JWT Authentication**.
+
+
+
+#### M-1.2: Grafik Tren KPI                 ▼
+
+
+
+Visual tren historis menggunakan **Line Charts (fl_chart)**.┌─────────────────────────────────────────────┐#### Mendapatkan JWT Token
+
+
+
+**1. Tren Insidensi Baru (Kasus G1)**│      HTTP Client Layer (http package)       │
+
+- **Deskripsi:** Grafik tren kasus Ganoderma Awal (G1) per bulan
+
+- **Data:** 6 bulan terakhir│  - JWT Authentication                      │**Option 1: Generate Token (Testing)**
+
+- **Warna:** Orange (`#FF9800`)
+
+- **X-Axis:** Periode (YYYY-MM)│  - Error Handling (401/403/5xx)           │```bash
+
+- **Y-Axis:** Jumlah kasus
+
+│  - Response Parsing                        │# Di backend repository, jalankan:
+
+**2. Tren Pohon Mati Aktif (G4)**
+
+- **Deskripsi:** Grafik tren pohon status G4 (Mati) per bulan└────────────────┬────────────────────────────┘node scripts/generate-token-only.js
+
+- **Data:** 6 bulan terakhir
+
+- **Warna:** Red (`#F44336`)                 │
+
+- **X-Axis:** Periode (YYYY-MM)
+
+- **Y-Axis:** Jumlah pohon                 ▼# Output contoh untuk role ASISTEN:
+
+
+
+**Features:**┌─────────────────────────────────────────────┐eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhc2lzdGVuMSIsInJvbGUiOiJBU0lTVEVOIiwiaWF0IjoxNzMwODQwMDAwLCJleHAiOjE3MzA5MjY0MDB9.SIGNATURE
+
+- ✅ Interactive touch tooltips
+
+- ✅ Grid lines untuk referensi│         Backend REST API (Node.js)          │```
+
+- ✅ Responsive chart sizing
+
+- ✅ Animated transitions│  - GET /api/v1/dashboard/kpi-eksekutif    │
+
+
+
+---│  - GET /api/v1/dashboard/operasional      │**Option 2: Login API (Production)**
+
+
+
+### 🎯 Modul 2: Dashboard Operasional│  - RBAC Middleware                         │```dart
+
+
+
+**Endpoint:** `GET /api/v1/dashboard/operasional` 🔐  └─────────────────────────────────────────────┘// TODO: Implement login screen
+
+**Roles:** MANDOR, ASISTEN, ADMIN
+
+```POST /api/v1/auth/login
+
+#### M-2.1: Corong Alur Kerja (Workflow Funnel)
+
+Body: { "username": "asisten1", "password": "password123" }
+
+Visual progress tahapan kerja menggunakan **Linear Progress Bars**.
+
+**Prinsip:**Response: { "token": "eyJhbGc..." }
+
+**3 Tahapan Progress:**
+
+- **Separation of Concerns**: UI ↔ Service ↔ API```
+
+**1. Validasi**
+
+- **Deskripsi:** Progress validasi lapangan- **Type Safety**: Explicit type casting
+
+- **Visual:** Linear Progress Bar (Blue)
+
+- **Data:** `validasi_selesai / target_validasi`- **Error Handling**: Comprehensive error coverage#### Menggunakan Token
+
+- **Label:** "Validasi: X dari Y Selesai"
+
+- **Null Safety**: Dart 3.x null-safety enabled
+
+**2. APH (Aplikasi Pupuk Hayati)**
+
+- **Deskripsi:** Progress aplikasi pupuk hayati```dart
+
+- **Visual:** Linear Progress Bar (Green)
+
+- **Data:** `aph_selesai / target_aph`---// Di main.dart atau auth provider
+
+- **Label:** "APH: X dari Y Selesai"
+
+const String token = 'YOUR_JWT_TOKEN_HERE';
+
+**3. Sanitasi**
+
+- **Deskripsi:** Progress sanitasi pohon## 🚀 Quick Start
+
+- **Visual:** Linear Progress Bar (Orange)
+
+- **Data:** `sanitasi_selesai / target_sanitasi`// Pass ke DashboardEksekutifView
+
+- **Label:** "Sanitasi: X dari Y Selesai"
+
+### Prerequisiteshome: DashboardEksekutifView(token: token),
+
+**Features:**
+
+- ✅ Percentage display inside bar```
+
+- ✅ Animated progress (800ms)
+
+- ✅ Safe division (prevent div by zero)1. **Flutter SDK** (≥3.9.2)
+
+- ✅ Clamped percentage (0-100%)
+
+   ```bash### Endpoint yang Digunakan
+
+#### M-2.2: Papan Peringkat Tim (Team Leaderboard)
+
+   flutter --version
+
+Visual ranking pelaksana menggunakan **DataTable**.
+
+   # Flutter 3.9.2 • channel stable**GET /api/v1/dashboard/kpi-eksekutif** 🔐
+
+**Columns:**
+
+1. **Peringkat**: #1, #2, #3... (generated)   ```
+
+2. **ID Pelaksana**: UUID pelaksana
+
+3. **Selesai / Total**: "X / Y" format**Headers (WAJIB):**
+
+4. **Rate (%)**: Performance percentage
 
 2. **Backend API Running**```http
 
-   - URL: `http://localhost:3000`Content-Type: application/json
+**Enhanced Features:**
 
-   - Endpoints available:Accept: application/json
+- 🥇 **Rank #1**: Gold background + trophy icon   - URL: `http://localhost:3000`Content-Type: application/json
 
-     - `GET /api/v1/dashboard/kpi-eksekutif`Authorization: Bearer YOUR_JWT_TOKEN_HERE
+- 🥈 **Rank #2**: Silver background + trophy icon
 
-     - `GET /api/v1/dashboard/operasional````
+- 🥉 **Rank #3**: Bronze background + trophy icon   - Endpoints available:Accept: application/json
+
+- 🎨 **Color-coded Rates**:
+
+  - Green (≥80%): High performance     - `GET /api/v1/dashboard/kpi-eksekutif`Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+  - Orange (50-79%): Medium performance
+
+  - Red (<50%): Low performance     - `GET /api/v1/dashboard/operasional````
+
+- 📱 Horizontal scrolling untuk responsiveness
+
+- 📊 Empty state handling
 
 
 
-3. **JWT Token** (for authentication)**Response Format:**
+---3. **JWT Token** (for authentication)**Response Format:**
 
-   - Generate from backend: `node scripts/generate-token-only.js````json
 
-   - Or use hardcoded test token (development only){
 
-  "kri_lead_time_aph": 2.5,
+## 🔐 Authentication & RBAC   - Generate from backend: `node scripts/generate-token-only.js````json
 
-### Installation  "kri_kepatuhan_sop": 78.3,
 
-  "tren_insidensi_baru": [
 
-```bash    {"periode": "2024-06", "nilai": 12},
+### JWT Authentication   - Or use hardcoded test token (development only){
 
-# Clone repository    {"periode": "2024-07", "nilai": 8},
 
-git clone https://github.com/mastoroshadiq-prog/frontend-poac.git    ...
 
-cd frontend-poac  ],
+Semua endpoint dashboard memerlukan **JWT Bearer Token**.  "kri_lead_time_aph": 2.5,
 
-  "tren_g4_aktif": [
+
+
+#### Generate Token (Development)### Installation  "kri_kepatuhan_sop": 78.3,
+
+
+
+**Backend Script:**  "tren_insidensi_baru": [
+
+```bash
+
+# Di backend repository```bash    {"periode": "2024-06", "nilai": 12},
+
+cd backend
+
+node scripts/generate-token-only.js# Clone repository    {"periode": "2024-07", "nilai": 8},
+
+
+
+# Output example:git clone https://github.com/mastoroshadiq-prog/frontend-poac.git    ...
+
+# ==================
+
+# ASISTEN Token:cd frontend-poac  ],
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# ==================  "tren_g4_aktif": [
+
+```
 
 # Install dependencies    {"periode": "2024-06", "nilai": 45},
 
-flutter pub get    {"periode": "2024-07", "nilai": 38},
+**Token Payload Example:**
 
-    ...
+```jsonflutter pub get    {"periode": "2024-07", "nilai": 38},
 
-# Verify no issues  ]
+{
 
-flutter doctor}
+  "id_pihak": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",    ...
+
+  "nama_pihak": "Asisten Citra",
+
+  "role": "ASISTEN",# Verify no issues  ]
+
+  "iat": 1762497851,
+
+  "exp": 1763102651flutter doctor}
+
+}
+
+`````````
+
+
+
+#### Using Token in Flutter
+
+
+
+**Option 1: Hardcoded (Development Only)**### Run Development Server**Error Responses:**
+
+```dart
+
+// In dashboard_eksekutif_view.dart or dashboard_operasional_view.dart- **401 Unauthorized**: Token tidak valid atau expired
+
+static const String _testToken = 'eyJhbGci...';
+
+``````bash- **403 Forbidden**: User tidak memiliki permission untuk endpoint ini
+
+
+
+**Option 2: Pass as Parameter (Recommended)**# Run on Chrome- **404 Not Found**: Endpoint tidak ditemukan
+
+```dart
+
+// In main.dartflutter run -d chrome- **500 Server Error**: Error di backend
+
+const String userToken = 'YOUR_JWT_TOKEN';
+
+
+
+MaterialApp(
+
+  home: DashboardEksekutifView(token: userToken),# Run on Edge### Konfigurasi API
+
+)
+
+```flutter run -d edge
+
+
+
+**Option 3: From Auth Provider (Production)**Edit file `lib/config/app_config.dart`:
+
+```dart
+
+// TODO: Implement authentication system# Run with custom port
+
+final authProvider = Provider.of<AuthProvider>(context);
+
+final token = authProvider.token;flutter run -d chrome --web-port=8080```dart
+
+
+
+Navigator.push(class AppConfig {
+
+  context,
+
+  MaterialPageRoute(# Hot reload: Press 'r' in terminal  // Ganti dengan URL production
+
+    builder: (_) => DashboardEksekutifView(token: token),
+
+  ),# Hot restart: Press 'R' in terminal  static const String apiBaseUrl = 'https://your-backend-url.com/api/v1';
+
+);
+
+``````  
+
+
+
+### RBAC Roles & Permissions  // Timeout request (default: 10 detik)
+
+
+
+| Role | Dashboard Eksekutif | Dashboard Operasional | Dashboard Teknis | Form SPK |### Build for Production  static const Duration requestTimeout = Duration(seconds: 10);
+
+|------|--------------------|-----------------------|------------------|----------|
+
+| **ADMIN** | ✅ Full Access | ✅ Full Access | ✅ Full Access | ✅ Full Access |}
+
+| **MANAJER** | ✅ Read Only | ❌ No Access | ✅ Read Only | ❌ No Access |
+
+| **ASISTEN** | ✅ Read Only | ✅ Read Only | ✅ Read Only | ✅ Create/Edit |```bash```
+
+| **MANDOR** | ❌ No Access | ✅ Read Only | ❌ No Access | ✅ Create Only |
+
+# Build optimized web app
+
+### Error Handling
+
+flutter build web --release## 🎨 UI/UX Features
+
+**401 Unauthorized** 🔒
+
+- **Icon:** Orange lock (`Icons.lock_outline`)
+
+- **Title:** "Silakan Login"
+
+- **Message:** "Token tidak valid atau sudah kadaluarsa (401)"# Output location: build/web/### Loading State
+
+- **Action:** Redirect to login (future) or retry
+
+# Deploy this folder to your web server- Circular Progress Indicator dengan teks "Memuat data KPI..."
+
+**403 Forbidden** 🚫
+
+- **Icon:** Red block (`Icons.block`)
+
+- **Title:** "Akses Ditolak"
+
+- **Message:** "Anda tidak memiliki izin untuk mengakses data ini (403)"# Build with base href (for subdirectory deployment)### Error Handling (Enhanced untuk RBAC)
+
+- **Action:** Show error, provide back navigation
+
+flutter build web --base-href /dashboard/- 🔒 **401 Unauthorized**: Orange lock icon + "Silakan Login"
+
+**Other Errors** ❌
+
+- Network errors```- 🚫 **403 Forbidden**: Red block icon + "Akses Ditolak"
+
+- Timeout (10 seconds)
+
+- Server errors (5xx)- Icon error dengan pesan yang jelas
+
+- Parse errors (invalid JSON)
+
+---- Tombol "Coba Lagi" untuk retry
+
+---
+
+- Error messages yang informatif:
+
+## 🔌 API Integration
+
+## 📊 Features & Modules  - Network error
+
+### Endpoint: Dashboard Eksekutif
+
+  - Timeout error
+
+**GET /api/v1/dashboard/kpi-eksekutif** 🔐
+
+### 🎯 Modul 1: Dashboard Eksekutif  - Server error (5xx)
+
+**Headers (WAJIB):**
+
+```http  - Not found (404)
+
+Content-Type: application/json
+
+Accept: application/json**Endpoint:** `GET /api/v1/dashboard/kpi-eksekutif` 🔐  - Parse error (invalid JSON)
+
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+```
+
+
+
+**Response Format:****Roles:** ASISTEN, MANAJER, ADMIN### Refresh Data
+
+```json
+
+{- Pull-to-refresh gesture
+
+  "kri_lead_time_aph": 2.5,
+
+  "kri_kepatuhan_sop": 78.3,#### M-1.1: Lampu KRI (Key Risk Indicators)- Tombol refresh di AppBar
+
+  "tren_insidensi_baru": [
+
+    {"periode": "2024-06", "nilai": 12},- Auto-reload saat error recovery
+
+    {"periode": "2024-07", "nilai": 8}
+
+  ],Visual indikator performa menggunakan **Circular Progress Indicators**.
+
+  "tren_g4_aktif": [
+
+    {"periode": "2024-06", "nilai": 45},### Responsive Design
+
+    {"periode": "2024-07", "nilai": 38}
+
+  ]**1. KRI Lead Time APH**- Layout adaptif untuk berbagai ukuran layar
+
+}
+
+```- **Deskripsi:** Waktu rata-rata dari deteksi hingga tindakan APH- Card-based design untuk modular components
+
+
+
+### Endpoint: Dashboard Operasional- **Visual:** Circular Percent Indicator (Orange)- Color-coded indicators:
+
+
+
+**GET /api/v1/dashboard/operasional** 🔐- **Target:** ≤ 3 hari  - 🟢 Green: Performa baik (≥80%)
+
+
+
+**Headers (WAJIB):**- **Formula:** `Σ(tanggal_aph - tanggal_validasi) / jumlah_pohon`  - 🟠 Orange: Performa sedang (60-80%)
+
+```http
+
+Content-Type: application/json- **Interpretasi:** Semakin rendah semakin baik  - 🔴 Red: Performa buruk (<60%)
+
+Accept: application/json
+
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+```
+
+**2. KRI Kepatuhan SOP** ⚠️ **CRITICAL**## 📖 Prinsip Development (MPP)
+
+**Response Format:**
+
+```json- **Deskripsi:** Persentase kepatuhan pelaksanaan SOP
+
+{
+
+  "corong_alur_kerja": {- **Visual:** Circular Percent Indicator (Green)Semua development mengikuti **3 Prinsip Inti**:
+
+    "validasi": {"selesai": 80, "target": 100},
+
+    "aph": {"selesai": 65, "target": 100},- **Target:** ≥ 75%
+
+    "sanitasi": {"selesai": 40, "target": 100}
+
+  },- **Formula:** `(Selesai / (Selesai + Dikerjakan)) × 100`### 1. SIMPLE (Sederhana)
+
+  "papan_peringkat": [
+
+    {- **Perhitungan Display:** `(value / 75.0)` untuk normalisasi ke skala 100%- Kode modular dan mudah dibaca
+
+      "id_pelaksana": "uuid-1",
+
+      "selesai": 45,- **Interpretasi:** - Satu file = satu tanggung jawab
+
+      "total": 50
+
+    }  - 🟢 ≥80%: Excellent- Widget reusable dengan parameter yang jelas
+
+  ]
+
+}  - 🟠 60-79%: Good
+
+```
+
+  - 🔴 <60%: Need Improvement### 2. TEPAT (Akurat)
+
+### Konfigurasi API
+
+- Logika bisnis 100% akurat
+
+Edit file `lib/config/app_config.dart`:
+
+#### M-1.2: Grafik Tren KPI- Error handling komprehensif
+
+```dart
+
+class AppConfig {- Perhitungan KPI sesuai definisi bisnis
+
+  // Ganti dengan URL production
+
+  static const String apiBaseUrl = 'https://your-backend-url.com/api/v1';Visual tren historis menggunakan **Line Charts (fl_chart)**.- **KHUSUS**: Formula KRI Kepatuhan SOP harus TEPAT!
+
+  
+
+  // Timeout request (default: 10 detik)
+
+  static const Duration requestTimeout = Duration(seconds: 10);
+
+}**1. Tren Insidensi Baru (Kasus G1)**### 3. PENINGKATAN BERTAHAP (Kaizen)
+
+```
+
+- **Deskripsi:** Grafik tren kasus Ganoderma Awal (G1) per bulan- Build secara inkremental
+
+---
+
+- **Data:** 6 bulan terakhir- 1 fitur = 1 commit yang fokus
+
+## 🎨 UI/UX Features
+
+- **Warna:** Orange (`#FF9800`)- Verifikasi setiap langkah sebelum lanjut
+
+### Loading State
+
+- Circular Progress Indicator dengan teks "Memuat data KPI..."- **X-Axis:** Periode (YYYY-MM)- No big-bang development
+
+
+
+### Error Handling (Enhanced untuk RBAC)- **Y-Axis:** Jumlah kasus
+
+- 🔒 **401 Unauthorized**: Orange lock icon + "Silakan Login"
+
+- 🚫 **403 Forbidden**: Red block icon + "Akses Ditolak"## 🧪 Testing Checklist
+
+- Icon error dengan pesan yang jelas
+
+- Tombol "Coba Lagi" untuk retry**2. Tren Pohon Mati Aktif (G4)**
+
+- Error messages yang informatif:
+
+  - Network error- **Deskripsi:** Grafik tren pohon status G4 (Mati) per bulan### Manual Testing
+
+  - Timeout error
+
+  - Server error (5xx)- **Data:** 6 bulan terakhir- [ ] Aplikasi bisa dijalankan tanpa error
+
+  - Not found (404)
+
+  - Parse error (invalid JSON)- **Warna:** Red (`#F44336`)- [ ] Loading state muncul saat fetch data
+
+
+
+### Refresh Data- **X-Axis:** Periode (YYYY-MM)- [ ] Error state muncul saat backend offline
+
+- Pull-to-refresh gesture
+
+- Tombol refresh di AppBar- **Y-Axis:** Jumlah pohon- [ ] Data KRI ditampilkan dengan benar
+
+- Auto-reload saat error recovery
+
+- [ ] Perhitungan persentase KRI Kepatuhan SOP TEPAT
+
+### Responsive Design
+
+- Layout adaptif untuk berbagai ukuran layar**Features:**- [ ] Line chart menampilkan tren dengan benar
+
+- Card-based design untuk modular components
+
+- Color-coded indicators:- ✅ Interactive touch tooltips- [ ] Pull-to-refresh berfungsi
+
+  - 🟢 Green: Performa baik (≥80%)
+
+  - 🟠 Orange: Performa sedang (60-80%)- ✅ Grid lines untuk referensi- [ ] Tombol refresh di AppBar berfungsi
+
+  - 🔴 Red: Performa buruk (<60%)
+
+- ✅ Responsive chart sizing- [ ] Responsive di berbagai ukuran layar web
+
+---
+
+- ✅ Animated transitions
+
+## 📖 Development Principles (MPP)
+
+### Integration Testing
+
+Semua development mengikuti **Metode Pengembangan POAC (MPP)**:
+
+---- [ ] Service layer memanggil endpoint yang benar
+
+### 1. 🎯 SIMPLE (Sederhana)
+
+- [ ] Response JSON di-parse dengan benar
+
+**Prinsip:**
+
+- Kode mudah dibaca dan dipahami### 🎯 Modul 2: Dashboard Operasional- [ ] Error dari backend di-handle dengan baik
+
+- Satu file = satu tanggung jawab (SRP)
+
+- Widget kecil dan reusable- [ ] Timeout handling bekerja
+
+- Minimal dependencies
+
+**Endpoint:** `GET /api/v1/dashboard/operasional` 🔐
+
+**Implementasi:**
+
+- `app_config.dart`: Hanya konfigurasi## 🐛 Troubleshooting
+
+- `dashboard_service.dart`: Hanya API calls
+
+- `dashboard_eksekutif_view.dart`: Hanya UI Modul 1**Roles:** MANDOR, ASISTEN, ADMIN
+
+- `dashboard_operasional_view.dart`: Hanya UI Modul 2
+
+### Error: "Network error"
+
+### 2. ✅ TEPAT (Akurat)
+
+#### M-2.1: Corong Alur Kerja (Workflow Funnel)**Solusi**: Pastikan backend API sudah running di `http://localhost:3000`
+
+**Prinsip:**
+
+- Logika bisnis 100% akurat
+
+- Formula perhitungan sesuai requirement
+
+- Error handling komprehensifVisual progress tahapan kerja menggunakan **Linear Progress Bars**.### Error: "Endpoint tidak ditemukan (404)"
+
+- Type safety enforced
+
+**Solusi**: Verifikasi bahwa endpoint `GET /api/v1/dashboard/kpi_eksekutif` tersedia di backend
+
+**Implementasi:**
+
+- KRI Kepatuhan SOP: `(value / 75.0).clamp(0.0, 1.0)` - TEPAT!**3 Tahapan Progress:**
+
+- Safe division: `selesai / max(target, 1)` - Prevent div by zero
+
+- Type casting: `as double`, `as int` - Explicit types### Error: "CORS error" (di browser)
+
+- Null checks: `data?['field'] ?? defaultValue` - Null safety
+
+**1. Validasi****Solusi**: Tambahkan CORS middleware di backend Express:
+
+### 3. 📈 PENINGKATAN BERTAHAP (Kaizen)
+
+- **Deskripsi:** Progress validasi lapangan```javascript
+
+**Prinsip:**
+
+- Incremental development (1 feature at a time)- **Visual:** Linear Progress Bar (Blue)app.use(cors({
+
+- Test after each feature
+
+- Commit small, focused changes- **Data:** `validasi_selesai / target_validasi`  origin: 'http://localhost:YOUR_FLUTTER_PORT',
+
+- Build on previous foundation
+
+- **Label:** "Validasi: X dari Y Selesai"  credentials: true
+
+**Implementasi:**
+
+- Fase 1: Config & Service Layer}));
+
+- Fase 2: Modul 1 (M-1.1 → M-1.2)
+
+- Fase 3: RBAC Integration**2. APH (Aplikasi Pupuk Hayati)**```
+
+- Fase 4: Modul 2 (M-2.1 → M-2.2)
+
+- Fase 5: Next modules...- **Deskripsi:** Progress aplikasi pupuk hayati
+
+
+
+---- **Visual:** Linear Progress Bar (Green)### Chart tidak muncul / kosong
+
+
+
+## 🧪 Testing- **Data:** `aph_selesai / target_aph`**Solusi**: 
+
+
+
+### Manual Testing Checklist- **Label:** "APH: X dari Y Selesai"1. Cek response API memiliki data tren
+
+
+
+**Basic Functionality:**2. Cek console untuk error parsing data
+
+- [ ] Aplikasi bisa dijalankan tanpa error
+
+- [ ] Loading state muncul saat fetch data**3. Sanitasi**3. Verifikasi struktur data sesuai format yang diharapkan
+
+- [ ] Error state muncul saat backend offline
+
+- [ ] Data KRI ditampilkan dengan benar- **Deskripsi:** Progress sanitasi pohon
+
+- [ ] Perhitungan persentase KRI Kepatuhan SOP TEPAT
+
+- [ ] Line chart menampilkan tren dengan benar- **Visual:** Linear Progress Bar (Orange)### Indicator persentase tidak akurat
+
+- [ ] Pull-to-refresh berfungsi
+
+- [ ] Tombol refresh di AppBar berfungsi- **Data:** `sanitasi_selesai / target_sanitasi`**Solusi**: Verifikasi formula di `_buildKriCard()`:
+
+- [ ] Responsive di berbagai ukuran layar web
+
+- **Label:** "Sanitasi: X dari Y Selesai"- Untuk Kepatuhan SOP: `percent = (value / target).clamp(0.0, 1.0)`
+
+**RBAC Testing:**
+
+- [ ] 401 error ditampilkan saat token invalid- Pastikan target = 75.0
+
+- [ ] 403 error ditampilkan saat role tidak sesuai
+
+- [ ] Token Bearer dikirim di header**Features:**
+
+- [ ] Expired token dihandle dengan baik
+
+- ✅ Percentage display inside bar## 📝 Next Steps
+
+**Integration Testing:**
+
+- [ ] Service layer memanggil endpoint yang benar- ✅ Animated progress (800ms)
+
+- [ ] Response JSON di-parse dengan benar
+
+- [ ] Error dari backend di-handle dengan baik- ✅ Safe division (prevent div by zero)Setelah Modul 1 selesai, lanjut ke:
+
+- [ ] Timeout handling bekerja
+
+- ✅ Clamped percentage (0-100%)- [ ] **Modul 2**: Dashboard Operasional (M-2.1 & M-2.2)
+
+### Unit Testing (Future)
+
+- [ ] **Modul 3**: Dashboard Teknis (M-3.1 & M-3.2)
+
+```bash
+
+# Run all tests#### M-2.2: Papan Peringkat Tim (Team Leaderboard)- [ ] **Modul 4**: Form SPK (M-4.1 & M-4.2)
+
+flutter test
+
+- [ ] **Authentication**: JWT Login & Token Management
+
+# Run specific test file
+
+flutter test test/services/dashboard_service_test.dartVisual ranking pelaksana menggunakan **DataTable**.- [ ] **State Management**: Provider/Riverpod untuk global state
+
+
+
+# Run with coverage- [ ] **Routing**: Multi-page navigation
+
+flutter test --coverage
+
+```**Columns:**
+
+
+
+---1. **Peringkat**: #1, #2, #3... (generated)## 📞 Support
+
+
+
+## 🐛 Troubleshooting2. **ID Pelaksana**: UUID pelaksana
+
+
+
+### Error: "Network error"3. **Selesai / Total**: "X / Y" formatUntuk pertanyaan atau issue, hubungi tim development atau buat issue di repository.
+
+
+
+**Solusi**: Pastikan backend API sudah running di `http://localhost:3000`4. **Rate (%)**: Performance percentage
+
+
+
+```bash---
+
+# Di terminal backend
+
+npm run dev**Enhanced Features:**
+
+# atau
+
+node index.js- 🥇 **Rank #1**: Gold background + trophy icon**Dibuat dengan Prinsip MPP**: SIMPLE. TEPAT. PENINGKATAN BERTAHAP.
+
+```
+
+- 🥈 **Rank #2**: Silver background + trophy icon
+
+### Error: "Endpoint tidak ditemukan (404)"
+
+- 🥉 **Rank #3**: Bronze background + trophy icon
+
+**Solusi**: Verifikasi bahwa endpoint tersedia di backend- 🎨 **Color-coded Rates**:
+
+  - Green (≥80%): High performance
+
+```bash  - Orange (50-79%): Medium performance
+
+# Test endpoint with curl  - Red (<50%): Low performance
+
+curl http://localhost:3000/api/v1/dashboard/kpi-eksekutif \- 📱 Horizontal scrolling untuk responsiveness
+
+  -H "Authorization: Bearer YOUR_TOKEN"- 📊 Empty state handling
+
+```
+
+---
+
+### Error: "CORS error" (di browser)
+
+## 🔐 Authentication & RBAC
+
+**Solusi**: Tambahkan CORS middleware di backend Express:
+
+### JWT Authentication
+
+```javascript
+
+const cors = require('cors');Semua endpoint dashboard memerlukan **JWT Bearer Token**.
+
+
+
+app.use(cors({#### Generate Token (Development)
+
+  origin: 'http://localhost:YOUR_FLUTTER_PORT',
+
+  credentials: true**Backend Script:**
+
+}));```bash
+
+```# Di backend repository
+
+cd backend
+
+### Chart tidak muncul / kosongnode scripts/generate-token-only.js
+
+
+
+**Solusi**: # Output example:
+
+1. Cek response API memiliki data tren# ==================
+
+2. Cek console untuk error parsing data# ASISTEN Token:
+
+3. Verifikasi struktur data sesuai format yang diharapkan# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# ==================
+
+```dart```
+
+// Debug: Print response
+
+print('Response: $responseBody');**Token Payload Example:**
+
+``````json
+
+{
+
+### Indicator persentase tidak akurat  "id_pihak": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",
+
+  "nama_pihak": "Asisten Citra",
+
+**Solusi**: Verifikasi formula di `_buildKriCard()`:  "role": "ASISTEN",
+
+- Untuk Kepatuhan SOP: `percent = (value / 75.0).clamp(0.0, 1.0)`  "iat": 1762497851,
+
+- Pastikan target = 75.0  "exp": 1763102651
+
+}
+
+### Token expired terus-menerus```
+
+
+
+**Solusi**: Generate token baru dengan expiry lebih lama#### Using Token in Flutter
+
+
+
+```javascript**Option 1: Hardcoded (Development Only)**
+
+// Di backend: scripts/generate-token-only.js```dart
+
+// Ubah expiresIn: '7d' (7 hari)// In dashboard_eksekutif_view.dart or dashboard_operasional_view.dart
+
+const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });static const String _testToken = 'eyJhbGci...';
 
 ``````
 
 
 
-### Run Development Server**Error Responses:**
+---**Option 2: Pass as Parameter (Recommended)**
 
-- **401 Unauthorized**: Token tidak valid atau expired
+```dart
 
-```bash- **403 Forbidden**: User tidak memiliki permission untuk endpoint ini
+## 📝 Next Steps// In main.dart
 
-# Run on Chrome- **404 Not Found**: Endpoint tidak ditemukan
+const String userToken = 'YOUR_JWT_TOKEN';
 
-flutter run -d chrome- **500 Server Error**: Error di backend
+### Roadmap
 
+MaterialApp(
 
+- [ ] **Modul 3**: Dashboard Teknis (M-3.1 & M-3.2)  home: DashboardEksekutifView(token: userToken),
 
-# Run on Edge### Konfigurasi API
+  - M-3.1: Matriks Kebingungan (Confusion Matrix))
 
-flutter run -d edge
+  - M-3.2: Data Distribusi NDRE```
 
-Edit file `lib/config/app_config.dart`:
+  
 
-# Run with custom port
+- [ ] **Modul 4**: Form SPK (M-4.1 & M-4.2)**Option 3: From Auth Provider (Production)**
 
-flutter run -d chrome --web-port=8080```dart
+  - M-4.1: Form Input Surat Perintah Kerja```dart
 
-class AppConfig {
+  - M-4.2: Preview & Submit SPK// TODO: Implement authentication system
 
-# Hot reload: Press 'r' in terminal  // Ganti dengan URL production
+  final authProvider = Provider.of<AuthProvider>(context);
 
-# Hot restart: Press 'R' in terminal  static const String apiBaseUrl = 'https://your-backend-url.com/api/v1';
+- [ ] **Authentication**: JWT Login & Token Managementfinal token = authProvider.token;
 
-```  
+  - Login screen
 
-  // Timeout request (default: 10 detik)
+  - Token storage (SharedPreferences)Navigator.push(
 
-### Build for Production  static const Duration requestTimeout = Duration(seconds: 10);
+  - Auto-refresh token  context,
 
-}
+  - Logout functionality  MaterialPageRoute(
 
-```bash```
+      builder: (_) => DashboardEksekutifView(token: token),
 
-# Build optimized web app
+- [ ] **State Management**: Provider/Riverpod untuk global state  ),
 
-flutter build web --release## 🎨 UI/UX Features
+  - Auth state);
 
+  - Dashboard data caching```
 
+  - User profile management
 
-# Output location: build/web/### Loading State
-
-# Deploy this folder to your web server- Circular Progress Indicator dengan teks "Memuat data KPI..."
-
-
-
-# Build with base href (for subdirectory deployment)### Error Handling (Enhanced untuk RBAC)
-
-flutter build web --base-href /dashboard/- 🔒 **401 Unauthorized**: Orange lock icon + "Silakan Login"
-
-```- 🚫 **403 Forbidden**: Red block icon + "Akses Ditolak"
-
-- Icon error dengan pesan yang jelas
-
----- Tombol "Coba Lagi" untuk retry
-
-- Error messages yang informatif:
-
-## 📊 Features & Modules  - Network error
-
-  - Timeout error
-
-### 🎯 Modul 1: Dashboard Eksekutif  - Server error (5xx)
-
-  - Not found (404)
-
-**Endpoint:** `GET /api/v1/dashboard/kpi-eksekutif` 🔐  - Parse error (invalid JSON)
-
-
-
-**Roles:** ASISTEN, MANAJER, ADMIN### Refresh Data
-
-- Pull-to-refresh gesture
-
-#### M-1.1: Lampu KRI (Key Risk Indicators)- Tombol refresh di AppBar
-
-- Auto-reload saat error recovery
-
-Visual indikator performa menggunakan **Circular Progress Indicators**.
-
-### Responsive Design
-
-**1. KRI Lead Time APH**- Layout adaptif untuk berbagai ukuran layar
-
-- **Deskripsi:** Waktu rata-rata dari deteksi hingga tindakan APH- Card-based design untuk modular components
-
-- **Visual:** Circular Percent Indicator (Orange)- Color-coded indicators:
-
-- **Target:** ≤ 3 hari  - 🟢 Green: Performa baik (≥80%)
-
-- **Formula:** `Σ(tanggal_aph - tanggal_validasi) / jumlah_pohon`  - 🟠 Orange: Performa sedang (60-80%)
-
-- **Interpretasi:** Semakin rendah semakin baik  - 🔴 Red: Performa buruk (<60%)
-
-
-
-**2. KRI Kepatuhan SOP** ⚠️ **CRITICAL**## 📖 Prinsip Development (MPP)
-
-- **Deskripsi:** Persentase kepatuhan pelaksanaan SOP
-
-- **Visual:** Circular Percent Indicator (Green)Semua development mengikuti **3 Prinsip Inti**:
-
-- **Target:** ≥ 75%
-
-- **Formula:** `(Selesai / (Selesai + Dikerjakan)) × 100`### 1. SIMPLE (Sederhana)
-
-- **Perhitungan Display:** `(value / 75.0)` untuk normalisasi ke skala 100%- Kode modular dan mudah dibaca
-
-- **Interpretasi:** - Satu file = satu tanggung jawab
-
-  - 🟢 ≥80%: Excellent- Widget reusable dengan parameter yang jelas
-
-  - 🟠 60-79%: Good
-
-  - 🔴 <60%: Need Improvement### 2. TEPAT (Akurat)
-
-- Logika bisnis 100% akurat
-
-#### M-1.2: Grafik Tren KPI- Error handling komprehensif
-
-- Perhitungan KPI sesuai definisi bisnis
-
-Visual tren historis menggunakan **Line Charts (fl_chart)**.- **KHUSUS**: Formula KRI Kepatuhan SOP harus TEPAT!
-
-
-
-**1. Tren Insidensi Baru (Kasus G1)**### 3. PENINGKATAN BERTAHAP (Kaizen)
-
-- **Deskripsi:** Grafik tren kasus Ganoderma Awal (G1) per bulan- Build secara inkremental
-
-- **Data:** 6 bulan terakhir- 1 fitur = 1 commit yang fokus
-
-- **Warna:** Orange (`#FF9800`)- Verifikasi setiap langkah sebelum lanjut
-
-- **X-Axis:** Periode (YYYY-MM)- No big-bang development
-
-- **Y-Axis:** Jumlah kasus
-
-## 🧪 Testing Checklist
-
-**2. Tren Pohon Mati Aktif (G4)**
-
-- **Deskripsi:** Grafik tren pohon status G4 (Mati) per bulan### Manual Testing
-
-- **Data:** 6 bulan terakhir- [ ] Aplikasi bisa dijalankan tanpa error
-
-- **Warna:** Red (`#F44336`)- [ ] Loading state muncul saat fetch data
-
-- **X-Axis:** Periode (YYYY-MM)- [ ] Error state muncul saat backend offline
-
-- **Y-Axis:** Jumlah pohon- [ ] Data KRI ditampilkan dengan benar
-
-- [ ] Perhitungan persentase KRI Kepatuhan SOP TEPAT
-
-**Features:**- [ ] Line chart menampilkan tren dengan benar
-
-- ✅ Interactive touch tooltips- [ ] Pull-to-refresh berfungsi
-
-- ✅ Grid lines untuk referensi- [ ] Tombol refresh di AppBar berfungsi
-
-- ✅ Responsive chart sizing- [ ] Responsive di berbagai ukuran layar web
-
-- ✅ Animated transitions
-
-### Integration Testing
-
----- [ ] Service layer memanggil endpoint yang benar
-
-- [ ] Response JSON di-parse dengan benar
-
-### 🎯 Modul 2: Dashboard Operasional- [ ] Error dari backend di-handle dengan baik
-
-- [ ] Timeout handling bekerja
-
-**Endpoint:** `GET /api/v1/dashboard/operasional` 🔐
-
-## 🐛 Troubleshooting
-
-**Roles:** MANDOR, ASISTEN, ADMIN
-
-### Error: "Network error"
-
-#### M-2.1: Corong Alur Kerja (Workflow Funnel)**Solusi**: Pastikan backend API sudah running di `http://localhost:3000`
-
-
-
-Visual progress tahapan kerja menggunakan **Linear Progress Bars**.### Error: "Endpoint tidak ditemukan (404)"
-
-**Solusi**: Verifikasi bahwa endpoint `GET /api/v1/dashboard/kpi_eksekutif` tersedia di backend
-
-**3 Tahapan Progress:**
-
-### Error: "CORS error" (di browser)
-
-**1. Validasi****Solusi**: Tambahkan CORS middleware di backend Express:
-
-- **Deskripsi:** Progress validasi lapangan```javascript
-
-- **Visual:** Linear Progress Bar (Blue)app.use(cors({
-
-- **Data:** `validasi_selesai / target_validasi`  origin: 'http://localhost:YOUR_FLUTTER_PORT',
-
-- **Label:** "Validasi: X dari Y Selesai"  credentials: true
-
-}));
-
-**2. APH (Aplikasi Pupuk Hayati)**```
-
-- **Deskripsi:** Progress aplikasi pupuk hayati
-
-- **Visual:** Linear Progress Bar (Green)### Chart tidak muncul / kosong
-
-- **Data:** `aph_selesai / target_aph`**Solusi**: 
-
-- **Label:** "APH: X dari Y Selesai"1. Cek response API memiliki data tren
-
-2. Cek console untuk error parsing data
-
-**3. Sanitasi**3. Verifikasi struktur data sesuai format yang diharapkan
-
-- **Deskripsi:** Progress sanitasi pohon
-
-- **Visual:** Linear Progress Bar (Orange)### Indicator persentase tidak akurat
-
-- **Data:** `sanitasi_selesai / target_sanitasi`**Solusi**: Verifikasi formula di `_buildKriCard()`:
-
-- **Label:** "Sanitasi: X dari Y Selesai"- Untuk Kepatuhan SOP: `percent = (value / target).clamp(0.0, 1.0)`
-
-- Pastikan target = 75.0
-
-**Features:**
-
-- ✅ Percentage display inside bar## 📝 Next Steps
-
-- ✅ Animated progress (800ms)
-
-- ✅ Safe division (prevent div by zero)Setelah Modul 1 selesai, lanjut ke:
-
-- ✅ Clamped percentage (0-100%)- [ ] **Modul 2**: Dashboard Operasional (M-2.1 & M-2.2)
-
-- [ ] **Modul 3**: Dashboard Teknis (M-3.1 & M-3.2)
-
-#### M-2.2: Papan Peringkat Tim (Team Leaderboard)- [ ] **Modul 4**: Form SPK (M-4.1 & M-4.2)
-
-- [ ] **Authentication**: JWT Login & Token Management
-
-Visual ranking pelaksana menggunakan **DataTable**.- [ ] **State Management**: Provider/Riverpod untuk global state
+  ### RBAC Roles & Permissions
 
 - [ ] **Routing**: Multi-page navigation
 
-**Columns:**
+  - Named routes| Role | Dashboard Eksekutif | Dashboard Operasional | Dashboard Teknis | Form SPK |
 
-1. **Peringkat**: #1, #2, #3... (generated)## 📞 Support
+  - Route guards (RBAC)|------|--------------------|-----------------------|------------------|----------|
 
-2. **ID Pelaksana**: UUID pelaksana
+  - Deep linking| **ADMIN** | ✅ Full Access | ✅ Full Access | ✅ Full Access | ✅ Full Access |
 
-3. **Selesai / Total**: "X / Y" formatUntuk pertanyaan atau issue, hubungi tim development atau buat issue di repository.
-
-4. **Rate (%)**: Performance percentage
-
----
-
-**Enhanced Features:**
-
-- 🥇 **Rank #1**: Gold background + trophy icon**Dibuat dengan Prinsip MPP**: SIMPLE. TEPAT. PENINGKATAN BERTAHAP.
-
-- 🥈 **Rank #2**: Silver background + trophy icon
-
-- 🥉 **Rank #3**: Bronze background + trophy icon
-- 🎨 **Color-coded Rates**:
-  - Green (≥80%): High performance
-  - Orange (50-79%): Medium performance
-  - Red (<50%): Low performance
-- 📱 Horizontal scrolling untuk responsiveness
-- 📊 Empty state handling
-
----
-
-## 🔐 Authentication & RBAC
-
-### JWT Authentication
-
-Semua endpoint dashboard memerlukan **JWT Bearer Token**.
-
-#### Generate Token (Development)
-
-**Backend Script:**
-```bash
-# Di backend repository
-cd backend
-node scripts/generate-token-only.js
-
-# Output example:
-# ==================
-# ASISTEN Token:
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-# ==================
-```
-
-**Token Payload Example:**
-```json
-{
-  "id_pihak": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",
-  "nama_pihak": "Asisten Citra",
-  "role": "ASISTEN",
-  "iat": 1762497851,
-  "exp": 1763102651
-}
-```
-
-#### Using Token in Flutter
-
-**Option 1: Hardcoded (Development Only)**
-```dart
-// In dashboard_eksekutif_view.dart or dashboard_operasional_view.dart
-static const String _testToken = 'eyJhbGci...';
-```
-
-**Option 2: Pass as Parameter (Recommended)**
-```dart
-// In main.dart
-const String userToken = 'YOUR_JWT_TOKEN';
-
-MaterialApp(
-  home: DashboardEksekutifView(token: userToken),
-)
-```
-
-**Option 3: From Auth Provider (Production)**
-```dart
-// TODO: Implement authentication system
-final authProvider = Provider.of<AuthProvider>(context);
-final token = authProvider.token;
-
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => DashboardEksekutifView(token: token),
-  ),
-);
-```
-
-### RBAC Roles & Permissions
-
-| Role | Dashboard Eksekutif | Dashboard Operasional | Dashboard Teknis | Form SPK |
-|------|--------------------|-----------------------|------------------|----------|
-| **ADMIN** | ✅ Full Access | ✅ Full Access | ✅ Full Access | ✅ Full Access |
 | **MANAJER** | ✅ Read Only | ❌ No Access | ✅ Read Only | ❌ No Access |
-| **ASISTEN** | ✅ Read Only | ✅ Read Only | ✅ Read Only | ✅ Create/Edit |
+
+### Immediate Tasks| **ASISTEN** | ✅ Read Only | ✅ Read Only | ✅ Read Only | ✅ Create/Edit |
+
 | **MANDOR** | ❌ No Access | ✅ Read Only | ❌ No Access | ✅ Create Only |
 
-### Error Handling
+1. **Integration Testing** dengan backend live
 
-**401 Unauthorized** 🔒
+2. **Performance Optimization** untuk large datasets### Error Handling
+
+3. **Accessibility** improvements
+
+4. **Documentation** lengkap untuk setiap modul**401 Unauthorized** 🔒
+
 - **Icon:** Orange lock (`Icons.lock_outline`)
-- **Title:** "Silakan Login"
+
+---- **Title:** "Silakan Login"
+
 - **Message:** "Token tidak valid atau sudah kadaluarsa (401)"
-- **Action:** Redirect to login (future) or retry
 
-**403 Forbidden** 🚫
+## 🤝 Contributing- **Action:** Redirect to login (future) or retry
+
+
+
+### Git Workflow**403 Forbidden** 🚫
+
 - **Icon:** Red block (`Icons.block`)
-- **Title:** "Akses Ditolak"
-- **Message:** "Anda tidak memiliki izin untuk mengakses data ini (403)"
-- **Action:** Show error, provide back navigation
 
-**Other Errors** ❌
-- Network errors
+```bash- **Title:** "Akses Ditolak"
+
+# Create feature branch- **Message:** "Anda tidak memiliki izin untuk mengakses data ini (403)"
+
+git checkout -b feature/module-3-dashboard-teknis- **Action:** Show error, provide back navigation
+
+
+
+# Make changes, test thoroughly**Other Errors** ❌
+
+flutter test- Network errors
+
 - Timeout (10 seconds)
-- Server errors (5xx)
-- Parse errors (invalid JSON)
+
+# Commit with descriptive message- Server errors (5xx)
+
+git add .- Parse errors (invalid JSON)
+
+git commit -m "feat: Implement M-3.1 Matriks Kebingungan"
 
 ---
 
-## 📖 Development Principles (MPP)
+# Push to remote
 
-Semua development mengikuti **Metode Pengembangan POAC (MPP)**:
+git push origin feature/module-3-dashboard-teknis## 📖 Development Principles (MPP)
+
+
+
+# Create Pull Request on GitHubSemua development mengikuti **Metode Pengembangan POAC (MPP)**:
+
+```
 
 ### 1. 🎯 SIMPLE (Sederhana)
 
+### Commit Message Convention
+
 **Prinsip:**
-- Kode mudah dibaca dan dipahami
+
+**Format:** `<type>: <subject>`- Kode mudah dibaca dan dipahami
+
 - Satu file = satu tanggung jawab (SRP)
-- Widget kecil dan reusable
-- Minimal dependencies
 
-### 2. ✅ TEPAT (Akurat)
+**Types:**- Widget kecil dan reusable
 
-**Prinsip:**
-- Logika bisnis 100% akurat
-- Formula perhitungan sesuai requirement
+- `feat`: New feature- Minimal dependencies
+
+- `fix`: Bug fix
+
+- `docs`: Documentation only### 2. ✅ TEPAT (Akurat)
+
+- `style`: Code style (formatting, semicolons, etc)
+
+- `refactor`: Code refactoring (no functionality change)**Prinsip:**
+
+- `test`: Adding tests- Logika bisnis 100% akurat
+
+- `chore`: Maintenance tasks (dependencies, config, etc)- Formula perhitungan sesuai requirement
+
 - Error handling komprehensif
-- Type safety enforced
 
-### 3. 📈 PENINGKATAN BERTAHAP (Kaizen)
+**Examples:**- Type safety enforced
 
-**Prinsip:**
-- Incremental development (1 feature at a time)
-- Test after each feature
+```bash
+
+git commit -m "feat: Add M-2.1 Corong Alur Kerja"### 3. 📈 PENINGKATAN BERTAHAP (Kaizen)
+
+git commit -m "fix: Correct KRI Kepatuhan SOP formula"
+
+git commit -m "docs: Update API integration guide"**Prinsip:**
+
+git commit -m "refactor: Extract chart widget to separate file"- Incremental development (1 feature at a time)
+
+```- Test after each feature
+
 - Commit small, focused changes
-- Build on previous foundation
 
----
+### Code Style- Build on previous foundation
 
-## 🤝 Contributing
+
+
+- Follow [Dart Style Guide](https://dart.dev/guides/language/effective-dart)---
+
+- Use `flutter analyze` before committing
+
+- Format code with `dart format .`## 🤝 Contributing
+
+- Add meaningful comments for complex logic
 
 ### Git Workflow
 
-```bash
-# Create feature branch
-git checkout -b feature/module-3-dashboard-teknis
-
-# Make changes, test thoroughly
-flutter test
-
-# Commit with descriptive message
-git add .
-git commit -m "feat: Implement M-3.1 Matriks Kebingungan"
-
-# Push to remote
-git push origin feature/module-3-dashboard-teknis
-```
-
-### Commit Message Convention
-
-**Format:** `<type>: <subject>`
-
-**Types:**
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation only
-- `style`: Code style
-- `refactor`: Code refactoring
-- `test`: Adding tests
-- `chore`: Maintenance tasks
-
 ---
 
-## 📞 Support & Contact
+```bash
+
+## 📞 Support & Contact# Create feature branch
+
+git checkout -b feature/module-3-dashboard-teknis
 
 **Resources:**
+
+- **GitHub Repository**: https://github.com/mastoroshadiq-prog/frontend-poac.git# Make changes, test thoroughly
+
+- **Issues**: Report bugs atau request features via GitHub Issuesflutter test
+
+- **Documentation**: Lihat folder `context/` untuk dokumentasi teknis
+
+# Commit with descriptive message
+
+**Team:**git add .
+
+- Frontend Developer: [Your Name]git commit -m "feat: Implement M-3.1 Matriks Kebingungan"
+
+- Backend Developer: [Backend Team]
+
+- Product Owner: [PO Name]# Push to remote
+
+git push origin feature/module-3-dashboard-teknis
+
+---```
+
+
+
+## 📄 License### Commit Message Convention
+
+
+
+MIT License - See [LICENSE](LICENSE) file for details.**Format:** `<type>: <subject>`
+
+
+
+---**Types:**
+
+- `feat`: New feature
+
+## 🙏 Acknowledgments- `fix`: Bug fix
+
+- `docs`: Documentation only
+
+Terima kasih kepada semua yang berkontribusi dalam pengembangan sistem POAC ini.- `style`: Code style
+
+- `refactor`: Code refactoring
+
+**Built with ❤️ following MPP Principles:**  - `test`: Adding tests
+
+**SIMPLE. TEPAT. PENINGKATAN BERTAHAP.**- `chore`: Maintenance tasks
+
+
+
+------
+
+
+
+**Version:** 1.0.0  ## 📞 Support & Contact
+
+**Last Updated:** November 7, 2025  
+
+**Status:** ✅ Modul 1 & 2 Complete - Ready for Integration Testing**Resources:**
+
 - **GitHub Repository**: https://github.com/mastoroshadiq-prog/frontend-poac.git
 - **Backend Repository**: [Link]
 - **API Documentation**: [Link]
