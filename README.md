@@ -1,9 +1,4 @@
-Siap. Ini dia konten mentah (`raw`) dari file `README.md` yang sudah dirapikan.
-
-Anda bisa langsung menyalin semua teks di dalam blok di bawah ini dan menyimpannya sebagai file `.md`.
-
-````markdown
-# Frontend POAC - Aplikasi Manajemen Perkebunan
+# 🌴 Frontend POAC - Aplikasi Manajemen Perkebunan
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
