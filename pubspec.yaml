@@ -43,6 +43,9 @@ dependencies:
   
   # Package untuk indikator persentase circular
   percent_indicator: ^4.2.3
+  
+  # Supabase client untuk authentication
+  supabase_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
