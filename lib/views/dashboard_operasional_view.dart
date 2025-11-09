@@ -370,7 +370,7 @@ class _DashboardOperasionalViewState extends State<DashboardOperasionalView> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  headingRowColor: MaterialStateProperty.resolveWith(
+                  headingRowColor: WidgetStateProperty.resolveWith(
                     (states) => Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   ),
                   columnSpacing: 30,
@@ -423,7 +423,7 @@ class _DashboardOperasionalViewState extends State<DashboardOperasionalView> {
                       }
 
                       return DataRow(
-                        color: MaterialStateProperty.resolveWith(
+                        color: WidgetStateProperty.resolveWith(
                           (states) => rowColor,
                         ),
                         cells: [

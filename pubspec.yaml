@@ -46,6 +46,9 @@ dependencies:
   
   # Supabase client untuk authentication
   supabase_flutter: ^2.0.0
+  
+  # Package untuk format tanggal (date formatting)
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

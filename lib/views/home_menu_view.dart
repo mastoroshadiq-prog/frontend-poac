@@ -4,6 +4,7 @@ import '../services/auth_service.dart';
 import 'dashboard_eksekutif_view.dart';
 import 'dashboard_operasional_view.dart';
 import 'dashboard_teknis_view.dart';
+import 'spk_create_view.dart';
 
 /// Halaman menu utama setelah login
 /// Menampilkan dashboard yang dapat diakses sesuai role
@@ -230,6 +231,23 @@ class HomeMenuView extends StatelessWidget {
                                 builder: (context) => DashboardTeknisView(
                                   token: session.token,
                                 ),
+                              ),
+                            );
+                          },
+                        ),
+                      // SPK Management Card (ASISTEN & ADMIN only)
+                      if (['ASISTEN', 'ADMIN'].contains(session.role))
+                        _buildDashboardCard(
+                          context,
+                          title: 'Buat SPK',
+                          subtitle: 'Planning & Organizing',
+                          icon: Icons.assignment_add,
+                          color: Colors.orange,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SPKCreateView(),
                               ),
                             );
                           },

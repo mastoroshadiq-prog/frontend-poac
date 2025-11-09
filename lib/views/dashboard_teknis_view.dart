@@ -14,9 +14,9 @@ class DashboardTeknisView extends StatefulWidget {
   final String token;
 
   const DashboardTeknisView({
-    Key? key,
+    super.key,
     required this.token,
-  }) : super(key: key);
+  });
 
   @override
   State<DashboardTeknisView> createState() => _DashboardTeknisViewState();
