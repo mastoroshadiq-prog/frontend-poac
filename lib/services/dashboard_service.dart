@@ -1,12 +1,131 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config/app_config.dart';
+import '../config/supabase_config.dart';
+import '../models/eksekutif_poac_data.dart';
 
 /// Service class untuk mengelola API calls ke Dashboard Backend
 /// Sesuai Prinsip MPP: SIMPLE, TEPAT, PENINGKATAN BERTAHAP
 class DashboardService {
   // Base URL Backend API dari AppConfig
   static String get baseUrl => AppConfig.apiBaseUrl;
+
+  /// [INTERNAL] Helper untuk mendapatkan JWT token dari Supabase session
+  /// 
+  /// Throws: Exception jika session tidak ditemukan atau token null
+  String _getAuthToken() {
+    final session = SupabaseConfig.client.auth.currentSession;
+    if (session == null) {
+      throw Exception('Sesi login tidak ditemukan. Silakan login kembali.');
+    }
+    return session.accessToken;
+  }
+
+  /// [REFACTOR FRONTEND #1] Fetch data gabungan untuk Dashboard Eksekutif POAC
+  /// 
+  /// Menggabungkan data dari 2 endpoint secara PARALEL:
+  /// 1. GET /dashboard/kpi-eksekutif (untuk kuadran C - Control & P - Plan)
+  /// 2. GET /dashboard/operasional (untuk kuadran O - Organize & A - Actuate)
+  /// 
+  /// RBAC: Memerlukan role ASISTEN atau ADMIN
+  /// 
+  /// Returns: EksekutifPOACData yang berisi kedua set data
+  /// 
+  /// Throws:
+  ///   - Exception('Sesi login tidak ditemukan') jika tidak ada session
+  ///   - Exception('Akses Ditolak') jika 403 Forbidden pada salah satu endpoint
+  ///   - Exception('Silakan Login') jika 401 Unauthorized pada salah satu endpoint
+  Future<EksekutifPOACData> fetchEksekutifPOACData() async {
+    try {
+      // Step 1: Dapatkan token dari Supabase session
+      final token = _getAuthToken();
+
+      // Step 2: Panggil KEDUA endpoint secara PARALEL menggunakan Future.wait
+      final results = await Future.wait([
+        _fetchKpiEksekutifRaw(token),
+        _fetchDashboardOperasionalRaw(token),
+      ]);
+
+      // Step 3: Extract hasil dari kedua panggilan
+      final kpiData = results[0];
+      final operasionalData = results[1];
+
+      // Step 4: Kembalikan model data gabungan
+      return EksekutifPOACData(
+        kpiData: kpiData,
+        operasionalData: operasionalData,
+      );
+    } catch (e) {
+      // Preserve specific error messages
+      rethrow;
+    }
+  }
+
+  /// [INTERNAL] Raw fetch untuk KPI Eksekutif (tanpa extract dari wrapper)
+  /// Digunakan oleh fetchEksekutifPOACData untuk parallel fetching
+  Future<Map<String, dynamic>> _fetchKpiEksekutifRaw(String token) async {
+    try {
+      final uri = Uri.parse('$baseUrl/dashboard/kpi-eksekutif');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(AppConfig.requestTimeout);
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body) as Map<String, dynamic>;
+        // Extract data dari wrapper
+        if (responseBody.containsKey('data') && responseBody['data'] is Map) {
+          return responseBody['data'] as Map<String, dynamic>;
+        }
+        return responseBody;
+      } else if (response.statusCode == 401) {
+        throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');
+      } else if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak: Anda tidak memiliki izin untuk mengakses Dashboard Eksekutif (403)');
+      } else {
+        throw Exception('Request gagal (${response.statusCode}): ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// [INTERNAL] Raw fetch untuk Dashboard Operasional (tanpa extract dari wrapper)
+  /// Digunakan oleh fetchEksekutifPOACData untuk parallel fetching
+  Future<Map<String, dynamic>> _fetchDashboardOperasionalRaw(String token) async {
+    try {
+      final uri = Uri.parse('$baseUrl/dashboard/operasional');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(AppConfig.requestTimeout);
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body) as Map<String, dynamic>;
+        // Extract data dari wrapper
+        if (responseBody.containsKey('data') && responseBody['data'] is Map) {
+          return responseBody['data'] as Map<String, dynamic>;
+        }
+        return responseBody;
+      } else if (response.statusCode == 401) {
+        throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');
+      } else if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak: Anda tidak memiliki izin untuk mengakses Dashboard Operasional (403)');
+      } else {
+        throw Exception('Request gagal (${response.statusCode}): ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   /// Fetch KPI Eksekutif dari Backend (dengan JWT Authentication)
   /// 

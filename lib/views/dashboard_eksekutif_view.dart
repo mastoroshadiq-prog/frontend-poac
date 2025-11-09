@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../services/dashboard_service.dart';
+import '../models/eksekutif_poac_data.dart';
 
-/// Dashboard Eksekutif View - Modul 1 (RBAC Enabled)
-/// Menampilkan KPI Eksekutif (M-1.1 & M-1.2)
+/// Dashboard Eksekutif View - REFACTOR #1: Intelijen POAC Penuh
+/// Menampilkan ringkasan 4 Kuadran: PLAN, ORGANIZE, ACTUATE, CONTROL
 /// 
-/// Fitur:
-/// - M-1.1: Lampu KRI (2 Indikator Persentase Circular)
-/// - M-1.2: Grafik Tren KPI (2 Line Charts)
+/// Data Source:
+/// - Kuadran P & C: GET /dashboard/kpi-eksekutif
+/// - Kuadran O & A: GET /dashboard/operasional
 /// 
-/// RBAC FASE 2: View ini sekarang memerlukan JWT token untuk autentikasi
+/// RBAC: Memerlukan role ASISTEN atau ADMIN
 class DashboardEksekutifView extends StatefulWidget {
-  /// JWT Token untuk autentikasi
-  /// Untuk testing, bisa hardcode token dari generate-token-only.js
-  /// Untuk production, token akan datang dari login/auth provider
+  /// JWT Token untuk autentikasi (opsional, akan diambil dari Supabase session)
   final String? token;
 
   const DashboardEksekutifView({
@@ -28,28 +27,19 @@ class DashboardEksekutifView extends StatefulWidget {
 
 class _DashboardEksekutifViewState extends State<DashboardEksekutifView> {
   final DashboardService _dashboardService = DashboardService();
-  late Future<Map<String, dynamic>> _kpiDataFuture;
-
-  // TODO: Ganti dengan token dari auth provider di production
-  // Token ini adalah contoh dari generate-token-only.js untuk role ASISTEN
-  // Token ini hanya untuk TESTING
-  static const String _testToken = 
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9waWhhayI6ImEwZWViYzk5LTljMGItNGVmOC1iYjZkLTZiYjliZDM4MGExMiIsIm5hbWFfcGloYWsiOiJBc2lzdGVuIENpdHJhIiwicm9sZSI6IkFTSVNURU4iLCJpYXQiOjE3NjI0OTc4NTEsImV4cCI6MTc2MzEwMjY1MX0.P3LEHAjj0iVrc_RtOqYfYsBK8k9RS5ZYfmyQKMiPgQc';
+  late Future<EksekutifPOACData> _poacDataFuture;
 
   @override
   void initState() {
     super.initState();
-    // Load data KPI saat widget pertama kali dibuat
-    // Gunakan token dari widget parameter atau fallback ke test token
-    final authToken = widget.token ?? _testToken;
-    _kpiDataFuture = _dashboardService.fetchKpiEksekutif(authToken);
+    // Load data POAC gabungan saat widget pertama kali dibuat
+    _poacDataFuture = _dashboardService.fetchEksekutifPOACData();
   }
 
-  /// Refresh data KPI (bisa dipanggil dari pull-to-refresh)
+  /// Refresh data POAC (pull-to-refresh)
   void _refreshData() {
     setState(() {
-      final authToken = widget.token ?? _testToken;
-      _kpiDataFuture = _dashboardService.fetchKpiEksekutif(authToken);
+      _poacDataFuture = _dashboardService.fetchEksekutifPOACData();
     });
   }
 
@@ -57,7 +47,7 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard Eksekutif'),
+        title: const Text('Dashboard Eksekutif - Intelijen POAC'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
@@ -67,8 +57,8 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView> {
           ),
         ],
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: _kpiDataFuture,
+      body: FutureBuilder<EksekutifPOACData>(
+        future: _poacDataFuture,
         builder: (context, snapshot) {
           // Loading state
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -78,17 +68,16 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView> {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text('Memuat data KPI...'),
+                  Text('Memuat data POAC...'),
                 ],
               ),
             );
           }
 
-          // Error state (ENHANCED untuk RBAC)
+          // Error state (RBAC errors)
           if (snapshot.hasError) {
             final errorMessage = snapshot.error.toString();
             
-            // Detect authentication/authorization errors
             IconData errorIcon;
             Color errorColor;
             String errorTitle;
@@ -144,27 +133,630 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView> {
             );
           }
 
-          // Success state - Render data
+          // Success state - Render 4 Kuadran POAC
           if (!snapshot.hasData) {
             return const Center(
               child: Text('Tidak ada data'),
             );
           }
 
-          final data = snapshot.data!;
-          return _buildDashboardContent(data);
+          final poacData = snapshot.data!;
+          return _buildDashboardPOAC(poacData);
         },
       ),
     );
   }
 
-  /// Build konten dashboard dengan data KPI
+  /// Build konten dashboard dengan 4 Kuadran POAC
+  Widget _buildDashboardPOAC(EksekutifPOACData poacData) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        _refreshData();
+        // Tunggu future selesai
+        await _poacDataFuture;
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16.0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Responsive: GridView untuk desktop, Column untuk mobile
+            if (constraints.maxWidth > 800) {
+              // Desktop: 2x2 Grid
+              return GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.2,
+                children: [
+                  _buildKuadranPlan(poacData),
+                  _buildKuadranOrganize(poacData),
+                  _buildKuadranActuate(poacData),
+                  _buildKuadranControl(poacData),
+                ],
+              );
+            } else {
+              // Mobile: Column
+              return Column(
+                children: [
+                  _buildKuadranPlan(poacData),
+                  const SizedBox(height: 16),
+                  _buildKuadranOrganize(poacData),
+                  const SizedBox(height: 16),
+                  _buildKuadranActuate(poacData),
+                  const SizedBox(height: 16),
+                  _buildKuadranControl(poacData),
+                ],
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  /// KUADRAN P (PLAN) - Target & Progress
+  Widget _buildKuadranPlan(EksekutifPOACData poacData) {
+    final double kepatuhanSop = poacData.kriKepatuhanSop;
+    const double targetSop = 90.0; // HARDCODED as per business rule
+
+    // Extract planning execution data from data_corong
+    final corong = poacData.dataCorong;
+    final targetVal = (corong['target_validasi'] as num?)?.toInt() ?? 0;
+    final selesaiVal = (corong['selesai_validasi'] as num?)?.toInt() ?? 0;
+    final targetAph = (corong['target_aph'] as num?)?.toInt() ?? 0;
+    final selesaiAph = (corong['selesai_aph'] as num?)?.toInt() ?? 0;
+    final targetSan = (corong['target_sanitasi'] as num?)?.toInt() ?? 0;
+    final selesaiSan = (corong['selesai_sanitasi'] as num?)?.toInt() ?? 0;
+
+    final totalTarget = targetVal + targetAph + targetSan;
+    final totalSelesai = selesaiVal + selesaiAph + selesaiSan;
+    final overallProgress = totalTarget > 0 ? (totalSelesai / totalTarget * 100) : 0.0;
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.flag, color: Colors.blue.shade700),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'P (PLAN) - Target & Progress',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // SOP Compliance Gauge (Existing)
+                    Center(
+                      child: CircularPercentIndicator(
+                        radius: 50.0,
+                        lineWidth: 10.0,
+                        percent: kepatuhanSop / 100.0,
+                        center: Text(
+                          '${kepatuhanSop.toStringAsFixed(1)}%',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        progressColor: kepatuhanSop >= targetSop ? Colors.green : Colors.orange,
+                        backgroundColor: Colors.grey.shade200,
+                        circularStrokeCap: CircularStrokeCap.round,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Center(
+                      child: Text(
+                        'Kepatuhan SOP',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue.shade200),
+                        ),
+                        child: Text(
+                          'Target: ${targetSop.toStringAsFixed(1)}%',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade700,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    const Divider(),
+                    const SizedBox(height: 12),
+                    
+                    // Planning Execution Section
+                    const Row(
+                      children: [
+                        Icon(Icons.assignment_outlined, size: 16, color: Colors.black87),
+                        SizedBox(width: 6),
+                        Text(
+                          'PLANNING EXECUTION',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    
+                    // Progress Bars
+                    _buildPlanProgressRow('Validasi', selesaiVal, targetVal, Colors.blue),
+                    const SizedBox(height: 10),
+                    _buildPlanProgressRow('APH', selesaiAph, targetAph, Colors.green),
+                    const SizedBox(height: 10),
+                    _buildPlanProgressRow('Sanitasi', selesaiSan, targetSan, Colors.purple),
+                    
+                    const SizedBox(height: 16),
+                    const Divider(),
+                    const SizedBox(height: 12),
+                    
+                    // Summary Cards
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: _buildPlanMiniCard(
+                            'Total',
+                            totalTarget.toString(),
+                            Icons.list_alt,
+                            Colors.blue,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildPlanMiniCard(
+                            'Done',
+                            totalSelesai.toString(),
+                            Icons.check_circle,
+                            Colors.green,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildPlanMiniCard(
+                            'Progress',
+                            '${overallProgress.toStringAsFixed(0)}%',
+                            Icons.trending_up,
+                            Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Helper: Build Planning Progress Row (Linear Progress Bar)
+  Widget _buildPlanProgressRow(String label, int selesai, int target, Color color) {
+    final percent = target > 0 ? selesai / target : 0.0;
+    final percentText = (percent * 100).toStringAsFixed(0);
+    
+    // Status icon
+    IconData statusIcon;
+    Color statusColor;
+    if (percent >= 1.0) {
+      statusIcon = Icons.check_circle;
+      statusColor = Colors.green;
+    } else if (percent >= 0.5) {
+      statusIcon = Icons.warning_amber_rounded;
+      statusColor = Colors.orange;
+    } else {
+      statusIcon = Icons.error_outline;
+      statusColor = Colors.red;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(statusIcon, size: 14, color: statusColor),
+                const SizedBox(width: 6),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              '$percentText% ($selesai/$target)',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: percent,
+            backgroundColor: Colors.grey.shade200,
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 6,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Helper: Build Planning Mini Card
+  Widget _buildPlanMiniCard(String label, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// KUADRAN O (ORGANIZE) - Work in Progress
+  Widget _buildKuadranOrganize(EksekutifPOACData poacData) {
+    final int totalSpk = poacData.totalSpkAktif;
+    final int tugasDikerjakan = poacData.tugasDikerjakan;
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.work, color: Colors.orange.shade700),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'O (ORGANIZE) - WIP',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildStatTile(
+                    icon: Icons.assignment,
+                    label: 'Total SPK Aktif',
+                    value: totalSpk.toString(),
+                    color: Colors.orange,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildStatTile(
+                    icon: Icons.hourglass_empty,
+                    label: 'Tugas "DIKERJAKAN"',
+                    value: tugasDikerjakan.toString(),
+                    color: Colors.amber,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// KUADRAN A (ACTUATE) - Aktivitas Lapangan
+  Widget _buildKuadranActuate(EksekutifPOACData poacData) {
+    final int pelaksanaAktif = poacData.pelaksanaAktif;
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.people, color: Colors.green.shade700),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'A (ACTUATE) - Aktivitas',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Center(
+                child: _buildStatTile(
+                  icon: Icons.groups,
+                  label: 'Pelaksana Aktif',
+                  value: pelaksanaAktif.toString(),
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// KUADRAN C (CONTROL) - Hasil & Dampak
+  Widget _buildKuadranControl(EksekutifPOACData poacData) {
+    final double leadTimeAph = poacData.kriLeadTimeAph;
+    final List<Map<String, dynamic>> trenInsidensi = poacData.trenInsidensiBaru;
+    final List<Map<String, dynamic>> trenG4 = poacData.trenG4Aktif;
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.analytics, color: Colors.purple.shade700),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'C (CONTROL) - Hasil',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Lead Time APH
+                    Center(
+                      child: CircularPercentIndicator(
+                        radius: 40.0,
+                        lineWidth: 8.0,
+                        percent: (3.0 - leadTimeAph).clamp(0.0, 3.0) / 3.0,
+                        center: Text(
+                          '${leadTimeAph.toStringAsFixed(1)}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        footer: const Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            'Lead Time APH (hari)',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        progressColor: leadTimeAph <= 3.0 ? Colors.green : Colors.red,
+                        backgroundColor: Colors.grey.shade200,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Mini Tren Charts
+                    if (trenInsidensi.isNotEmpty)
+                      _buildMiniTrendChart('Tren Insidensi', trenInsidensi, Colors.red),
+                    if (trenG4.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _buildMiniTrendChart('Tren G4 Aktif', trenG4, Colors.orange),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Helper: Build Stat Tile
+  Widget _buildStatTile({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 32),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Helper: Build Mini Trend Chart
+  Widget _buildMiniTrendChart(String title, List<Map<String, dynamic>> data, Color color) {
+    if (data.isEmpty) return const SizedBox.shrink();
+
+    final spots = data.asMap().entries.map((entry) {
+      final nilai = (entry.value['nilai'] as num?)?.toDouble() ?? 0.0;
+      return FlSpot(entry.key.toDouble(), nilai);
+    }).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: 60,
+          child: LineChart(
+            LineChartData(
+              gridData: const FlGridData(show: false),
+              titlesData: const FlTitlesData(show: false),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: spots,
+                  isCurved: true,
+                  color: color,
+                  barWidth: 2,
+                  dotData: const FlDotData(show: false),
+                ),
+              ],
+              minY: 0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build konten dashboard dengan data KPI (OLD - DEPRECATED, NOT USED)
+  // ignore: unused_element
   Widget _buildDashboardContent(Map<String, dynamic> data) {
     return RefreshIndicator(
       onRefresh: () async {
         _refreshData();
         // Tunggu future selesai
-        await _kpiDataFuture;
+        await _poacDataFuture;
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
