@@ -84,4 +84,163 @@ class EksekutifPOACData {
   int get pelaksanaAktif {
     return dataPapanPeringkat.length;
   }
+
+  // ========== ENHANCEMENT HELPERS (New API Fields) ==========
+
+  /// Helper: Get Tren Kepatuhan SOP (Plan - NEW)
+  List<Map<String, dynamic>> get trenKepatuhanSop {
+    final tren = kpiData['tren_kepatuhan_sop'];
+    if (tren is List) {
+      return tren.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Planning Accuracy (Plan - NEW)
+  Map<String, dynamic> get planningAccuracy {
+    final accuracy = kpiData['planning_accuracy'];
+    if (accuracy is Map<String, dynamic>) {
+      return accuracy;
+    }
+    return {
+      'last_month': {
+        'target_completion': 0,
+        'actual_completion': 0,
+        'accuracy_percentage': 0.0,
+      },
+      'current_month': {
+        'target_completion': 0,
+        'actual_completion': 0,
+        'accuracy_percentage': 0.0,
+        'projected_final_accuracy': 0.0,
+      },
+    };
+  }
+
+  /// Helper: Calculate SOP Velocity (Plan - Calculated)
+  /// Returns velocity in percentage points per week (can be negative)
+  double get sopVelocity {
+    final tren = trenKepatuhanSop;
+    if (tren.length < 2) return 0.0;
+    
+    final latest = (tren.last['nilai'] as num?)?.toDouble() ?? 0.0;
+    final previous = (tren[tren.length - 2]['nilai'] as num?)?.toDouble() ?? 0.0;
+    return latest - previous;
+  }
+
+  /// Helper: Calculate weeks to target 90% SOP (Plan - Calculated)
+  /// Returns null if velocity is 0 or negative
+  int? get weeksToTarget90 {
+    final current = kriKepatuhanSop;
+    final velocity = sopVelocity;
+    
+    if (velocity <= 0 || current >= 90.0) return null;
+    
+    final gap = 90.0 - current;
+    return (gap / velocity).ceil();
+  }
+
+  // ========== DEADLINE HELPERS (Organize - NEW) ==========
+
+  /// Helper: Get Deadline Validasi (nullable)
+  DateTime? get deadlineValidasi {
+    final deadline = dataCorong['deadline_validasi'];
+    if (deadline == null || deadline == 'null') return null;
+    try {
+      return DateTime.parse(deadline);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Helper: Get Deadline APH (nullable)
+  DateTime? get deadlineAph {
+    final deadline = dataCorong['deadline_aph'];
+    if (deadline == null || deadline == 'null') return null;
+    try {
+      return DateTime.parse(deadline);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Helper: Get Deadline Sanitasi (nullable)
+  DateTime? get deadlineSanitasi {
+    final deadline = dataCorong['deadline_sanitasi'];
+    if (deadline == null || deadline == 'null') return null;
+    try {
+      return DateTime.parse(deadline);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Helper: Calculate days until deadline (negative if overdue)
+  int? daysUntilDeadline(DateTime? deadline) {
+    if (deadline == null) return null;
+    return deadline.difference(DateTime.now()).inDays;
+  }
+
+  // ========== RISK LEVEL HELPERS (Organize - NEW) ==========
+
+  /// Helper: Get Risk Level Validasi
+  String get riskLevelValidasi {
+    return dataCorong['risk_level_validasi'] ?? 'LOW';
+  }
+
+  /// Helper: Get Risk Level APH
+  String get riskLevelAph {
+    return dataCorong['risk_level_aph'] ?? 'LOW';
+  }
+
+  /// Helper: Get Risk Level Sanitasi
+  String get riskLevelSanitasi {
+    return dataCorong['risk_level_sanitasi'] ?? 'LOW';
+  }
+
+  // ========== BLOCKER HELPERS (Organize - NEW) ==========
+
+  /// Helper: Get Blockers Validasi
+  List<String> get blockersValidasi {
+    final blockers = dataCorong['blockers_validasi'];
+    if (blockers is List) {
+      return blockers.cast<String>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Blockers APH
+  List<String> get blockersAph {
+    final blockers = dataCorong['blockers_aph'];
+    if (blockers is List) {
+      return blockers.cast<String>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Blockers Sanitasi
+  List<String> get blockersSanitasi {
+    final blockers = dataCorong['blockers_sanitasi'];
+    if (blockers is List) {
+      return blockers.cast<String>();
+    }
+    return [];
+  }
+
+  // ========== RESOURCE ALLOCATION HELPERS (Organize - NEW) ==========
+
+  /// Helper: Get Pelaksana Assigned to Validasi
+  int get pelaksanaAssignedValidasi {
+    return (dataCorong['pelaksana_assigned_validasi'] as num?)?.toInt() ?? 0;
+  }
+
+  /// Helper: Get Pelaksana Assigned to APH
+  int get pelaksanaAssignedAph {
+    return (dataCorong['pelaksana_assigned_aph'] as num?)?.toInt() ?? 0;
+  }
+
+  /// Helper: Get Pelaksana Assigned to Sanitasi
+  int get pelaksanaAssignedSanitasi {
+    return (dataCorong['pelaksana_assigned_sanitasi'] as num?)?.toInt() ?? 0;
+  }
 }

@@ -66,6 +66,8 @@ class DashboardService {
   Future<Map<String, dynamic>> _fetchKpiEksekutifRaw(String token) async {
     try {
       final uri = Uri.parse('$baseUrl/dashboard/kpi-eksekutif');
+      print('🔍 [DEBUG] Fetching KPI Eksekutif from: $uri');
+      
       final response = await http.get(
         uri,
         headers: {
@@ -75,12 +77,17 @@ class DashboardService {
         },
       ).timeout(AppConfig.requestTimeout);
 
+      print('🔍 [DEBUG] KPI Eksekutif Response Status: ${response.statusCode}');
+      print('🔍 [DEBUG] KPI Eksekutif Response Body (first 500 chars): ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)}');
+
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
         // Extract data dari wrapper
         if (responseBody.containsKey('data') && responseBody['data'] is Map) {
+          print('✅ [DEBUG] KPI Eksekutif data extracted successfully');
           return responseBody['data'] as Map<String, dynamic>;
         }
+        print('✅ [DEBUG] KPI Eksekutif using raw response body');
         return responseBody;
       } else if (response.statusCode == 401) {
         throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');
@@ -90,6 +97,7 @@ class DashboardService {
         throw Exception('Request gagal (${response.statusCode}): ${response.body}');
       }
     } catch (e) {
+      print('❌ [DEBUG] Error in _fetchKpiEksekutifRaw: $e');
       rethrow;
     }
   }
@@ -99,6 +107,8 @@ class DashboardService {
   Future<Map<String, dynamic>> _fetchDashboardOperasionalRaw(String token) async {
     try {
       final uri = Uri.parse('$baseUrl/dashboard/operasional');
+      print('🔍 [DEBUG] Fetching Dashboard Operasional from: $uri');
+      
       final response = await http.get(
         uri,
         headers: {
@@ -108,12 +118,17 @@ class DashboardService {
         },
       ).timeout(AppConfig.requestTimeout);
 
+      print('🔍 [DEBUG] Operasional Response Status: ${response.statusCode}');
+      print('🔍 [DEBUG] Operasional Response Body (first 500 chars): ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)}');
+
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
         // Extract data dari wrapper
         if (responseBody.containsKey('data') && responseBody['data'] is Map) {
+          print('✅ [DEBUG] Operasional data extracted successfully');
           return responseBody['data'] as Map<String, dynamic>;
         }
+        print('✅ [DEBUG] Operasional using raw response body');
         return responseBody;
       } else if (response.statusCode == 401) {
         throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');
@@ -123,6 +138,7 @@ class DashboardService {
         throw Exception('Request gagal (${response.statusCode}): ${response.body}');
       }
     } catch (e) {
+      print('❌ [DEBUG] Error in _fetchDashboardOperasionalRaw: $e');
       rethrow;
     }
   }

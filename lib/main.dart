@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'config/supabase_config.dart';
 import 'views/login_view.dart';
 import 'views/home_menu_view.dart';
@@ -7,10 +7,10 @@ import 'models/user_session.dart';
 void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Supabase
   await SupabaseConfig.initialize();
-  
+
   runApp(const MyApp());
 }
 
@@ -34,9 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       // Landing page adalah Login (RBAC FASE 3)
       initialRoute: '/',
-      routes: {
-        '/': (context) => const LoginView(),
-      },
+      routes: {'/': (context) => const LoginView()},
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
           final session = settings.arguments as UserSession;
