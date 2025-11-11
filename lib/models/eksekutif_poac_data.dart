@@ -96,6 +96,49 @@ class EksekutifPOACData {
     return [];
   }
 
+  /// Helper: Get SOP Compliance Breakdown (Plan - V2 NEW)
+  Map<String, dynamic> get sopComplianceBreakdown {
+    final breakdown = kpiData['sop_compliance_breakdown'];
+    if (breakdown is Map<String, dynamic>) {
+      return breakdown;
+    }
+    return {
+      'compliant_items': [],
+      'non_compliant_items': [],
+      'partially_compliant_items': [],
+    };
+  }
+
+  /// Helper: Get Compliant Items
+  List<Map<String, dynamic>> get compliantItems {
+    final breakdown = sopComplianceBreakdown;
+    final items = breakdown['compliant_items'];
+    if (items is List) {
+      return items.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Non-Compliant Items
+  List<Map<String, dynamic>> get nonCompliantItems {
+    final breakdown = sopComplianceBreakdown;
+    final items = breakdown['non_compliant_items'];
+    if (items is List) {
+      return items.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Partially Compliant Items
+  List<Map<String, dynamic>> get partiallyCompliantItems {
+    final breakdown = sopComplianceBreakdown;
+    final items = breakdown['partially_compliant_items'];
+    if (items is List) {
+      return items.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
   /// Helper: Get Planning Accuracy (Plan - NEW)
   Map<String, dynamic> get planningAccuracy {
     final accuracy = kpiData['planning_accuracy'];
@@ -200,7 +243,7 @@ class EksekutifPOACData {
 
   // ========== BLOCKER HELPERS (Organize - NEW) ==========
 
-  /// Helper: Get Blockers Validasi
+  /// Helper: Get Blockers Validasi (OLD - Simple String List)
   List<String> get blockersValidasi {
     final blockers = dataCorong['blockers_validasi'];
     if (blockers is List) {
@@ -209,7 +252,7 @@ class EksekutifPOACData {
     return [];
   }
 
-  /// Helper: Get Blockers APH
+  /// Helper: Get Blockers APH (OLD - Simple String List)
   List<String> get blockersAph {
     final blockers = dataCorong['blockers_aph'];
     if (blockers is List) {
@@ -218,11 +261,69 @@ class EksekutifPOACData {
     return [];
   }
 
-  /// Helper: Get Blockers Sanitasi
+  /// Helper: Get Blockers Sanitasi (OLD - Simple String List)
   List<String> get blockersSanitasi {
     final blockers = dataCorong['blockers_sanitasi'];
     if (blockers is List) {
       return blockers.cast<String>();
+    }
+    return [];
+  }
+
+  // ========== BLOCKER DETAIL HELPERS (Organize - V2 NEW) ==========
+
+  /// Helper: Get Blockers Detail for Validasi
+  List<Map<String, dynamic>> get validasiBlockersDetail {
+    final blockers = dataCorong['validasi_blockers_detail'];
+    if (blockers is List) {
+      return blockers.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Blockers Detail for APH
+  List<Map<String, dynamic>> get aphBlockersDetail {
+    final blockers = dataCorong['aph_blockers_detail'];
+    if (blockers is List) {
+      return blockers.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Blockers Detail for Sanitasi
+  List<Map<String, dynamic>> get sanitasiBlockersDetail {
+    final blockers = dataCorong['sanitasi_blockers_detail'];
+    if (blockers is List) {
+      return blockers.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  // ========== PLANNING TASKS HELPERS (Organize - V2 NEW) ==========
+
+  /// Helper: Get Tasks for Validasi
+  List<Map<String, dynamic>> get validasiTasks {
+    final tasks = dataCorong['validasi_tasks'];
+    if (tasks is List) {
+      return tasks.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Tasks for APH
+  List<Map<String, dynamic>> get aphTasks {
+    final tasks = dataCorong['aph_tasks'];
+    if (tasks is List) {
+      return tasks.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  /// Helper: Get Tasks for Sanitasi
+  List<Map<String, dynamic>> get sanitasiTasks {
+    final tasks = dataCorong['sanitasi_tasks'];
+    if (tasks is List) {
+      return tasks.cast<Map<String, dynamic>>();
     }
     return [];
   }

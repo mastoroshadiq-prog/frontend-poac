@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../config/app_config.dart';
 import '../config/supabase_config.dart';
 import '../models/eksekutif_poac_data.dart';
+import '../models/panen_data.dart';
 
 /// Service class untuk mengelola API calls ke Dashboard Backend
 /// Sesuai Prinsip MPP: SIMPLE, TEPAT, PENINGKATAN BERTAHAP
@@ -448,6 +449,126 @@ class DashboardService {
     }
   }
 
+  /// Fetch Dashboard Panen (KPI Hasil PANEN) dari Backend (dengan JWT Authentication)
+  /// 
+  /// ENHANCEMENT: Endpoint NEW untuk tracking hasil panen (TBS tonnage, reject rate, SPK execution)
+  /// Data Source: NEW Schema (ops_panen, ops_spk_panen, ops_panen_execution, sop_checklist_panen_item)
+  /// Memanggil endpoint: GET /api/v1/dashboard/panen
+  /// 
+  /// RBAC: Endpoint ini memerlukan autentikasi JWT dengan role MANDOR, ASISTEN, atau ADMIN
+  /// 
+  /// Returns: PanenData dengan struktur:
+  /// {
+  ///   "summary": {
+  ///     "total_ton_tbs": double,
+  ///     "avg_reject_persen": double,
+  ///     "total_spk": int,
+  ///     "total_executions": int
+  ///   },
+  ///   "by_spk": [
+  ///     {
+  ///       "nomor_spk": String,
+  ///       "lokasi": String,
+  ///       "mandor": String,
+  ///       "status": String,
+  ///       "periode": String,
+  ///       "total_ton": double,
+  ///       "avg_reject": double,
+  ///       "execution_count": int,
+  ///       "executions": [...]
+  ///     }
+  ///   ],
+  ///   "weekly_breakdown": [
+  ///     {
+  ///       "week_start": String,
+  ///       "total_ton": double,
+  ///       "avg_reject": double,
+  ///       "execution_count": int
+  ///     }
+  ///   ]
+  /// }
+  /// 
+  /// Throws: 
+  ///   - Exception('Silakan Login') jika 401 Unauthorized
+  ///   - Exception('Akses Ditolak') jika 403 Forbidden
+  ///   - Exception lain untuk error lainnya
+  Future<PanenData> fetchPanenData() async {
+    try {
+      // Step 1: Dapatkan token dari Supabase session
+      final token = _getAuthToken();
+
+      // Step 2: Buat URI endpoint
+      final uri = Uri.parse('$baseUrl/dashboard/panen');
+      print('🔍 [DEBUG] Fetching Dashboard Panen from: $uri');
+
+      // Step 3: Panggil API dengan JWT token di header (WAJIB RBAC)
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(
+        AppConfig.requestTimeout,
+        onTimeout: () {
+          throw Exception('Request timeout: Server tidak merespons dalam ${AppConfig.requestTimeout.inSeconds} detik');
+        },
+      );
+
+      print('🔍 [DEBUG] Panen Response Status: ${response.statusCode}');
+      print('🔍 [DEBUG] Panen Response Body (first 500 chars): ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)}');
+
+      // Step 4: Validasi status code
+      if (response.statusCode == 200) {
+        // Parse JSON response
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        
+        // Backend mengembalikan struktur: { "success": true, "data": {...}, "message": "..." }
+        // Extract object 'data'
+        Map<String, dynamic> data;
+        
+        if (responseBody.containsKey('data') && responseBody['data'] is Map) {
+          data = responseBody['data'] as Map<String, dynamic>;
+          print('✅ [DEBUG] Panen data extracted successfully');
+        } else {
+          data = responseBody;
+          print('✅ [DEBUG] Panen using raw response body');
+        }
+        
+        // Parse ke PanenData model
+        return PanenData.fromJson(data);
+      } 
+      // Handle 401 Unauthorized (RBAC)
+      else if (response.statusCode == 401) {
+        throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');
+      } 
+      // Handle 403 Forbidden (RBAC)
+      else if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak: Anda tidak memiliki izin untuk mengakses Dashboard Panen (403)');
+      } 
+      else if (response.statusCode == 404) {
+        throw Exception('Endpoint tidak ditemukan (404): Pastikan backend sudah running');
+      } else if (response.statusCode >= 500) {
+        throw Exception('Server error (${response.statusCode}): ${response.body}');
+      } else {
+        throw Exception('Request gagal (${response.statusCode}): ${response.body}');
+      }
+    } on http.ClientException catch (e) {
+      throw Exception('Network error: Tidak dapat terhubung ke server - $e');
+    } on FormatException catch (e) {
+      throw Exception('Parse error: Response bukan JSON valid - $e');
+    } catch (e) {
+      // Re-throw exception lain dengan pesan yang jelas
+      if (e.toString().contains('Silakan Login') || 
+          e.toString().contains('Akses Ditolak')) {
+        rethrow; // Preserve specific auth errors
+      }
+      print('❌ [DEBUG] Error in fetchPanenData: $e');
+      throw Exception('Unexpected error: $e');
+    }
+  }
+
   /// Fungsi helper untuk konversi array tren ke format chart
   /// 
   /// Input: List dari backend, misal:
@@ -465,5 +586,199 @@ class DashboardService {
         'nilai': (item['nilai'] ?? 0).toDouble(),
       };
     }).toList();
+  }
+
+  // ============================================================================
+  // LIFECYCLE APIs - Multi-Phase Lifecycle Dashboard
+  // ============================================================================
+
+  /// Fetch Lifecycle Overview (5 phases summary)
+  /// 
+  /// GET /api/v1/lifecycle/overview
+  /// 
+  /// Returns: LifecycleOverview with health_index, total_spks, phases array
+  /// 
+  /// RBAC: Requires MANDOR, ASISTEN, or ADMIN role
+  Future<Map<String, dynamic>> fetchLifecycleOverview() async {
+    try {
+      final token = _getAuthToken();
+      final url = Uri.parse('$baseUrl/lifecycle/overview');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 401) {
+        throw Exception('Silakan Login - Session expired');
+      }
+
+      if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak - Requires MANDOR/ASISTEN/ADMIN role');
+      }
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch lifecycle overview: ${response.statusCode}');
+      }
+
+      final jsonData = json.decode(response.body);
+      
+      // DEBUG: Print response untuk troubleshooting
+      print('📡 Lifecycle Overview Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+      print('Parsed JSON: $jsonData');
+      print('JSON Keys: ${jsonData is Map ? jsonData.keys.toList() : 'Not a Map'}');
+      
+      // Validate response structure
+      if (jsonData == null) {
+        throw Exception('Response body is null');
+      }
+      
+      if (jsonData is! Map<String, dynamic>) {
+        throw Exception('Response is not a valid JSON object');
+      }
+      
+      // Backend might return data directly or wrapped in "data" field
+      // Check which structure is used
+      if (jsonData.containsKey('data') && jsonData['data'] != null) {
+        // Wrapped format: { "data": {...} }
+        if (jsonData['data'] is! Map<String, dynamic>) {
+          throw Exception('Response "data" is not a valid object');
+        }
+        return jsonData['data'] as Map<String, dynamic>;
+      } else {
+        // Direct format: { "health_index": ..., "phases": [...] }
+        // Return the entire response as-is
+        return jsonData;
+      }
+    } catch (e) {
+      print('❌ Error in fetchLifecycleOverview: $e');
+      throw Exception('Error fetching lifecycle overview: $e');
+    }
+  }
+
+  /// Fetch Phase Detail (specific phase data)
+  /// 
+  /// GET /api/v1/lifecycle/phase/:phase_name
+  /// 
+  /// Params:
+  ///   - phaseName: Pembibitan | TBM | TM | Pemanenan | Replanting
+  /// 
+  /// Returns: PhaseDetail with phase_info, summary, spks, weekly_breakdown
+  /// 
+  /// RBAC: Requires MANDOR, ASISTEN, or ADMIN role
+  Future<Map<String, dynamic>> fetchPhaseDetail(String phaseName) async {
+    try {
+      final token = _getAuthToken();
+      final url = Uri.parse('$baseUrl/lifecycle/phase/$phaseName');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 401) {
+        throw Exception('Silakan Login - Session expired');
+      }
+
+      if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak - Requires MANDOR/ASISTEN/ADMIN role');
+      }
+
+      if (response.statusCode == 404) {
+        throw Exception('Phase "$phaseName" tidak ditemukan');
+      }
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch phase detail: ${response.statusCode}');
+      }
+
+      final jsonData = json.decode(response.body);
+      
+      // Validate response structure
+      if (jsonData == null) {
+        throw Exception('Response body is null');
+      }
+      
+      if (jsonData is! Map<String, dynamic>) {
+        throw Exception('Response is not a valid JSON object');
+      }
+      
+      // Backend might return data directly or wrapped in "data" field
+      if (jsonData.containsKey('data') && jsonData['data'] != null) {
+        if (jsonData['data'] is! Map<String, dynamic>) {
+          throw Exception('Response "data" is not a valid object');
+        }
+        return jsonData['data'] as Map<String, dynamic>;
+      } else {
+        return jsonData;
+      }
+    } catch (e) {
+      throw Exception('Error fetching phase detail: $e');
+    }
+  }
+
+  /// Fetch SOP Compliance Data
+  /// 
+  /// GET /api/v1/lifecycle/sop-compliance
+  /// 
+  /// Returns: SOPComplianceData with overall_compliance, compliant_phases, needs_attention
+  /// 
+  /// RBAC: Requires ASISTEN or ADMIN role (executive level)
+  Future<Map<String, dynamic>> fetchSOPCompliance() async {
+    try {
+      final token = _getAuthToken();
+      final url = Uri.parse('$baseUrl/lifecycle/sop-compliance');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 401) {
+        throw Exception('Silakan Login - Session expired');
+      }
+
+      if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak - Requires ASISTEN/ADMIN role');
+      }
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch SOP compliance: ${response.statusCode}');
+      }
+
+      final jsonData = json.decode(response.body);
+      
+      // Validate response structure
+      if (jsonData == null) {
+        throw Exception('Response body is null');
+      }
+      
+      if (jsonData is! Map<String, dynamic>) {
+        throw Exception('Response is not a valid JSON object');
+      }
+      
+      // Backend might return data directly or wrapped in "data" field
+      if (jsonData.containsKey('data') && jsonData['data'] != null) {
+        if (jsonData['data'] is! Map<String, dynamic>) {
+          throw Exception('Response "data" is not a valid object');
+        }
+        return jsonData['data'] as Map<String, dynamic>;
+      } else {
+        return jsonData;
+      }
+    } catch (e) {
+      throw Exception('Error fetching SOP compliance: $e');
+    }
   }
 }

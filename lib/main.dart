@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'config/supabase_config.dart';
+import 'config/app_theme.dart';
 import 'views/login_view.dart';
 import 'views/home_menu_view.dart';
+import 'views/lifecycle_detail_view.dart';
+import 'views/dashboard_eksekutif_view.dart';
+import 'views/dashboard_operasional_view.dart';
+import 'views/dashboard_teknis_view.dart';
 import 'models/user_session.dart';
 
 void main() async {
@@ -22,26 +27,90 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Dashboard POAC - Keboen',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
-          ),
-        ),
-      ),
+      theme: AppTheme.lightTheme, // Apply custom theme
       // Landing page adalah Login (RBAC FASE 3)
       initialRoute: '/',
       routes: {'/': (context) => const LoginView()},
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
-          final session = settings.arguments as UserSession;
+          final session = settings.arguments as UserSession?;
+          if (session == null) {
+            // If no session, redirect to login
+            return MaterialPageRoute(builder: (context) => const LoginView());
+          }
           return MaterialPageRoute(
             builder: (context) => HomeMenuView(session: session),
           );
         }
+        
+        // Dashboard Eksekutif
+        if (settings.name == '/dashboard-eksekutif') {
+          final args = settings.arguments;
+          final String? token = args is Map ? args['token'] : args as String?;
+          return MaterialPageRoute(
+            builder: (context) => DashboardEksekutifView(token: token),
+          );
+        }
+        
+        // Dashboard Operasional
+        if (settings.name == '/dashboard-operasional') {
+          final args = settings.arguments;
+          final String? token = args is Map ? args['token'] : args as String?;
+          return MaterialPageRoute(
+            builder: (context) => DashboardOperasionalView(token: token),
+          );
+        }
+        
+        // Dashboard Teknis
+        if (settings.name == '/dashboard-teknis') {
+          final args = settings.arguments;
+          final String? token = args is Map ? args['token'] : args as String?;
+          if (token == null) {
+            return MaterialPageRoute(builder: (context) => const LoginView());
+          }
+          return MaterialPageRoute(
+            builder: (context) => DashboardTeknisView(token: token),
+          );
+        }
+        
+        // Lifecycle detail route: /lifecycle/:phase
+        if (settings.name?.startsWith('/lifecycle/') ?? false) {
+          final phase = settings.name!.substring(11); // Extract phase name
+          return MaterialPageRoute(
+            builder: (context) => LifecycleDetailView(initialPhase: phase),
+          );
+        }
+        
+        // Reports route (placeholder for now)
+        if (settings.name == '/reports') {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(title: const Text('Reports')),
+              body: const Center(child: Text('Reports - Coming Soon')),
+            ),
+          );
+        }
+        
+        // Settings route (placeholder)
+        if (settings.name == '/settings') {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(title: const Text('Settings')),
+              body: const Center(child: Text('Settings - Coming Soon')),
+            ),
+          );
+        }
+        
+        // Help route (placeholder)
+        if (settings.name == '/help') {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(title: const Text('Help')),
+              body: const Center(child: Text('Help - Coming Soon')),
+            ),
+          );
+        }
+        
         return null;
       },
     );

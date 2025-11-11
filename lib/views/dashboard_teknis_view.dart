@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../services/dashboard_service.dart';
+import '../widgets/dashboard_layout.dart';
 
 /// Dashboard Teknis View - Modul 3
 /// 
@@ -41,19 +42,30 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard Teknis'),
-        backgroundColor: Colors.purple,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadData,
-            tooltip: 'Refresh Data',
-          ),
-        ],
-      ),
-      body: FutureBuilder<Map<String, dynamic>>(
+    const String testToken = 
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9waGlhayI6ImEwZWViYzk5LTljMGItNGVmOC1iYjZkLTZiYjliZDM4MGExMiIsIm5hbWFfcGloYWsiOiJBc2lzdGVuIENpdHJhIiwicm9sZSI6IkFTSVNURU4iLCJpYXQiOjE3NjI0OTc4NTEsImV4cCI6MTc2MzEwMjY1MX0.P3LEHAjj0iVrc_RtOqYfYsBK8k9RS5ZYfmyQKMiPgQc';
+    
+    return DashboardLayout(
+      title: 'Dashboard Teknis',
+      currentRoute: '/dashboard-teknis',
+      breadcrumbs: const [
+        BreadcrumbItem(label: 'Home'),
+        BreadcrumbItem(label: 'Dashboard Teknis'),
+      ],
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: _loadData,
+          tooltip: 'Refresh Data',
+        ),
+      ],
+      onNavigate: (route) {
+        Navigator.of(context).pushNamed(
+          route,
+          arguments: {'token': widget.token},
+        );
+      },
+      child: FutureBuilder<Map<String, dynamic>>(
         future: _dashboardData,
         builder: (context, snapshot) {
           // Loading state
