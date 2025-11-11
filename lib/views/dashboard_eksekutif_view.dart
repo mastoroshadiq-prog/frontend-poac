@@ -330,39 +330,14 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
                       // LEFT COLUMN: SOP Compliance Gauge with Target & Gap
                       Expanded(
                         flex: 5,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Theme.of(
-                                  context,
-                                ).colorScheme.primaryContainer.withOpacity(0.3),
-                                Theme.of(context).colorScheme.surface,
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.primary.withOpacity(0.1),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                            border: Border.all(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.outlineVariant,
-                              width: 1,
-                            ),
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Column(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
                             children: [
                               // Title
                               Row(
@@ -603,6 +578,7 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
                               ],
                             ],
                           ),
+                          ),
                         ),
                       ),
 
@@ -611,28 +587,14 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
                       // RIGHT COLUMN: SOP Trend Chart
                       Expanded(
                         flex: 7,
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Colors.purple.shade50, Colors.white],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.purple.withOpacity(0.1),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                            border: Border.all(
-                              color: Colors.purple.shade100,
-                              width: 1,
-                            ),
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Column(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Title
@@ -697,6 +659,7 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
                                   ),
                                 ),
                             ],
+                          ),
                           ),
                         ),
                       ),
