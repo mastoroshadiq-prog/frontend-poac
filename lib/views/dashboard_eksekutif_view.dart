@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../services/dashboard_service.dart';
 import '../models/eksekutif_poac_data.dart';
+import '../widgets/stat_cards.dart';
 
 /// Dashboard Eksekutif View - REFACTOR #1: Intelijen POAC Penuh
 /// Menampilkan ringkasan 4 Kuadran: PLAN, ORGANIZE, ACTUATE, CONTROL
@@ -727,46 +728,40 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
                   ),
                   const SizedBox(height: 12),
 
-                  // Circular Gauges for Validasi, APH, Sanitasi (User Requirement #3 - Modern UI)
+                  // Progress Cards (Modern FASE 2 Components)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        child: _buildCircularProgressGauge(
-                          'Validasi',
-                          selesaiVal,
-                          targetVal,
-                          Colors.blue,
-                          poacData.deadlineValidasi,
-                          poacData.riskLevelValidasi,
-                          poacData.blockersValidasi,
-                          poacData.pelaksanaAssignedValidasi,
+                        child: ProgressStatCard(
+                          title: 'Validasi',
+                          current: selesaiVal,
+                          total: targetVal,
+                          icon: Icons.fact_check,
+                          color: Colors.blue,
+                          onTap: () => _showPlanningDetail(context, 'Validasi', selesaiVal, targetVal, Colors.blue, poacData.deadlineValidasi, poacData.riskLevelValidasi, poacData.blockersValidasi, ['Team ${poacData.pelaksanaAssignedValidasi}']),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: _buildCircularProgressGauge(
-                          'APH',
-                          selesaiAph,
-                          targetAph,
-                          Colors.green,
-                          poacData.deadlineAph,
-                          poacData.riskLevelAph,
-                          poacData.blockersAph,
-                          poacData.pelaksanaAssignedAph,
+                        child: ProgressStatCard(
+                          title: 'APH',
+                          current: selesaiAph,
+                          total: targetAph,
+                          icon: Icons.health_and_safety,
+                          color: Colors.green,
+                          onTap: () => _showPlanningDetail(context, 'APH', selesaiAph, targetAph, Colors.green, poacData.deadlineAph, poacData.riskLevelAph, poacData.blockersAph, ['Team ${poacData.pelaksanaAssignedAph}']),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: _buildCircularProgressGauge(
-                          'Sanitasi',
-                          selesaiSan,
-                          targetSan,
-                          Colors.purple,
-                          poacData.deadlineSanitasi,
-                          poacData.riskLevelSanitasi,
-                          poacData.blockersSanitasi,
-                          poacData.pelaksanaAssignedSanitasi,
+                        child: ProgressStatCard(
+                          title: 'Sanitasi',
+                          current: selesaiSan,
+                          total: targetSan,
+                          icon: Icons.cleaning_services,
+                          color: Colors.purple,
+                          onTap: () => _showPlanningDetail(context, 'Sanitasi', selesaiSan, targetSan, Colors.purple, poacData.deadlineSanitasi, poacData.riskLevelSanitasi, poacData.blockersSanitasi, ['Team ${poacData.pelaksanaAssignedSanitasi}']),
                         ),
                       ),
                     ],
@@ -776,35 +771,20 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
                   const Divider(),
                   const SizedBox(height: 12),
 
-                  // Summary Cards
+                  // Summary Cards (Modern FASE 2 Components)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        child: _buildPlanMiniCard(
-                          'Total',
-                          totalTarget.toString(),
-                          Icons.list_alt,
-                          Colors.blue,
-                        ),
+                        child: CompactStatCard(label: 'Total', value: totalTarget.toString(), icon: Icons.list_alt, color: Colors.blue),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: _buildPlanMiniCard(
-                          'Done',
-                          totalSelesai.toString(),
-                          Icons.check_circle,
-                          Colors.green,
-                        ),
+                        child: CompactStatCard(label: 'Done', value: totalSelesai.toString(), icon: Icons.check_circle, color: Colors.green),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: _buildPlanMiniCard(
-                          'Progress',
-                          '${overallProgress.toStringAsFixed(0)}%',
-                          Icons.trending_up,
-                          Colors.orange,
-                        ),
+                        child: CompactStatCard(label: 'Progress', value: '${overallProgress.toStringAsFixed(0)}%', icon: Icons.trending_up, color: Colors.orange),
                       ),
                     ],
                   ),
