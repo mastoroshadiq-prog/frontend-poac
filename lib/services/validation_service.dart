@@ -49,6 +49,8 @@ class ValidationService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       );
 
@@ -120,6 +122,8 @@ class ValidationService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       );
 
@@ -209,6 +213,8 @@ class ValidationService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
         body: jsonEncode({
           'correct_status': correctStatus,
@@ -261,6 +267,8 @@ class ValidationService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       );
 

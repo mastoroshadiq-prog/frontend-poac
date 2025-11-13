@@ -76,6 +76,8 @@ class DashboardService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(AppConfig.requestTimeout);
 
@@ -117,6 +119,8 @@ class DashboardService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(AppConfig.requestTimeout);
 
@@ -177,6 +181,8 @@ class DashboardService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token', // ⬅️ PERUBAHAN KRITIS: JWT Authentication
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(
         AppConfig.requestTimeout,
@@ -286,6 +292,8 @@ class DashboardService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token', // ⬅️ KRITIS: JWT Authentication
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(
         AppConfig.requestTimeout,
@@ -388,6 +396,8 @@ class DashboardService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token', // ⬅️ KRITIS: JWT Authentication
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(
         AppConfig.requestTimeout,
@@ -509,6 +519,8 @@ class DashboardService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(
         AppConfig.requestTimeout,
@@ -647,6 +659,8 @@ class DashboardService {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(AppConfig.requestTimeout);
 
@@ -699,6 +713,8 @@ class DashboardService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       );
 
@@ -771,6 +787,8 @@ class DashboardService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       );
 
@@ -832,6 +850,8 @@ class DashboardService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       );
 

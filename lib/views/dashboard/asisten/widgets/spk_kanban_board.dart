@@ -136,10 +136,7 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
             else if (_errorMessage != null)
               _buildErrorState()
             else if (_data != null)
-              SizedBox(
-                height: 600, // Fixed height to avoid unbounded constraints
-                child: _buildKanbanBoard(),
-              ),
+              _buildKanbanBoard(),
           ],
         ),
       ),
@@ -259,40 +256,67 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
     final stats = _data!.statistics;
     
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
-        color: Colors.blue[50],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue[200]!),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Wrap(
-        spacing: 16,
-        runSpacing: 12,
-        alignment: WrapAlignment.spaceEvenly,
+      child: Row(
         children: [
-          _buildStatItem(
-            'Total SPK',
-            stats.totalSpk.toString(),
-            Icons.assignment,
-            Colors.blue[700]!,
+          Expanded(
+            child: _buildStatItem(
+              'Total SPK',
+              stats.totalSpk.toString(),
+              Icons.description_outlined,
+              const Color(0xFF1976D2), // Blue
+            ),
           ),
-          _buildStatItem(
-            'Completion',
-            '${stats.completionRate.toStringAsFixed(0)}%',
-            Icons.check_circle,
-            Colors.green[700]!,
+          Container(
+            width: 1,
+            height: 60,
+            color: Colors.grey.shade200,
           ),
-          _buildStatItem(
-            'Avg Time',
-            '${stats.avgTimeToComplete.toStringAsFixed(1)}d',
-            Icons.timer,
-            Colors.orange[700]!,
+          Expanded(
+            child: _buildStatItem(
+              'Completion',
+              '${stats.completionRate.toStringAsFixed(0)}%',
+              Icons.check_circle_outline,
+              const Color(0xFF4CAF50), // Green
+            ),
           ),
-          _buildStatItem(
-            'Overdue',
-            stats.overdueCount.toString(),
-            Icons.warning,
-            Colors.red[700]!,
+          Container(
+            width: 1,
+            height: 60,
+            color: Colors.grey.shade200,
+          ),
+          Expanded(
+            child: _buildStatItem(
+              'Average Time',
+              '${stats.avgTimeToComplete.toStringAsFixed(1)}d',
+              Icons.schedule,
+              const Color(0xFFFF9800), // Orange
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 60,
+            color: Colors.grey.shade200,
+          ),
+          Expanded(
+            child: _buildStatItem(
+              'Overdue',
+              stats.overdueCount.toString(),
+              Icons.warning_amber_rounded,
+              const Color(0xFFF44336), // Red
+            ),
           ),
         ],
       ),
@@ -301,22 +325,26 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
 
   Widget _buildStatItem(String label, String value, IconData icon, Color color) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: color, size: 20),
+        Icon(icon, color: color, size: 28),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade600,
+          ),
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: 4),
         Text(
           value,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
             color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.grey[600],
           ),
         ),
       ],
@@ -367,144 +395,243 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
   }
 
   Widget _buildKanbanBoard() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        Expanded(
-          child: _buildKanbanColumn(
-            'PENDING',
-            _data!.pending,
-            Colors.grey[300]!,
-            Icons.pending_actions,
-          ),
+        _buildStatusRow(
+          'PENDING',
+          _data!.pending,
+          Colors.grey[700]!,
+          Icons.pending_actions,
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildKanbanColumn(
-            'DIKERJAKAN',
-            _data!.dikerjakan,
-            Colors.blue[300]!,
-            Icons.work,
-          ),
+        const SizedBox(height: 8),
+        _buildStatusRow(
+          'DIKERJAKAN',
+          _data!.dikerjakan,
+          Colors.blue[700]!,
+          Icons.work,
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildKanbanColumn(
-            'SELESAI',
-            _data!.selesai,
-            Colors.green[300]!,
-            Icons.check_circle,
-          ),
+        const SizedBox(height: 8),
+        _buildStatusRow(
+          'SELESAI',
+          _data!.selesai,
+          Colors.green[700]!,
+          Icons.check_circle,
         ),
       ],
     );
   }
 
-  Widget _buildKanbanColumn(
+  Widget _buildStatusRow(
     String title,
     List<SpkCard> cards,
-    Color headerColor,
+    Color statusColor,
     IconData icon,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
+    return Card(
+      elevation: 1,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[300]!),
+        side: BorderSide(color: Colors.grey[300]!),
       ),
-      child: Column(
-        children: [
-          // Column Header
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            decoration: BoxDecoration(
-              color: headerColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
+      child: InkWell(
+        onTap: () => _showStatusDetailsDialog(title, cards, statusColor, icon),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          child: Row(
+            children: [
+              // Status Icon
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, size: 24, color: statusColor),
               ),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, size: 20, color: Colors.white),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 14,
+              const SizedBox(width: 16),
+              // Status Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: statusColor,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      cards.isEmpty
+                          ? 'Tidak ada SPK'
+                          : '${cards.length} SPK • ${_getStatusSummary(cards)}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Badge + Expand Icon
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      cards.length.toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Colors.grey[400],
+                    size: 24,
                   ),
-                  child: Text(
-                    cards.length.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: headerColor.withOpacity(0.8),
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
-          // Cards Area (DragTarget)
-          Expanded(
-            child: DragTarget<SpkCard>(
-              onWillAcceptWithDetails: (details) => details.data.status != title,
-              onAcceptWithDetails: (details) {
-                _updateSpkStatus(details.data, title);
-              },
-              builder: (context, candidateData, rejectedData) {
-                return Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: candidateData.isNotEmpty
-                        ? headerColor.withOpacity(0.2)
-                        : Colors.transparent,
-                  ),
-                  child: cards.isEmpty
-                      ? _buildEmptyColumn()
-                      : ListView.builder(
-                          itemCount: cards.length,
-                          itemBuilder: (context, index) {
-                            return _buildSpkCard(cards[index], title);
-                          },
-                        ),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildEmptyColumn() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 8),
-            Text(
-              'Tidak ada SPK',
-              style: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 12,
+  String _getStatusSummary(List<SpkCard> cards) {
+    if (cards.isEmpty) return '';
+    
+    final avgProgress = cards.fold<double>(0, (sum, card) => sum + card.progress) / cards.length;
+    final overdueCount = cards.where((card) => card.isOverdue).length;
+    
+    final parts = <String>[];
+    parts.add('${avgProgress.toStringAsFixed(0)}% rata-rata');
+    
+    if (overdueCount > 0) {
+      parts.add('$overdueCount overdue');
+    }
+    
+    return parts.join(' • ');
+  }
+
+  void _showStatusDetailsDialog(
+    String status,
+    List<SpkCard> cards,
+    Color statusColor,
+    IconData icon,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          height: MediaQuery.of(context).size.height * 0.85,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              // Dialog Header
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: statusColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(icon, size: 28, color: statusColor),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'SPK $status',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: statusColor,
+                          ),
+                        ),
+                        Text(
+                          '${cards.length} SPK ditemukan',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                    tooltip: 'Tutup',
+                  ),
+                ],
               ),
-            ),
-          ],
+              const Divider(height: 32),
+              // Cards List
+              Expanded(
+                child: cards.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.inbox, size: 64, color: Colors.grey[400]),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Tidak ada SPK dengan status $status',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : DragTarget<SpkCard>(
+                        onWillAcceptWithDetails: (details) => details.data.status != status,
+                        onAcceptWithDetails: (details) {
+                          _updateSpkStatus(details.data, status);
+                          Navigator.of(context).pop();
+                        },
+                        builder: (context, candidateData, rejectedData) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: candidateData.isNotEmpty
+                                  ? statusColor.withOpacity(0.1)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ListView.builder(
+                              itemCount: cards.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _buildSpkCard(cards[index], status),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

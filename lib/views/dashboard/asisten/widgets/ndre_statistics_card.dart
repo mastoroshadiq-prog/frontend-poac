@@ -221,12 +221,13 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
         ),
         const SizedBox(height: 16),
         SizedBox(
-          height: 200,
+          height: 220,
           child: Row(
             children: [
-              // Pie Chart
-              Expanded(
-                flex: 3,
+              // Donut Chart
+              SizedBox(
+                width: 220,
+                height: 220,
                 child: PieChart(
                   PieChartData(
                     pieTouchData: PieTouchData(
@@ -245,16 +246,15 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
                     ),
                     borderData: FlBorderData(show: false),
                     sectionsSpace: 2,
-                    centerSpaceRadius: 40,
+                    centerSpaceRadius: 50,
                     sections: _buildPieChartSections(),
                   ),
                 ),
               ),
-              const SizedBox(width: 24),
-              // Legend
+              const SizedBox(width: 32),
+              // Horizontal Bars with Icons
               Expanded(
-                flex: 2,
-                child: _buildPieLegend(),
+                child: _buildCategoryBars(),
               ),
             ],
           ),
@@ -270,21 +270,21 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
         'Stres Berat',
         stats.stresBerat,
         stats.persentaseStresBerat,
-        Colors.red[400]!
+        const Color(0xFFEF5350) // Red
       ),
       (
         'Stres Sedang',
         stats.stresSedang,
         stats.persentaseStresSedang,
-        Colors.orange[400]!
+        const Color(0xFFFFC107) // Yellow
       ),
-      ('Sehat', stats.sehat, stats.persentaseSehat, Colors.green[400]!),
+      ('Sehat', stats.sehat, stats.persentaseSehat, const Color(0xFF4CAF50)), // Green
     ];
 
     return List.generate(categories.length, (index) {
       final isTouched = index == _touchedIndex;
-      final fontSize = isTouched ? 20.0 : 16.0;
-      final radius = isTouched ? 65.0 : 55.0;
+      final fontSize = isTouched ? 18.0 : 14.0;
+      final radius = isTouched ? 70.0 : 60.0;
       final category = categories[index];
 
       return PieChartSectionData(
@@ -304,64 +304,103 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
     });
   }
 
-  Widget _buildPieLegend() {
+  Widget _buildCategoryBars() {
     final stats = _statistics!;
     final categories = [
-      ('Stres Berat', stats.stresBerat, stats.persentaseStresBerat,
-          Colors.red[400]!, Icons.error),
-      ('Stres Sedang', stats.stresSedang, stats.persentaseStresSedang,
-          Colors.orange[400]!, Icons.warning),
-      ('Sehat', stats.sehat, stats.persentaseSehat, Colors.green[400]!,
-          Icons.check_circle),
+      (
+        'Stres Berat',
+        stats.stresBerat,
+        stats.persentaseStresBerat,
+        const Color(0xFFEF5350), // Red
+        Icons.error_outline
+      ),
+      (
+        'Stres Sedang',
+        stats.stresSedang,
+        stats.persentaseStresSedang,
+        const Color(0xFFFFC107), // Yellow
+        Icons.warning_amber_outlined
+      ),
+      (
+        'Sehat',
+        stats.sehat,
+        stats.persentaseSehat,
+        const Color(0xFF4CAF50), // Green
+        Icons.check_circle_outline
+      ),
     ];
 
-    return Wrap(
-      direction: Axis.vertical,
-      spacing: 4,
-      runSpacing: 4,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: categories.map((category) {
-        return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 180),
-          child: InkWell(
-            onTap: widget.onCategoryTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(category.$5, color: category.$4, size: 20),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          category.$1,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          '${category.$2} pohon',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey[600],
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        return _buildCategoryBarRow(
+          icon: category.$5,
+          label: category.$1,
+          count: category.$2,
+          percentage: category.$3,
+          color: category.$4,
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCategoryBarRow({
+    required IconData icon,
+    required String label,
+    required int count,
+    required double percentage,
+    required Color color,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          // Icon
+          Icon(
+            icon,
+            color: color,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          // Label
+          SizedBox(
+            width: 95,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-        );
-      }).toList(),
+          const SizedBox(width: 12),
+          // Progress Bar
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: percentage / 100,
+                backgroundColor: Colors.grey[200],
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                minHeight: 20,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Count
+          SizedBox(
+            width: 75,
+            child: Text(
+              '$count Pohon',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

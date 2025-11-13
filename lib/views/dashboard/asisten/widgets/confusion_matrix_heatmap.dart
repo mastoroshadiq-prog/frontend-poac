@@ -400,95 +400,114 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
   Widget _buildMetricsRow(BuildContext context) {
     final data = _data!;
 
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildMetricCard(
-                'Accuracy',
-                '${(data.accuracy * 100).toStringAsFixed(1)}%',
-                Icons.check_circle,
-                data.meetsTargetAccuracy ? Colors.green : Colors.orange,
-                'Overall correctness\nTarget: ≥80%',
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _buildMetricCard(
-                'Precision',
-                '${(data.precision * 100).toStringAsFixed(1)}%',
-                Icons.analytics,
-                data.meetsTargetPrecision ? Colors.blue : Colors.orange,
-                'Positive prediction reliability\nTarget: ≥75%',
-              ),
-            ),
-          ],
+        Expanded(
+          child: _buildCircularMetricGauge(
+            'Accuracy',
+            data.accuracy,
+            const Color(0xFF5B8C5A), // Dark green like in image
+            'Overall correctness\nTarget: ≥80%',
+          ),
         ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _buildMetricCard(
-                'Recall',
-                '${(data.recall * 100).toStringAsFixed(1)}%',
-                Icons.radar,
-                data.meetsTargetRecall ? Colors.purple : Colors.orange,
-                'Detection completeness\nTarget: ≥80%',
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _buildMetricCard(
-                'F1-Score',
-                '${(data.f1Score * 100).toStringAsFixed(1)}%',
-                Icons.star,
-                Colors.amber,
-                'Balanced performance\n(Precision × Recall)',
-              ),
-            ),
-          ],
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildCircularMetricGauge(
+            'Precision',
+            data.precision,
+            const Color(0xFF1E88A8), // Teal/cyan like in image
+            'Positive prediction reliability\nTarget: ≥75%',
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildCircularMetricGauge(
+            'Recall',
+            data.recall,
+            const Color(0xFFE67E3A), // Orange like in image
+            'Detection completeness\nTarget: ≥80%',
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildCircularMetricGauge(
+            'F1 Score',
+            data.f1Score,
+            const Color(0xFF6B7280), // Gray like in image
+            'Balanced performance\n(Precision × Recall)',
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildMetricCard(
+  Widget _buildCircularMetricGauge(
     String label,
-    String value,
-    IconData icon,
+    double value,
     Color color,
     String tooltip,
   ) {
+    final percentage = (value * 100).toInt();
+    
     return Tooltip(
       message: tooltip,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 20),
-            const SizedBox(height: 4),
+            // Circular gauge
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Custom painted circular gauge
+                  CustomPaint(
+                    size: const Size(100, 100),
+                    painter: _CircularGaugePainter(
+                      progress: value.clamp(0.0, 1.0),
+                      progressColor: color,
+                      backgroundColor: Colors.grey.shade200,
+                      strokeWidth: 10,
+                    ),
+                  ),
+                  // Percentage text in center
+                  Text(
+                    '$percentage%',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Label
             Text(
               label,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade700,
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -623,5 +642,71 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
         duration: Duration(seconds: 2),
       ),
     );
+  }
+}
+
+/// Custom painter for circular gauge (semi-circle from top)
+class _CircularGaugePainter extends CustomPainter {
+  final double progress;
+  final Color progressColor;
+  final Color backgroundColor;
+  final double strokeWidth;
+
+  _CircularGaugePainter({
+    required this.progress,
+    required this.progressColor,
+    required this.backgroundColor,
+    required this.strokeWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+    
+    // Starting angle: -180° (left), sweep to 0° (right) = 180° semicircle
+    // But we want it to start from top, so: -135° to +135° (270° arc)
+    const startAngle = -2.356; // -135° in radians (top-left)
+    const sweepAngle = 4.712; // 270° in radians (3/4 circle, like in the image)
+    
+    // Background arc (gray)
+    final bgPaint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+    
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      startAngle,
+      sweepAngle,
+      false,
+      bgPaint,
+    );
+    
+    // Progress arc (colored)
+    if (progress > 0) {
+      final progressPaint = Paint()
+        ..color = progressColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round;
+      
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        startAngle,
+        sweepAngle * progress,
+        false,
+        progressPaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CircularGaugePainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.progressColor != progressColor ||
+        oldDelegate.backgroundColor != backgroundColor ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }

@@ -47,6 +47,8 @@ class SPKService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
         body: jsonEncode(body),
       ).timeout(AppConfig.requestTimeout);
@@ -106,6 +108,8 @@ class SPKService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
         body: jsonEncode({'tugas': daftarTugas}),
       ).timeout(AppConfig.requestTimeout);
@@ -174,6 +178,8 @@ class SPKService {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
       ).timeout(AppConfig.requestTimeout);
 
