@@ -21,12 +21,12 @@ class MandorPerformanceTable extends StatefulWidget {
   final Function(String mandorId)? onMandorTap;
 
   const MandorPerformanceTable({
-    Key? key,
+    super.key,
     this.mandorId,
     this.startDate,
     this.endDate,
     this.onMandorTap,
-  }) : super(key: key);
+  });
 
   @override
   State<MandorPerformanceTable> createState() => _MandorPerformanceTableState();
@@ -39,7 +39,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
   String? _errorMessage;
   String _sortColumn = 'overall';
   bool _sortAscending = false;
-  Set<String> _expandedRows = {};
+  final Set<String> _expandedRows = {};
   String? _selectedMandorForRadar;
 
   @override
@@ -135,7 +135,8 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
             else if (_errorMessage != null)
               _buildErrorState()
             else if (_data != null)
-              Expanded(
+              SizedBox(
+                height: 600, // Fixed height to avoid unbounded constraints
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -360,7 +361,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
           ..._data!.mandors.map((mandor) {
             final isExpanded = _expandedRows.contains(mandor.mandorId);
             return _buildTableRow(mandor, isExpanded);
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -679,7 +680,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ],
       ),

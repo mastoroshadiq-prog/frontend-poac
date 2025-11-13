@@ -53,14 +53,14 @@ class AnomalyAlertWidget extends StatefulWidget {
   final Function(AnomalyItem)? onCreateSpk;
 
   const AnomalyAlertWidget({
-    Key? key,
+    super.key,
     this.divisi,
     this.blok,
     this.anomalyType,
     this.severity,
     this.onInvestigate,
     this.onCreateSpk,
-  }) : super(key: key);
+  });
 
   @override
   State<AnomalyAlertWidget> createState() => _AnomalyAlertWidgetState();
@@ -73,7 +73,7 @@ class _AnomalyAlertWidgetState extends State<AnomalyAlertWidget> {
   String? _errorMessage;
   String? _selectedTypeFilter;
   String? _selectedSeverityFilter;
-  Set<String> _expandedIds = {};
+  final Set<String> _expandedIds = {};
 
   @override
   void initState() {
@@ -145,7 +145,10 @@ class _AnomalyAlertWidgetState extends State<AnomalyAlertWidget> {
             else if (_errorMessage != null)
               _buildErrorState()
             else if (_data != null)
-              Expanded(child: _buildAlertList()),
+              SizedBox(
+                height: 600, // Fixed height to avoid unbounded constraints
+                child: _buildAlertList(),
+              ),
           ],
         ),
       ),
@@ -588,7 +591,7 @@ class _AnomalyAlertWidgetState extends State<AnomalyAlertWidget> {
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
                     if (anomaly.trees!.length > 3)
                       Padding(
                         padding: const EdgeInsets.only(left: 24, top: 4),

@@ -26,9 +26,9 @@ class DashboardTeknisView extends StatefulWidget {
   final String token;
 
   const DashboardTeknisView({
-    Key? key,
+    super.key,
     required this.token,
-  }) : super(key: key);
+  });
 
   @override
   State<DashboardTeknisView> createState() => _DashboardTeknisViewState();
@@ -151,7 +151,7 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
                             value: divisi,
                             child: Text(divisi),
                           ))
-                      .toList(),
+                      ,
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -175,66 +175,70 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
           arguments: {'token': widget.token},
         );
       },
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Left Column (30%) - Validation & Health
-            Expanded(
-              flex: 30,
-              child: Column(
-                children: [
-                  // Confusion Matrix Heatmap
-                  ConfusionMatrixHeatmap(
-                    key: ValueKey('confusion_$_refreshCounter'),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left Column (30%) - Validation & Health
+                SizedBox(
+                  width: constraints.maxWidth * 0.30 - 24,
+                  child: Column(
+                    children: [
+                      // Confusion Matrix Heatmap
+                      ConfusionMatrixHeatmap(
+                        key: ValueKey('confusion_$_refreshCounter'),
+                      ),
+                      const SizedBox(height: 16),
+                      // NDRE Statistics Card
+                      NdreStatisticsCard(
+                        key: ValueKey('ndre_$_refreshCounter'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  // NDRE Statistics Card
-                  NdreStatisticsCard(
-                    key: ValueKey('ndre_$_refreshCounter'),
+                ),
+                const SizedBox(width: 16),
+                // Center Column (40%) - Analysis & Tasks
+                SizedBox(
+                  width: constraints.maxWidth * 0.40 - 24,
+                  child: Column(
+                    children: [
+                      // Field vs Drone Scatter Plot
+                      FieldVsDroneScatter(
+                        key: ValueKey('scatter_$_refreshCounter'),
+                      ),
+                      const SizedBox(height: 16),
+                      // SPK Kanban Board
+                      SpkKanbanBoard(
+                        key: ValueKey('kanban_$_refreshCounter'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 16),
+                // Right Column (30%) - Alerts & Performance
+                SizedBox(
+                  width: constraints.maxWidth * 0.30 - 24,
+                  child: Column(
+                    children: [
+                      // Anomaly Alert Widget
+                      AnomalyAlertWidget(
+                        key: ValueKey('anomaly_$_refreshCounter'),
+                      ),
+                      const SizedBox(height: 16),
+                      // Mandor Performance Table
+                      MandorPerformanceTable(
+                        key: ValueKey('performance_$_refreshCounter'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
-            // Center Column (40%) - Analysis & Tasks
-            Expanded(
-              flex: 40,
-              child: Column(
-                children: [
-                  // Field vs Drone Scatter Plot
-                  FieldVsDroneScatter(
-                    key: ValueKey('scatter_$_refreshCounter'),
-                  ),
-                  const SizedBox(height: 16),
-                  // SPK Kanban Board
-                  SpkKanbanBoard(
-                    key: ValueKey('kanban_$_refreshCounter'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Right Column (30%) - Alerts & Performance
-            Expanded(
-              flex: 30,
-              child: Column(
-                children: [
-                  // Anomaly Alert Widget
-                  AnomalyAlertWidget(
-                    key: ValueKey('anomaly_$_refreshCounter'),
-                  ),
-                  const SizedBox(height: 16),
-                  // Mandor Performance Table
-                  MandorPerformanceTable(
-                    key: ValueKey('performance_$_refreshCounter'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

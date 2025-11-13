@@ -134,7 +134,10 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
             else if (_errorMessage != null)
               _buildErrorState()
             else if (_data != null)
-              Expanded(child: _buildKanbanBoard()),
+              SizedBox(
+                height: 600, // Fixed height to avoid unbounded constraints
+                child: _buildKanbanBoard(),
+              ),
           ],
         ),
       ),
