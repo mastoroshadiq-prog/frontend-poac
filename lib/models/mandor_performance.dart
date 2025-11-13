@@ -15,7 +15,7 @@ class MandorPerformanceData {
     return MandorPerformanceData(
       summary:
           PerformanceSummary.fromJson(json['summary'] as Map<String, dynamic>),
-      mandors: (json['mandors'] as List<dynamic>)
+      mandors: ((json['mandors'] as List<dynamic>?) ?? [])
           .map((e) => MandorPerformance.fromJson(e as Map<String, dynamic>))
           .toList(),
       rankings: PerformanceRankings.fromJson(
@@ -38,9 +38,9 @@ class PerformanceSummary {
 
   factory PerformanceSummary.fromJson(Map<String, dynamic> json) {
     return PerformanceSummary(
-      totalMandors: json['total_mandors'] as int,
-      avgCompletionRate: (json['avg_completion_rate'] as num).toDouble(),
-      avgQualityScore: (json['avg_quality_score'] as num).toDouble(),
+      totalMandors: (json['total_mandors'] as num?)?.toInt() ?? 0,
+      avgCompletionRate: (json['avg_completion_rate'] as num?)?.toDouble() ?? 0.0,
+      avgQualityScore: (json['avg_quality_score'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
@@ -67,17 +67,17 @@ class MandorPerformance {
 
   factory MandorPerformance.fromJson(Map<String, dynamic> json) {
     return MandorPerformance(
-      mandorId: json['mandor_id'] as String,
-      name: json['name'] as String,
-      afdeling: json['afdeling'] as String,
+      mandorId: json['mandor_id'] as String? ?? '',
+      name: json['name'] as String? ?? 'Unknown',
+      afdeling: json['afdeling'] as String? ?? '',
       performance: PerformanceMetrics.fromJson(
           json['performance'] as Map<String, dynamic>),
       breakdown: PerformanceBreakdown.fromJson(
           json['breakdown'] as Map<String, dynamic>),
-      issues: (json['issues'] as List<dynamic>)
+      issues: ((json['issues'] as List<dynamic>?) ?? [])
           .map((e) => PerformanceIssue.fromJson(e as Map<String, dynamic>))
           .toList(),
-      recommendations: (json['recommendations'] as List<dynamic>)
+      recommendations: ((json['recommendations'] as List<dynamic>?) ?? [])
           .map((e) => e.toString())
           .toList(),
     );
@@ -123,12 +123,12 @@ class PerformanceMetrics {
 
   factory PerformanceMetrics.fromJson(Map<String, dynamic> json) {
     return PerformanceMetrics(
-      spkAssigned: json['spk_assigned'] as int,
-      spkCompleted: json['spk_completed'] as int,
-      spkOverdue: json['spk_overdue'] as int,
-      completionRate: (json['completion_rate'] as num).toDouble(),
-      avgCompletionDays: (json['avg_completion_days'] as num).toDouble(),
-      qualityScore: (json['quality_score'] as num).toDouble(),
+      spkAssigned: (json['spk_assigned'] as num?)?.toInt() ?? 0,
+      spkCompleted: (json['spk_completed'] as num?)?.toInt() ?? 0,
+      spkOverdue: (json['spk_overdue'] as num?)?.toInt() ?? 0,
+      completionRate: (json['completion_rate'] as num?)?.toDouble() ?? 0.0,
+      avgCompletionDays: (json['avg_completion_days'] as num?)?.toDouble() ?? 0.0,
+      qualityScore: (json['quality_score'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
@@ -149,10 +149,10 @@ class PerformanceBreakdown {
 
   factory PerformanceBreakdown.fromJson(Map<String, dynamic> json) {
     return PerformanceBreakdown(
-      validationAccuracy: (json['validation_accuracy'] as num).toDouble(),
-      sopCompliance: (json['sop_compliance'] as num).toDouble(),
-      speedScore: (json['speed_score'] as num).toDouble(),
-      surveyorRating: (json['surveyor_rating'] as num).toDouble(),
+      validationAccuracy: (json['validation_accuracy'] as num?)?.toDouble() ?? 0.0,
+      sopCompliance: (json['sop_compliance'] as num?)?.toDouble() ?? 0.0,
+      speedScore: (json['speed_score'] as num?)?.toDouble() ?? 0.0,
+      surveyorRating: (json['surveyor_rating'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -191,10 +191,10 @@ class PerformanceIssue {
 
   factory PerformanceIssue.fromJson(Map<String, dynamic> json) {
     return PerformanceIssue(
-      type: json['type'] as String,
-      spkId: json['spk_id'] as String,
-      nomorSpk: json['nomor_spk'] as String,
-      daysOverdue: json['days_overdue'] as int?,
+      type: json['type'] as String? ?? '',
+      spkId: json['spk_id'] as String? ?? '',
+      nomorSpk: json['nomor_spk'] as String? ?? '',
+      daysOverdue: (json['days_overdue'] as num?)?.toInt(),
       reason: json['reason'] as String?,
     );
   }

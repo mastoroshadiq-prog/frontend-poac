@@ -634,7 +634,8 @@ class DashboardService {
       if (startDate != null) queryParams['start_date'] = startDate.toIso8601String();
       if (endDate != null) queryParams['end_date'] = endDate.toIso8601String();
 
-      final url = Uri.parse('$baseUrl/api/v1/dashboard/ndre-statistics').replace(
+      // baseUrl already includes /api/v1, so just add /dashboard/ndre-statistics
+      final url = Uri.parse('$baseUrl/dashboard/ndre-statistics').replace(
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 

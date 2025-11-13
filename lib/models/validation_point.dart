@@ -41,13 +41,13 @@ class ValidationPoint {
 
   factory ValidationPoint.fromJson(Map<String, dynamic> json) {
     return ValidationPoint(
-      idNpokok: json['id_npokok'] as String,
-      treeId: json['tree_id'] as String,
-      ndreValue: (json['ndre_value'] as num).toDouble(),
-      fieldScore: json['field_score'] as int,
-      dronePrediction: json['drone_prediction'] as String,
-      fieldActual: json['field_actual'] as String,
-      category: json['category'] as String,
+      idNpokok: json['id_npokok'] as String? ?? '',
+      treeId: json['tree_id'] as String? ?? '',
+      ndreValue: (json['ndre_value'] as num?)?.toDouble() ?? 0.0,
+      fieldScore: (json['field_score'] as num?)?.toInt() ?? 0,
+      dronePrediction: json['drone_prediction'] as String? ?? 'Unknown',
+      fieldActual: json['field_actual'] as String? ?? 'Unknown',
+      category: json['category'] as String? ?? 'UNKNOWN',
       surveyor: json['surveyor'] as String?,
       validationDate: json['validation_date'] != null
           ? DateTime.parse(json['validation_date'])
@@ -212,7 +212,7 @@ class FieldVsDroneData {
           'Hanya ${fpCount + fnCount} kasus mismatch yang perlu perhatian.';
     } else if (accuracy >= 75) {
       return 'Validasi cukup baik dengan akurasi ${accuracy.toStringAsFixed(1)}%. '
-          'Terdapat ${fpCount + fnCount} kasus mismatch (${fpCount} FP, ${fnCount} FN) '
+          'Terdapat ${fpCount + fnCount} kasus mismatch ($fpCount FP, $fnCount FN) '
           'yang perlu diselidiki lebih lanjut.';
     } else {
       return 'Akurasi rendah (${accuracy.toStringAsFixed(1)}%). '

@@ -47,10 +47,10 @@ class AnomaliSummary {
 
   factory AnomaliSummary.fromJson(Map<String, dynamic> json) {
     return AnomaliSummary(
-      totalAnomalies: json['total_anomalies'] as int,
-      highSeverity: json['high_severity'] as int,
-      mediumSeverity: json['medium_severity'] as int,
-      lowSeverity: json['low_severity'] as int,
+      totalAnomalies: (json['total_anomalies'] as num?)?.toInt() ?? 0,
+      highSeverity: (json['high_severity'] as num?)?.toInt() ?? 0,
+      mediumSeverity: (json['medium_severity'] as num?)?.toInt() ?? 0,
+      lowSeverity: (json['low_severity'] as num?)?.toInt() ?? 0,
     );
   }
 }
@@ -85,10 +85,10 @@ class AnomalyItem {
 
   factory AnomalyItem.fromJson(Map<String, dynamic> json) {
     return AnomalyItem(
-      type: json['type'] as String,
-      severity: json['severity'] as String,
-      count: json['count'] as int,
-      criteria: json['criteria'] as String,
+      type: json['type'] as String? ?? 'UNKNOWN',
+      severity: json['severity'] as String? ?? 'low',
+      count: (json['count'] as num?)?.toInt() ?? 0,
+      criteria: json['criteria'] as String? ?? '',
       trees: json['trees'] != null
           ? (json['trees'] as List<dynamic>)
               .map((e) => AnomalyTree.fromJson(e as Map<String, dynamic>))
@@ -97,10 +97,10 @@ class AnomalyItem {
       bloks: json['bloks'] != null
           ? (json['bloks'] as List<dynamic>).map((e) => e.toString()).toList()
           : null,
-      treesAffected: json['trees_affected'] as int?,
-      recommendedAction: json['recommended_action'] as String,
-      estimatedCost: json['estimated_cost'] as int,
-      priority: json['priority'] as String,
+      treesAffected: (json['trees_affected'] as num?)?.toInt(),
+      recommendedAction: json['recommended_action'] as String? ?? '',
+      estimatedCost: (json['estimated_cost'] as num?)?.toInt() ?? 0,
+      priority: json['priority'] as String? ?? 'normal',
       dueDate: json['due_date'] != null ? DateTime.parse(json['due_date']) : null,
     );
   }
@@ -175,7 +175,7 @@ class AnomalyItem {
   }
 
   /// Helper: Get unique ID for this anomaly
-  String get id => '${type}_${severity}_${count}';
+  String get id => '${type}_${severity}_$count';
 
   /// Helper: Get affected count (trees or treesAffected)
   int get affectedCount => trees?.length ?? treesAffected ?? count;

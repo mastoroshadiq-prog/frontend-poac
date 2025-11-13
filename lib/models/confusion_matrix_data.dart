@@ -41,16 +41,16 @@ class ConfusionMatrixData {
     final summaryData = json['summary'] as Map<String, dynamic>?;
 
     return ConfusionMatrixData(
-      truePositive: matrixData['true_positive'] as int,
-      falsePositive: matrixData['false_positive'] as int,
-      trueNegative: matrixData['true_negative'] as int,
-      falseNegative: matrixData['false_negative'] as int,
-      accuracy: (metricsData['accuracy'] as num).toDouble(),
-      precision: (metricsData['precision'] as num).toDouble(),
-      recall: (metricsData['recall'] as num).toDouble(),
-      f1Score: (metricsData['f1_score'] as num).toDouble(),
-      fpr: (metricsData['fpr'] as num).toDouble(),
-      fnr: (metricsData['fnr'] as num).toDouble(),
+      truePositive: (matrixData['true_positive'] as num?)?.toInt() ?? 0,
+      falsePositive: (matrixData['false_positive'] as num?)?.toInt() ?? 0,
+      trueNegative: (matrixData['true_negative'] as num?)?.toInt() ?? 0,
+      falseNegative: (matrixData['false_negative'] as num?)?.toInt() ?? 0,
+      accuracy: (metricsData['accuracy'] as num?)?.toDouble() ?? 0.0,
+      precision: (metricsData['precision'] as num?)?.toDouble() ?? 0.0,
+      recall: (metricsData['recall'] as num?)?.toDouble() ?? 0.0,
+      f1Score: (metricsData['f1_score'] as num?)?.toDouble() ?? 0.0,
+      fpr: (metricsData['fpr'] as num?)?.toDouble() ?? 0.0,
+      fnr: (metricsData['fnr'] as num?)?.toDouble() ?? 0.0,
       recommendations: (json['recommendations'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
