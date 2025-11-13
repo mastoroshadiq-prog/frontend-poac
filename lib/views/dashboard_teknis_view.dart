@@ -16,10 +16,10 @@ import '../widgets/dashboard_layout.dart';
 /// - Anomaly detection & alerts
 /// - Mandor performance tracking
 /// 
-/// Layout: 3-kolom responsif
-/// - Left (30%): ConfusionMatrix, NdreStatistics
-/// - Center (40%): FieldVsDroneScatter, SpkKanban
-/// - Right (30%): AnomalyAlerts, MandorPerformance
+/// Layout: Grid 3 baris × 2 kolom (50%-50%)
+/// - Baris 1: ConfusionMatrix | FieldVsDroneScatter
+/// - Baris 2: NdreStatistics | SpkKanban
+/// - Baris 3: AnomalyAlerts | MandorPerformance
 /// 
 /// RBAC: Memerlukan role ASISTEN atau ADMIN
 class DashboardTeknisView extends StatefulWidget {
@@ -177,66 +177,74 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Account for padding (16px on each side = 32px total) and gaps (16px × 2 = 32px)
-          final availableWidth = constraints.maxWidth - 32 - 32; // padding + gaps
+          // Account for padding (16px on each side = 32px total) and gap (16px × 1 = 16px)
+          final availableWidth = constraints.maxWidth - 32 - 16; // padding + gap
+          final columnWidth = availableWidth / 2; // 50% each column
           
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
               children: [
-                // Left Column (30%) - Validation & Health
-                SizedBox(
-                  width: availableWidth * 0.30,
-                  child: Column(
-                    children: [
-                      // Confusion Matrix Heatmap
-                      ConfusionMatrixHeatmap(
+                // Baris 1: Confusion Matrix | Field vs Drone Scatter
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: columnWidth,
+                      child: ConfusionMatrixHeatmap(
                         key: ValueKey('confusion_$_refreshCounter'),
                       ),
-                      const SizedBox(height: 16),
-                      // NDRE Statistics Card
-                      NdreStatisticsCard(
-                        key: ValueKey('ndre_$_refreshCounter'),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Center Column (40%) - Analysis & Tasks
-                SizedBox(
-                  width: availableWidth * 0.40,
-                  child: Column(
-                    children: [
-                      // Field vs Drone Scatter Plot
-                      FieldVsDroneScatter(
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: columnWidth,
+                      child: FieldVsDroneScatter(
                         key: ValueKey('scatter_$_refreshCounter'),
                       ),
-                      const SizedBox(height: 16),
-                      // SPK Kanban Board
-                      SpkKanbanBoard(
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                
+                // Baris 2: NDRE Statistics | SPK Kanban Board
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: columnWidth,
+                      child: NdreStatisticsCard(
+                        key: ValueKey('ndre_$_refreshCounter'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: columnWidth,
+                      child: SpkKanbanBoard(
                         key: ValueKey('kanban_$_refreshCounter'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                // Right Column (30%) - Alerts & Performance
-                SizedBox(
-                  width: availableWidth * 0.30,
-                  child: Column(
-                    children: [
-                      // Anomaly Alert Widget
-                      AnomalyAlertWidget(
+                const SizedBox(height: 16),
+                
+                // Baris 3: Anomaly Alerts | Mandor Performance
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: columnWidth,
+                      child: AnomalyAlertWidget(
                         key: ValueKey('anomaly_$_refreshCounter'),
                       ),
-                      const SizedBox(height: 16),
-                      // Mandor Performance Table
-                      MandorPerformanceTable(
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: columnWidth,
+                      child: MandorPerformanceTable(
                         key: ValueKey('performance_$_refreshCounter'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
