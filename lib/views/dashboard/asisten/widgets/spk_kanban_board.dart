@@ -263,8 +263,10 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.blue[200]!),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Wrap(
+        spacing: 16,
+        runSpacing: 12,
+        alignment: WrapAlignment.spaceEvenly,
         children: [
           _buildStatItem(
             'Total SPK',

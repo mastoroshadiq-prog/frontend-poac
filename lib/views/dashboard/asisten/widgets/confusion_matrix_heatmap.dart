@@ -103,30 +103,35 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.purple.shade100,
-                borderRadius: BorderRadius.circular(12),
+        Expanded(
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.analytics,
+                  color: Colors.purple.shade700,
+                  size: 20,
+                ),
               ),
-              child: Icon(
-                Icons.analytics,
-                color: Colors.purple.shade700,
-                size: 20,
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Confusion Matrix - Drone Accuracy',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.3,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'Confusion Matrix - Drone Accuracy',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
         IconButton(
           icon: const Icon(Icons.refresh),
@@ -140,7 +145,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
   Widget _buildMatrix(BuildContext context) {
     final data = _data!;
 
-    return Container(
+    return SizedBox(
       height: 320,
       child: Row(
         children: [
@@ -386,8 +391,10 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
   Widget _buildMetricsRow(BuildContext context) {
     final data = _data!;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      alignment: WrapAlignment.spaceEvenly,
       children: [
         _buildMetricCard(
           'Accuracy',

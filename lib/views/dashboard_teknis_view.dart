@@ -177,6 +177,9 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
+          // Account for padding (16px on each side = 32px total) and gaps (16px × 2 = 32px)
+          final availableWidth = constraints.maxWidth - 32 - 32; // padding + gaps
+          
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -184,7 +187,7 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
               children: [
                 // Left Column (30%) - Validation & Health
                 SizedBox(
-                  width: constraints.maxWidth * 0.30 - 24,
+                  width: availableWidth * 0.30,
                   child: Column(
                     children: [
                       // Confusion Matrix Heatmap
@@ -202,7 +205,7 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
                 const SizedBox(width: 16),
                 // Center Column (40%) - Analysis & Tasks
                 SizedBox(
-                  width: constraints.maxWidth * 0.40 - 24,
+                  width: availableWidth * 0.40,
                   child: Column(
                     children: [
                       // Field vs Drone Scatter Plot
@@ -220,7 +223,7 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
                 const SizedBox(width: 16),
                 // Right Column (30%) - Alerts & Performance
                 SizedBox(
-                  width: constraints.maxWidth * 0.30 - 24,
+                  width: availableWidth * 0.30,
                   child: Column(
                     children: [
                       // Anomaly Alert Widget
