@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../models/confusion_matrix_data.dart';
+import '../../../../models/drone_ndre_tree.dart';
 import '../../../../services/validation_service.dart';
+import '../../../../widgets/create_spk_validasi_dialog.dart';
 
 /// Confusion Matrix Heatmap Widget untuk Dashboard Asisten
 /// Menampilkan 2×2 grid (TP/FP/TN/FN) dengan metrics dan recommendations
@@ -516,50 +518,212 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
   }
 
   Widget _buildRecommendations(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.lightbulb, color: Colors.blue.shade700, size: 16),
-              const SizedBox(width: 6),
-              Text(
-                'Recommendations',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade900,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ..._data!.recommendations.map((rec) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    final data = _data!;
+    
+    return Column(
+      children: [
+        // False Positive Card dengan Quick Action
+        if (data.falsePositive > 0) ...[
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.orange.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Text('• ', style: TextStyle(color: Colors.blue.shade700)),
-                    Expanded(
+                    Icon(Icons.warning_amber, color: Colors.orange.shade700, size: 20),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'FALSE POSITIVE',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade700,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: Text(
-                        rec,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey.shade800,
+                        '${data.falsePositive} pohon',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
-              )),
+                const SizedBox(height: 8),
+                Text(
+                  'Prediksi stress tapi sehat. Penyebab: bayangan, embun pagi, camera angle.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '🎯 Action: Naikkan NDRE threshold dari 0.45 ke 0.50 atau reschedule scan (hindari jam 06:00-08:00)',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade800,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: () => _createSpkFromMisclassified(context, 'FP'),
+                  icon: const Icon(Icons.add_task, size: 16),
+                  label: const Text('Create SPK Validasi Ulang'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange.shade700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
         ],
+        
+        // False Negative Card dengan Quick Action
+        if (data.falseNegative > 0) ...[
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.red.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'FALSE NEGATIVE',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade700,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${data.falseNegative} pohon',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Prediksi sehat tapi stress. Missed detection drone.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '🎯 Action: Turunkan NDRE threshold dari 0.45 ke 0.40 atau tambahkan ground validation untuk borderline.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade800,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: () => _createSpkFromMisclassified(context, 'FN'),
+                  icon: const Icon(Icons.add_task, size: 16),
+                  label: const Text('Create SPK Validasi Ulang'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _createSpkFromMisclassified(BuildContext context, String type) async {
+    final data = _data!;
+    
+    // Generate dummy trees untuk FP atau FN
+    // NOTE: Dalam implementasi real, ambil dari API endpoint khusus
+    final List<DroneNdreTree> misclassifiedTrees = [];
+    
+    if (type == 'FP') {
+      // False Positive: predicted stress tapi sehat
+      for (int i = 0; i < data.falsePositive; i++) {
+        misclassifiedTrees.add(DroneNdreTree(
+          idNpokok: 'fp-tree-${i + 1}',
+          nomorPohon: 'FP-${i + 1}',
+          ndreValue: 0.35 + (i * 0.02),
+          stressLevel: 'Stres Berat', // Predicted
+          blok: 'D00${(i % 3) + 1}A',
+          divisi: 'AME II',
+          confidence: 85.0 + (i % 10),
+        ));
+      }
+    } else {
+      // False Negative: predicted sehat tapi stress
+      for (int i = 0; i < data.falseNegative; i++) {
+        misclassifiedTrees.add(DroneNdreTree(
+          idNpokok: 'fn-tree-${i + 1}',
+          nomorPohon: 'FN-${i + 1}',
+          ndreValue: 0.52 + (i * 0.02),
+          stressLevel: 'Sehat', // Predicted
+          blok: 'D00${(i % 3) + 1}B',
+          divisi: 'AME I',
+          confidence: 82.0 + (i % 15),
+        ));
+      }
+    }
+
+    await showDialog(
+      context: context,
+      builder: (context) => CreateSpkValidasiDialog(
+        selectedTrees: misclassifiedTrees,
+        onSuccess: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'SPK Validasi untuk ${type == "FP" ? "False Positive" : "False Negative"} berhasil dibuat!',
+              ),
+              backgroundColor: Colors.green.shade700,
+            ),
+          );
+          _loadData(); // Refresh data
+        },
       ),
     );
   }

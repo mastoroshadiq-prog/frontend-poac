@@ -7,6 +7,7 @@ import 'views/lifecycle_detail_view.dart';
 import 'views/dashboard_eksekutif_view.dart';
 import 'views/dashboard_operasional_view.dart';
 import 'views/dashboard_teknis_view.dart';
+import 'views/drone_ndre_analysis_page.dart';
 import 'models/user_session.dart';
 
 void main() async {
@@ -70,6 +71,13 @@ class MyApp extends StatelessWidget {
           }
           return MaterialPageRoute(
             builder: (context) => DashboardTeknisView(token: token),
+          );
+        }
+        
+        // Drone NDRE Analysis Page
+        if (settings.name == '/drone-ndre-analysis') {
+          return MaterialPageRoute(
+            builder: (context) => const DroneNdreAnalysisPage(),
           );
         }
         
