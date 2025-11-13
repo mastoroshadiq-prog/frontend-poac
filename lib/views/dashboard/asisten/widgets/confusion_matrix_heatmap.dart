@@ -344,33 +344,33 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: color.withOpacity(0.9),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 count.toString(),
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: color,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 'trees',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 9,
                   color: Colors.grey.shade600,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 '${percentage.toStringAsFixed(1)}%',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: color.withOpacity(0.8),
                 ),

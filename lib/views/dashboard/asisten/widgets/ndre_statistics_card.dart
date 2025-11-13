@@ -21,13 +21,13 @@ class NdreStatisticsCard extends StatefulWidget {
   final VoidCallback? onCategoryTap;
 
   const NdreStatisticsCard({
-    Key? key,
+    super.key,
     this.divisi,
     this.blok,
     this.startDate,
     this.endDate,
     this.onCategoryTap,
-  }) : super(key: key);
+  });
 
   @override
   State<NdreStatisticsCard> createState() => _NdreStatisticsCardState();
@@ -589,19 +589,26 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.grey[700],
+        Flexible(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey[700],
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-            color: valueColor,
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: valueColor,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

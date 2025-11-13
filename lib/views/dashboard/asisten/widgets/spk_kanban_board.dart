@@ -596,15 +596,19 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
                         fontSize: 11,
                         color: Colors.grey[600],
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Icon(Icons.person, size: 14, color: Colors.grey[600]),
                   const SizedBox(width: 4),
-                  Text(
-                    card.pelaksana,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey[600],
+                  Flexible(
+                    child: Text(
+                      card.pelaksana,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey[600],
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -652,14 +656,17 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
                       color: card.isOverdue ? Colors.red[600] : Colors.grey[600],
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      card.isOverdue
-                          ? 'OVERDUE'
-                          : 'Target: ${_formatDate(card.targetSelesai!)}',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: card.isOverdue ? Colors.red[600] : Colors.grey[600],
-                        fontWeight: card.isOverdue ? FontWeight.bold : FontWeight.normal,
+                    Flexible(
+                      child: Text(
+                        card.isOverdue
+                            ? 'OVERDUE'
+                            : 'Target: ${_formatDate(card.targetSelesai!)}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: card.isOverdue ? Colors.red[600] : Colors.grey[600],
+                          fontWeight: card.isOverdue ? FontWeight.bold : FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
