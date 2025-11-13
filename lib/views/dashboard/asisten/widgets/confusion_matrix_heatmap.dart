@@ -146,28 +146,34 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
     final data = _data!;
 
     return SizedBox(
-      height: 320,
-      child: Row(
-        children: [
-          // Y-axis label (Actual)
-          RotatedBox(
-            quarterTurns: 3,
-            child: Center(
-              child: Text(
-                'ACTUAL (Field Validation)',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade700,
+      height: 280,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.topLeft,
+        child: SizedBox(
+          width: 400,
+          height: 280,
+          child: Row(
+            children: [
+              // Y-axis label (Actual)
+              RotatedBox(
+                quarterTurns: 3,
+                child: Center(
+                  child: Text(
+                    'ACTUAL (Field)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(width: 8),
+              const SizedBox(width: 8),
 
-          // Matrix Grid
-          Expanded(
-            child: Column(
+              // Matrix Grid
+              Expanded(
+                child: Column(
               children: [
                 // X-axis label (Predicted)
                 Padding(
@@ -306,6 +312,8 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
             ),
           ),
         ],
+      ),
+        ),
       ),
     );
   }
