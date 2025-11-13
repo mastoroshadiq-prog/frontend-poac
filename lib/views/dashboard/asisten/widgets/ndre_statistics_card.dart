@@ -315,24 +315,27 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
           Icons.check_circle),
     ];
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Wrap(
+      direction: Axis.vertical,
+      spacing: 4,
+      runSpacing: 4,
       children: categories.map((category) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
+        return ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 180),
           child: InkWell(
             onTap: widget.onCategoryTap,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(category.$5, color: category.$4, size: 20),
                   const SizedBox(width: 8),
-                  Expanded(
+                  Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           category.$1,
@@ -340,6 +343,7 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           '${category.$2} pohon',
@@ -347,6 +351,7 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
                             fontSize: 10,
                             color: Colors.grey[600],
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

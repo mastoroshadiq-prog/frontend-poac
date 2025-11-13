@@ -22,13 +22,13 @@ class FieldVsDroneScatter extends StatefulWidget {
   final Function(ValidationPoint)? onPointTap;
 
   const FieldVsDroneScatter({
-    Key? key,
+    super.key,
     this.divisi,
     this.blok,
     this.stressLevel,
     this.category,
     this.onPointTap,
-  }) : super(key: key);
+  });
 
   @override
   State<FieldVsDroneScatter> createState() => _FieldVsDroneScatterState();
@@ -532,15 +532,18 @@ class _FieldVsDroneScatterState extends State<FieldVsDroneScatter> {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(cat.$4, color: cat.$3, size: 18),
                 const SizedBox(width: 8),
-                Expanded(
+                Flexible(
                   child: Text(
                     '${cat.$1}: ${cat.$2}',
                     style: const TextStyle(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                const SizedBox(width: 4),
                 Text(
                   '$count',
                   style: TextStyle(
@@ -552,7 +555,7 @@ class _FieldVsDroneScatterState extends State<FieldVsDroneScatter> {
               ],
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -691,7 +694,7 @@ class _FieldVsDroneScatterState extends State<FieldVsDroneScatter> {
               ],
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
