@@ -160,7 +160,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 quarterTurns: 3,
                 child: Center(
                   child: Text(
-                    'ACTUAL (Field)',
+                    'ACTUAL',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
@@ -179,7 +179,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'PREDICTED (Drone NDRE)',
+                    'PREDICTED',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -399,38 +399,54 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
   Widget _buildMetricsRow(BuildContext context) {
     final data = _data!;
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.spaceEvenly,
+    return Column(
       children: [
-        _buildMetricCard(
-          'Accuracy',
-          '${(data.accuracy * 100).toStringAsFixed(1)}%',
-          Icons.check_circle,
-          data.meetsTargetAccuracy ? Colors.green : Colors.orange,
-          'Overall correctness\nTarget: ≥80%',
+        Row(
+          children: [
+            Expanded(
+              child: _buildMetricCard(
+                'Accuracy',
+                '${(data.accuracy * 100).toStringAsFixed(1)}%',
+                Icons.check_circle,
+                data.meetsTargetAccuracy ? Colors.green : Colors.orange,
+                'Overall correctness\nTarget: ≥80%',
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _buildMetricCard(
+                'Precision',
+                '${(data.precision * 100).toStringAsFixed(1)}%',
+                Icons.analytics,
+                data.meetsTargetPrecision ? Colors.blue : Colors.orange,
+                'Positive prediction reliability\nTarget: ≥75%',
+              ),
+            ),
+          ],
         ),
-        _buildMetricCard(
-          'Precision',
-          '${(data.precision * 100).toStringAsFixed(1)}%',
-          Icons.analytics,
-          data.meetsTargetPrecision ? Colors.blue : Colors.orange,
-          'Positive prediction reliability\nTarget: ≥75%',
-        ),
-        _buildMetricCard(
-          'Recall',
-          '${(data.recall * 100).toStringAsFixed(1)}%',
-          Icons.radar,
-          data.meetsTargetRecall ? Colors.purple : Colors.orange,
-          'Detection completeness\nTarget: ≥80%',
-        ),
-        _buildMetricCard(
-          'F1-Score',
-          '${(data.f1Score * 100).toStringAsFixed(1)}%',
-          Icons.star,
-          Colors.amber,
-          'Balanced performance\n(Precision × Recall)',
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _buildMetricCard(
+                'Recall',
+                '${(data.recall * 100).toStringAsFixed(1)}%',
+                Icons.radar,
+                data.meetsTargetRecall ? Colors.purple : Colors.orange,
+                'Detection completeness\nTarget: ≥80%',
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _buildMetricCard(
+                'F1-Score',
+                '${(data.f1Score * 100).toStringAsFixed(1)}%',
+                Icons.star,
+                Colors.amber,
+                'Balanced performance\n(Precision × Recall)',
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -531,20 +547,24 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
   Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
-        ElevatedButton.icon(
-          onPressed: () => _adjustThreshold(context),
-          icon: const Icon(Icons.tune, size: 18),
-          label: const Text('Adjust Threshold'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple.shade600,
-            foregroundColor: Colors.white,
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => _adjustThreshold(context),
+            icon: const Icon(Icons.tune, size: 18),
+            label: const Text('Adjust Threshold'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple.shade600,
+              foregroundColor: Colors.white,
+            ),
           ),
         ),
         const SizedBox(width: 8),
-        OutlinedButton.icon(
-          onPressed: () => _exportReport(context),
-          icon: const Icon(Icons.download, size: 18),
-          label: const Text('Export Report'),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () => _exportReport(context),
+            icon: const Icon(Icons.download, size: 18),
+            label: const Text('Export Report'),
+          ),
         ),
       ],
     );
