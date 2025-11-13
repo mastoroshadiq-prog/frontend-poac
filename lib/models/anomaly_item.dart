@@ -17,6 +17,18 @@ class AnomalyData {
           .toList(),
     );
   }
+
+  /// Helper: Total anomalies count
+  int get totalAnomalies => summary.totalAnomalies;
+
+  /// Helper: Kritis severity count (map from high_severity)
+  int get kritisCount => summary.highSeverity;
+
+  /// Helper: Tinggi severity count (map from medium_severity)
+  int get tinggiCount => summary.mediumSeverity;
+
+  /// Helper: Sedang severity count (map from low_severity)
+  int get sedangCount => summary.lowSeverity;
 }
 
 /// Summary of anomalies by severity
@@ -129,14 +141,17 @@ class AnomalyItem {
     }
   }
 
-  /// Get severity color
-  String get severityColor {
+  /// Get severity color (as Color import from Flutter)
+  String get severityColorString {
     switch (severity.toLowerCase()) {
       case 'high':
+      case 'kritis':
         return 'red';
       case 'medium':
+      case 'tinggi':
         return 'orange';
       case 'low':
+      case 'sedang':
         return 'green';
       default:
         return 'grey';
@@ -156,6 +171,29 @@ class AnomalyItem {
         return 'blue';
       default:
         return 'grey';
+    }
+  }
+
+  /// Helper: Get unique ID for this anomaly
+  String get id => '${type}_${severity}_${count}';
+
+  /// Helper: Get affected count (trees or treesAffected)
+  int get affectedCount => trees?.length ?? treesAffected ?? count;
+
+  /// Helper: Get severity icon (MaterialIcons)
+  String get severityIconName {
+    switch (severity.toLowerCase()) {
+      case 'high':
+      case 'kritis':
+        return 'error';
+      case 'medium':
+      case 'tinggi':
+        return 'warning';
+      case 'low':
+      case 'sedang':
+        return 'info';
+      default:
+        return 'help';
     }
   }
 }
