@@ -403,13 +403,17 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
           });
         },
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: isActive ? Colors.blue[700] : Colors.black87,
+            Flexible(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: isActive ? Colors.blue[700] : Colors.black87,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 4),

@@ -152,7 +152,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
         alignment: Alignment.topLeft,
         child: SizedBox(
           width: 400,
-          height: 280,
+          height: 300,
           child: Row(
             children: [
               // Y-axis label (Actual)
@@ -348,45 +348,46 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: color.withOpacity(0.9),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 count.toString(),
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: color,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 'trees',
                 style: TextStyle(
-                  fontSize: 9,
+                  fontSize: 8,
                   color: Colors.grey.shade600,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 '${percentage.toStringAsFixed(1)}%',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: FontWeight.w600,
                   color: color.withOpacity(0.8),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Icon(
                 Icons.touch_app,
-                size: 16,
+                size: 14,
                 color: Colors.grey.shade400,
               ),
             ],

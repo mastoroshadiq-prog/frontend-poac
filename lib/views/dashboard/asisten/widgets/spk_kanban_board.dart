@@ -590,6 +590,7 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
                   Icon(_getTipeIcon(card.tipeSpk), size: 14, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Expanded(
+                    flex: 2,
                     child: Text(
                       card.tipeSpk,
                       style: TextStyle(
@@ -599,9 +600,11 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 4),
                   Icon(Icons.person, size: 14, color: Colors.grey[600]),
                   const SizedBox(width: 4),
-                  Flexible(
+                  Expanded(
+                    flex: 2,
                     child: Text(
                       card.pelaksana,
                       style: TextStyle(
