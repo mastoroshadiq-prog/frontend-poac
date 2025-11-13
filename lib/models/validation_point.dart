@@ -154,15 +154,32 @@ class FieldVsDroneData {
   });
 
   factory FieldVsDroneData.fromJson(Map<String, dynamic> json) {
-    return FieldVsDroneData(
-      distribution: ((json['distribution'] as List<dynamic>?) ?? [])
+    // Defensive: check if distribution is actually a List
+    final distributionData = json['distribution'];
+    final List<ValidationDistribution> parsedDistribution;
+    if (distributionData is List) {
+      parsedDistribution = distributionData
           .map((e) => ValidationDistribution.fromJson((e as Map<String, dynamic>?) ?? {}))
-          .toList(),
-      recommendations: (json['recommendations'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      totalTrees: json['total_trees'] as int? ?? 0,
+          .toList();
+    } else {
+      parsedDistribution = [];
+    }
+
+    // Defensive: check if recommendations is actually a List
+    final recommendationsData = json['recommendations'];
+    final List<String> parsedRecommendations;
+    if (recommendationsData is List) {
+      parsedRecommendations = recommendationsData
+          .map((e) => e.toString())
+          .toList();
+    } else {
+      parsedRecommendations = [];
+    }
+
+    return FieldVsDroneData(
+      distribution: parsedDistribution,
+      recommendations: parsedRecommendations,
+      totalTrees: (json['total_trees'] as num?)?.toInt() ?? 0,
       accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
       precision: (json['precision'] as num?)?.toDouble() ?? 0.0,
       recall: (json['recall'] as num?)?.toDouble() ?? 0.0,
@@ -245,22 +262,60 @@ class ValidationDistribution {
   });
 
   factory ValidationDistribution.fromJson(Map<String, dynamic> json) {
+    // Handle 'trees' field: backend returns integer (count), frontend expects List
+    final treesData = json['trees'];
+    final List<ValidationPoint> parsedTrees;
+    final int treeCount;
+    
+    if (treesData is int) {
+      // Backend returns count only (e.g., "trees": 118)
+      parsedTrees = [];
+      treeCount = treesData;
+    } else if (treesData is List) {
+      // Backend returns array of tree objects
+      parsedTrees = treesData
+          .map((e) => ValidationPoint.fromJson((e as Map<String, dynamic>?) ?? {}))
+          .toList();
+      treeCount = parsedTrees.length;
+    } else {
+      parsedTrees = [];
+      treeCount = 0;
+    }
+
     return ValidationDistribution(
       dronePrediction: json['drone_prediction'] as String? ?? 'Unknown',
-      fieldActual: json['field_actual'] as String? ?? 'Unknown',
-      count: (json['count'] as num?)?.toInt() ?? 0,
+      fieldActual: json['field_actual'] as String? ?? json['field_validation'] as String? ?? 'Unknown',
+      count: (json['count'] as num?)?.toInt() ?? treeCount,
       percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
       category: json['category'] as String? ?? 'UNKNOWN',
       avgNdre: (json['avg_ndre'] as num?)?.toDouble() ?? 0.0,
-      trees: ((json['trees'] as List<dynamic>?) ?? [])
-          .map((e) => ValidationPoint.fromJson((e as Map<String, dynamic>?) ?? {}))
-          .toList(),
+      trees: parsedTrees,
       commonCauses: json['common_causes'] != null
-          ? ((json['common_causes'] as List<dynamic>?) ?? [])
-              .map((e) => CommonCause.fromJson((e as Map<String, dynamic>?) ?? {}))
-              .toList()
+          ? _parseCommonCauses(json['common_causes'])
           : null,
     );
+  }
+
+  /// Parse common_causes - backend may return array of strings OR array of objects
+  static List<CommonCause>? _parseCommonCauses(dynamic data) {
+    if (data == null) return null;
+    if (data is! List) return null;
+    
+    final List<CommonCause> causes = [];
+    for (final item in data) {
+      if (item is String) {
+        // Backend returns string only (e.g., "Ganoderma confirmed")
+        causes.add(CommonCause(
+          cause: item,
+          count: 0,
+          percentage: 0.0,
+        ));
+      } else if (item is Map) {
+        // Backend returns full object
+        causes.add(CommonCause.fromJson((item as Map<String, dynamic>?) ?? {}));
+      }
+    }
+    return causes.isEmpty ? null : causes;
   }
 }
 

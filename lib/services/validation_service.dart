@@ -62,7 +62,7 @@ class ValidationService {
             json['data'] as Map<String, dynamic>,
           );
           debugPrint('✅ [ValidationService] Confusion matrix loaded');
-          debugPrint('   Total: ${data.totalTrees}, Accuracy: ${(data.accuracy * 100).toStringAsFixed(1)}%');
+          debugPrint('   Total: ${data.totalTrees}, Accuracy: ${data.accuracy.toStringAsFixed(1)}%');
           return data;
         } else {
           throw Exception(json['message'] ?? 'Failed to load confusion matrix');
@@ -126,6 +126,9 @@ class ValidationService {
       debugPrint('   Response Status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
+        debugPrint('📋 [DEBUG] Field vs Drone RAW Response Body:');
+        debugPrint(response.body.substring(0, response.body.length > 500 ? 500 : response.body.length));
+        
         final json = jsonDecode(response.body) as Map<String, dynamic>;
 
         if (json['success'] == true) {
