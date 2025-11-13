@@ -138,11 +138,19 @@ class FieldVsDroneData {
   final List<ValidationDistribution> distribution;
   final List<String> recommendations;
   final int totalTrees;
+  final double accuracy;
+  final double precision;
+  final double recall;
+  final double f1Score;
 
   FieldVsDroneData({
     required this.distribution,
     required this.recommendations,
     required this.totalTrees,
+    required this.accuracy,
+    required this.precision,
+    required this.recall,
+    required this.f1Score,
   });
 
   factory FieldVsDroneData.fromJson(Map<String, dynamic> json) {
@@ -155,7 +163,62 @@ class FieldVsDroneData {
               .toList() ??
           [],
       totalTrees: json['total_trees'] as int? ?? 0,
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
+      precision: (json['precision'] as num?)?.toDouble() ?? 0.0,
+      recall: (json['recall'] as num?)?.toDouble() ?? 0.0,
+      f1Score: (json['f1_score'] as num?)?.toDouble() ?? 0.0,
     );
+  }
+
+  /// Helper: Get all validation points from all distribution categories
+  List<ValidationPoint> get points {
+    final List<ValidationPoint> allPoints = [];
+    for (final dist in distribution) {
+      allPoints.addAll(dist.trees);
+    }
+    return allPoints;
+  }
+
+  /// Helper: Get total point count
+  int get totalPoints => points.length;
+
+  /// Helper: Get all common causes from False Positive and False Negative categories
+  List<CommonCause> get commonCauses {
+    final List<CommonCause> causes = [];
+    for (final dist in distribution) {
+      if (dist.commonCauses != null &&
+          (dist.category == 'FP' || dist.category == 'FN')) {
+        causes.addAll(dist.commonCauses!);
+      }
+    }
+    return causes;
+  }
+
+  /// Helper: Get distribution analysis text
+  String get distributionAnalysis {
+    final tpDist = distribution.where((d) => d.category == 'TP').firstOrNull;
+    final fpDist = distribution.where((d) => d.category == 'FP').firstOrNull;
+    final tnDist = distribution.where((d) => d.category == 'TN').firstOrNull;
+    final fnDist = distribution.where((d) => d.category == 'FN').firstOrNull;
+
+    final tpCount = tpDist?.count ?? 0;
+    final fpCount = fpDist?.count ?? 0;
+    final tnCount = tnDist?.count ?? 0;
+    final fnCount = fnDist?.count ?? 0;
+
+    if (accuracy >= 90) {
+      return 'Validasi sangat baik dengan akurasi ${accuracy.toStringAsFixed(1)}%. '
+          'Drone mampu mengidentifikasi stres dengan akurat ($tpCount TP, $tnCount TN). '
+          'Hanya ${fpCount + fnCount} kasus mismatch yang perlu perhatian.';
+    } else if (accuracy >= 75) {
+      return 'Validasi cukup baik dengan akurasi ${accuracy.toStringAsFixed(1)}%. '
+          'Terdapat ${fpCount + fnCount} kasus mismatch (${fpCount} FP, ${fnCount} FN) '
+          'yang perlu diselidiki lebih lanjut.';
+    } else {
+      return 'Akurasi rendah (${accuracy.toStringAsFixed(1)}%). '
+          'Drone menghasilkan ${fpCount + fnCount} prediksi salah dari $totalTrees pohon. '
+          'Perlu kalibrasi threshold NDRE dan review metodologi.';
+    }
   }
 }
 
