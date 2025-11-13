@@ -51,10 +51,7 @@ class ConfusionMatrixData {
       f1Score: (metricsData['f1_score'] as num?)?.toDouble() ?? 0.0,
       fpr: (metricsData['fpr'] as num?)?.toDouble() ?? 0.0,
       fnr: (metricsData['fnr'] as num?)?.toDouble() ?? 0.0,
-      recommendations: (json['recommendations'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
+      recommendations: _parseRecommendations(json['recommendations']),
       perDivisi: json['per_divisi'] != null
           ? ((json['per_divisi'] as List<dynamic>?) ?? [])
               .map((e) => DivisiAccuracy.fromJson((e as Map<String, dynamic>?) ?? {}))
@@ -68,6 +65,27 @@ class ConfusionMatrixData {
           : null,
       totalValidated: summaryData?['total_validated'] as int? ?? 0,
     );
+  }
+
+  /// Parse recommendations - backend may return array of strings OR array of objects
+  static List<String> _parseRecommendations(dynamic data) {
+    if (data == null) return [];
+    if (data is! List) return [];
+    
+    final List<String> recommendations = [];
+    for (final item in data) {
+      if (item is String) {
+        // Backend returns string directly
+        recommendations.add(item);
+      } else if (item is Map) {
+        // Backend returns object with message field
+        final message = item['message'] as String?;
+        if (message != null && message.isNotEmpty) {
+          recommendations.add(message);
+        }
+      }
+    }
+    return recommendations;
   }
 
   Map<String, dynamic> toJson() {
