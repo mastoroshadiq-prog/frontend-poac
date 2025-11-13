@@ -49,6 +49,12 @@ dependencies:
   
   # Package untuk format tanggal (date formatting)
   intl: ^0.19.0
+  
+  # Google Fonts untuk typography yang lebih baik
+  google_fonts: ^6.1.0
+  
+  # Flutter SVG untuk icon dan assets SVG
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
