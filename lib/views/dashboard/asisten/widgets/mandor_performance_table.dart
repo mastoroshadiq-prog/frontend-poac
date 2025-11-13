@@ -294,7 +294,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
             ),
             const SizedBox(height: 4),
             Text(
-              '${(performer.rate * 100).toStringAsFixed(0)}%',
+              '${(performer.rate).toStringAsFixed(0)}%',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -468,7 +468,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundColor: _getPerformanceColor(mandor.performance.qualityScore * 100),
+                        backgroundColor: _getPerformanceColor(mandor.performance.qualityScore),
                         child: Text(
                           mandor.name.substring(0, 1).toUpperCase(),
                           style: const TextStyle(
@@ -506,22 +506,22 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
                 // Overall Score
                 Expanded(
                   flex: 1,
-                  child: _buildScoreCell(mandor.performance.qualityScore * 100),
+                  child: _buildScoreCell(mandor.performance.qualityScore),
                 ),
                 // Completion Rate
                 Expanded(
                   flex: 1,
-                  child: _buildScoreCell(mandor.performance.completionRate * 100),
+                  child: _buildScoreCell(mandor.performance.completionRate),
                 ),
                 // Quality Score
                 Expanded(
                   flex: 1,
-                  child: _buildScoreCell(mandor.performance.qualityScore * 100),
+                  child: _buildScoreCell(mandor.performance.qualityScore),
                 ),
                 // Speed Score
                 Expanded(
                   flex: 1,
-                  child: _buildScoreCell(mandor.breakdown.speedScore * 100),
+                  child: _buildScoreCell(mandor.breakdown.speedScore),
                 ),
                 // Actions
                 SizedBox(
@@ -607,7 +607,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
               Expanded(
                 child: _buildMetricCard(
                   'Validation Accuracy',
-                  mandor.breakdown.validationAccuracy * 100,
+                  mandor.breakdown.validationAccuracy,
                   Icons.check_circle,
                 ),
               ),
@@ -615,7 +615,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
               Expanded(
                 child: _buildMetricCard(
                   'SOP Compliance',
-                  mandor.breakdown.sopCompliance * 100,
+                  mandor.breakdown.sopCompliance,
                   Icons.rule,
                 ),
               ),
@@ -623,7 +623,7 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
               Expanded(
                 child: _buildMetricCard(
                   'Speed Score',
-                  mandor.breakdown.speedScore * 100,
+                  mandor.breakdown.speedScore,
                   Icons.speed,
                 ),
               ),
@@ -800,11 +800,11 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
                       borderColor: Colors.blue[700]!,
                       borderWidth: 2,
                       dataEntries: [
-                        RadarEntry(value: mandor.performance.qualityScore * 100),
-                        RadarEntry(value: mandor.performance.completionRate * 100),
-                        RadarEntry(value: mandor.performance.qualityScore * 100),
-                        RadarEntry(value: mandor.breakdown.speedScore * 100),
-                        RadarEntry(value: mandor.breakdown.sopCompliance * 100),
+                        RadarEntry(value: mandor.performance.qualityScore),
+                        RadarEntry(value: mandor.performance.completionRate),
+                        RadarEntry(value: mandor.performance.qualityScore),
+                        RadarEntry(value: mandor.breakdown.speedScore),
+                        RadarEntry(value: mandor.breakdown.sopCompliance),
                       ],
                     ),
                   ],
@@ -822,11 +822,11 @@ class _MandorPerformanceTableState extends State<MandorPerformanceTable> {
 
   Widget _buildRadarLegend(MandorPerformance mandor) {
     final metrics = [
-      ('Overall', mandor.performance.qualityScore * 100),
-      ('Completion', mandor.performance.completionRate * 100),
-      ('Quality', mandor.performance.qualityScore * 100),
-      ('Speed', mandor.breakdown.speedScore * 100),
-      ('SOP', mandor.breakdown.sopCompliance * 100),
+      ('Overall', mandor.performance.qualityScore),
+      ('Completion', mandor.performance.completionRate),
+      ('Quality', mandor.performance.qualityScore),
+      ('Speed', mandor.breakdown.speedScore),
+      ('SOP', mandor.breakdown.sopCompliance),
     ];
 
     return Column(
