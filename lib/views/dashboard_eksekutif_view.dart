@@ -779,9 +779,7 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
     final riskIcon = _getRiskIcon(riskLevel);
 
     // Calculate days until deadline
-    final daysLeft = deadline != null
-        ? deadline.difference(DateTime.now()).inDays
-        : null;
+    final daysLeft = deadline?.difference(DateTime.now()).inDays;
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -1005,7 +1003,7 @@ class _DashboardEksekutifViewState extends State<DashboardEksekutifView>
           deadline,
           riskLevel,
           blockers,
-          ['Team Member ${pelaksanaAssigned}'], // Convert int to list for demo
+          ['Team Member $pelaksanaAssigned'], // Convert int to list for demo
         );
       },
       borderRadius: BorderRadius.circular(24),

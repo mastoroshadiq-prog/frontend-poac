@@ -179,7 +179,7 @@ class _PlantationHealthWidgetState extends State<PlantationHealthWidget> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '${overview.healthIndex.toStringAsFixed(0)}',
+                                      overview.healthIndex.toStringAsFixed(0),
                                       style: TextStyle(
                                         fontSize: 48,
                                         fontWeight: FontWeight.bold,

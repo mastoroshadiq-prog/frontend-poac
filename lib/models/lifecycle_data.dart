@@ -5,6 +5,7 @@
 /// 1. GET /api/v1/lifecycle/overview
 /// 2. GET /api/v1/lifecycle/phase/:phase_name
 /// 3. GET /api/v1/lifecycle/sop-compliance
+library;
 
 /// Lifecycle Phase Info (dari overview)
 class LifecyclePhase {

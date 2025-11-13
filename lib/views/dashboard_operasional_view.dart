@@ -723,8 +723,9 @@ class _DashboardOperasionalViewState extends State<DashboardOperasionalView> {
                     builder: (value, row) {
                       final peringkat = value as int;
                       Color badgeColor;
-                      if (peringkat == 1) badgeColor = Colors.amber;
-                      else if (peringkat == 2) badgeColor = Colors.grey;
+                      if (peringkat == 1) {
+                        badgeColor = Colors.amber;
+                      } else if (peringkat == 2) badgeColor = Colors.grey;
                       else if (peringkat == 3) badgeColor = Colors.brown.shade400;
                       else badgeColor = Colors.blue;
                       
@@ -775,8 +776,9 @@ class _DashboardOperasionalViewState extends State<DashboardOperasionalView> {
                     builder: (value, row) {
                       final rate = (value as num).toDouble();
                       Color rateColor;
-                      if (rate >= 80) rateColor = Colors.green;
-                      else if (rate >= 50) rateColor = Colors.orange;
+                      if (rate >= 80) {
+                        rateColor = Colors.green;
+                      } else if (rate >= 50) rateColor = Colors.orange;
                       else rateColor = Colors.red;
                       
                       return Container(
