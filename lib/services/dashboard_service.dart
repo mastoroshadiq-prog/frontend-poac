@@ -4,6 +4,7 @@ import '../config/app_config.dart';
 import '../config/supabase_config.dart';
 import '../models/eksekutif_poac_data.dart';
 import '../models/panen_data.dart';
+import '../models/ndre_statistics.dart';
 
 /// Service class untuk mengelola API calls ke Dashboard Backend
 /// Sesuai Prinsip MPP: SIMPLE, TEPAT, PENINGKATAN BERTAHAP
@@ -586,6 +587,94 @@ class DashboardService {
         'nilai': (item['nilai'] ?? 0).toDouble(),
       };
     }).toList();
+  }
+
+  // ============================================================================
+  // NDRE STATISTICS API - Dashboard Asisten Tier 3
+  // ============================================================================
+
+  /// Fetch NDRE Statistics (Distribution Pie Chart & Bar Chart)
+  /// 
+  /// GET /api/v1/dashboard/ndre-statistics
+  /// 
+  /// Query Parameters:
+  ///   - divisi: Filter by divisi (optional)
+  ///   - blok: Filter by blok (optional)
+  ///   - startDate: Filter start date (optional, ISO 8601)
+  ///   - endDate: Filter end date (optional, ISO 8601)
+  /// 
+  /// Returns: NdreStatistics with:
+  /// {
+  ///   "total_pohon": int,
+  ///   "stres_berat": int (NDRE < 0.30),
+  ///   "stres_sedang": int (0.30 <= NDRE < 0.45),
+  ///   "sehat": int (NDRE >= 0.45),
+  ///   "average_ndre": double,
+  ///   "min_ndre": double,
+  ///   "max_ndre": double,
+  ///   "divisi": String (optional),
+  ///   "blok": String (optional),
+  ///   "timestamp": String (ISO 8601)
+  /// }
+  /// 
+  /// RBAC: Requires MANDOR, ASISTEN, or ADMIN role
+  Future<NdreStatistics> getNdreStatistics({
+    String? divisi,
+    String? blok,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      final token = _getAuthToken();
+      
+      // Build query parameters
+      final queryParams = <String, String>{};
+      if (divisi != null) queryParams['divisi'] = divisi;
+      if (blok != null) queryParams['blok'] = blok;
+      if (startDate != null) queryParams['start_date'] = startDate.toIso8601String();
+      if (endDate != null) queryParams['end_date'] = endDate.toIso8601String();
+
+      final url = Uri.parse('$baseUrl/dashboard/ndre-statistics').replace(
+        queryParameters: queryParams.isNotEmpty ? queryParams : null,
+      );
+
+      print('🔍 [DEBUG] Fetching NDRE Statistics from: $url');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ).timeout(AppConfig.requestTimeout);
+
+      print('🔍 [DEBUG] NDRE Statistics Response Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as Map<String, dynamic>;
+        
+        // Extract data dari wrapper jika ada
+        final data = jsonData.containsKey('data') && jsonData['data'] is Map
+            ? jsonData['data'] as Map<String, dynamic>
+            : jsonData;
+
+        print('✅ [DEBUG] NDRE Statistics fetched successfully');
+        return NdreStatistics.fromJson(data);
+      } else if (response.statusCode == 401) {
+        throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');
+      } else if (response.statusCode == 403) {
+        throw Exception('Akses Ditolak: Anda tidak memiliki izin untuk mengakses data NDRE (403)');
+      } else if (response.statusCode == 404) {
+        throw Exception('Endpoint tidak ditemukan (404): Pastikan backend sudah running');
+      } else {
+        throw Exception('Request gagal (${response.statusCode}): ${response.body}');
+      }
+    } catch (e) {
+      // Fallback to dummy data for development
+      print('⚠️ [DEBUG] Using dummy NDRE statistics data: $e');
+      return NdreStatistics.dummy();
+    }
   }
 
   // ============================================================================
