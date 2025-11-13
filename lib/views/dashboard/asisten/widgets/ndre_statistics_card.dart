@@ -460,8 +460,8 @@ class _NdreStatisticsCardState extends State<NdreStatisticsCard> {
     final stats = _statistics!;
     final maxValue =
         [stats.stresBerat, stats.stresSedang, stats.sehat].reduce((a, b) => a > b ? a : b);
-    // Add 20% padding to max value
-    return (maxValue * 1.2).ceilToDouble();
+    // Add 20% padding to max value, minimum 10 to avoid zero interval
+    return maxValue > 0 ? (maxValue * 1.2).ceilToDouble() : 10.0;
   }
 
   Widget _getBottomTitles(double value, TitleMeta meta) {

@@ -37,10 +37,10 @@ class NdreStatistics {
 
   /// Factory constructor dari JSON response API
   factory NdreStatistics.fromJson(Map<String, dynamic> json) {
-    final total = json['total_pohon'] as int;
-    final stresBerat = json['stres_berat'] as int;
-    final stresSedang = json['stres_sedang'] as int;
-    final sehat = json['sehat'] as int;
+    final total = (json['total_pohon'] as num?)?.toInt() ?? 0;
+    final stresBerat = (json['stres_berat'] as num?)?.toInt() ?? 0;
+    final stresSedang = (json['stres_sedang'] as num?)?.toInt() ?? 0;
+    final sehat = (json['sehat'] as num?)?.toInt() ?? 0;
 
     return NdreStatistics(
       totalPohon: total,
