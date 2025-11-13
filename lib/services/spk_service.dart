@@ -186,8 +186,7 @@ class SPKService {
         final data = jsonData.containsKey('data') && jsonData['data'] is Map
             ? jsonData['data'] as Map<String, dynamic>
             : jsonData;
-
-        print('✅ [DEBUG] SPK Kanban fetched successfully');
+        
         return SpkKanbanData.fromJson(data);
       } else if (response.statusCode == 401) {
         throw Exception('Silakan Login: Token tidak valid atau sudah kadaluarsa (401)');

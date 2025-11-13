@@ -69,6 +69,8 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
         tipeSpk: _selectedTipeFilter,
       );
 
+      print('📊 [DEBUG] SPK Kanban Data Loaded: ${data.statistics.totalSpk} total (${data.pending.length} pending, ${data.dikerjakan.length} dikerjakan, ${data.selesai.length} selesai)');
+
       if (mounted) {
         setState(() {
           _data = data;

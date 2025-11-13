@@ -4,6 +4,7 @@
 /// - PENDING: SPK baru dibuat, belum dikerjakan
 /// - DIKERJAKAN: SPK sedang dalam proses
 /// - SELESAI: SPK sudah selesai dikerjakan
+library;
 
 class SpkKanbanData {
   final List<SpkCard> pending;
@@ -19,22 +20,33 @@ class SpkKanbanData {
   });
 
   factory SpkKanbanData.fromJson(Map<String, dynamic> json) {
+    // Backend returns UPPERCASE keys (PENDING, DIKERJAKAN, SELESAI)
+    // Handle both lowercase and UPPERCASE
+    final pending = ((json['pending'] ?? json['PENDING']) as List<dynamic>?)
+            ?.map((e) => SpkCard.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+    
+    final dikerjakan = ((json['dikerjakan'] ?? json['DIKERJAKAN']) as List<dynamic>?)
+            ?.map((e) => SpkCard.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+    
+    final selesai = ((json['selesai'] ?? json['SELESAI']) as List<dynamic>?)
+            ?.map((e) => SpkCard.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+    
+    // Calculate statistics from actual data jika backend tidak kirim
+    final statistics = json['statistics'] != null
+        ? SpkStatistics.fromJson(json['statistics'] as Map<String, dynamic>)
+        : SpkStatistics.fromLists(pending: pending, dikerjakan: dikerjakan, selesai: selesai);
+    
     return SpkKanbanData(
-      pending: (json['pending'] as List<dynamic>?)
-              ?.map((e) => SpkCard.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      dikerjakan: (json['dikerjakan'] as List<dynamic>?)
-              ?.map((e) => SpkCard.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      selesai: (json['selesai'] as List<dynamic>?)
-              ?.map((e) => SpkCard.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      statistics: json['statistics'] != null
-          ? SpkStatistics.fromJson(json['statistics'] as Map<String, dynamic>)
-          : SpkStatistics.empty(),
+      pending: pending,
+      dikerjakan: dikerjakan,
+      selesai: selesai,
+      statistics: statistics,
     );
   }
 
@@ -104,28 +116,37 @@ class SpkCard {
   });
 
   factory SpkCard.fromJson(Map<String, dynamic> json) {
-    final jumlahTugas = json['jumlah_tugas'] as int? ?? 0;
+    // Backend response tidak punya jumlah_tugas/tugas_selesai, gunakan default
+    final jumlahTugas = json['jumlah_tugas'] as int? ?? 1;
     final tugasSelesai = json['tugas_selesai'] as int? ?? 0;
     final progress = jumlahTugas > 0 ? (tugasSelesai / jumlahTugas) * 100 : 0.0;
+    
+    // Backend tidak punya nomor_spk, generate dari id_spk
+    final idSpk = json['id_spk'] as String;
+    final nomorSpk = json['nomor_spk'] as String? ?? 'SPK-${idSpk.substring(0, 8).toUpperCase()}';
 
     return SpkCard(
-      idSpk: json['id_spk'] as String,
-      nomorSpk: json['nomor_spk'] as String,
+      idSpk: idSpk,
+      nomorSpk: nomorSpk,
       namaSpk: json['nama_spk'] as String,
-      tipeSpk: json['tipe_spk'] as String,
-      status: json['status'] as String,
-      pelaksana: json['pelaksana'] as String? ?? 'Unassigned',
-      createdAt: DateTime.parse(json['created_at'] as String),
-      targetSelesai: json['target_selesai'] != null
-          ? DateTime.parse(json['target_selesai'] as String)
-          : null,
+      tipeSpk: json['tipe_spk'] as String? ?? 'VALIDASI',  // Default berdasarkan nama_spk yang ada
+      status: json['status_spk'] as String? ?? json['status'] as String? ?? 'PENDING',
+      pelaksana: json['pelaksana'] as String? ?? json['id_asisten_pembuat'] as String? ?? 'Unassigned',
+      createdAt: json['tanggal_dibuat'] != null 
+          ? DateTime.parse(json['tanggal_dibuat'] as String)
+          : (json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now()),
+      targetSelesai: json['tanggal_target_selesai'] != null
+          ? (json['tanggal_target_selesai'] as String).contains('T')
+              ? DateTime.parse(json['tanggal_target_selesai'] as String)
+              : DateTime.parse('${json['tanggal_target_selesai']}T00:00:00Z')
+          : (json['target_selesai'] != null ? DateTime.parse(json['target_selesai'] as String) : null),
       completedAt: json['completed_at'] != null
           ? DateTime.parse(json['completed_at'] as String)
           : null,
       jumlahTugas: jumlahTugas,
       tugasSelesai: tugasSelesai,
       progress: progress,
-      prioritas: json['prioritas'] as String?,
+      prioritas: json['risk_level'] as String? ?? json['prioritas'] as String?,
       divisi: json['divisi'] as String?,
       blok: json['blok'] as String?,
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
@@ -296,6 +317,47 @@ class SpkStatistics {
       completionRate: 0.0,
       avgTimeToComplete: 0.0,
       overdueCount: 0,
+    );
+  }
+  
+  /// Calculate statistics from lists (when backend doesn't provide statistics)
+  factory SpkStatistics.fromLists({
+    required List<SpkCard> pending,
+    required List<SpkCard> dikerjakan,
+    required List<SpkCard> selesai,
+  }) {
+    final total = pending.length + dikerjakan.length + selesai.length;
+    final completionRate = total > 0 ? (selesai.length / total) * 100 : 0.0;
+    
+    // Calculate average time to complete from selesai cards
+    double avgTime = 0.0;
+    if (selesai.isNotEmpty) {
+      int totalDays = 0;
+      int countWithDates = 0;
+      for (final card in selesai) {
+        if (card.completedAt != null) {
+          final duration = card.completedAt!.difference(card.createdAt);
+          totalDays += duration.inDays;
+          countWithDates++;
+        }
+      }
+      avgTime = countWithDates > 0 ? totalDays / countWithDates : 0.0;
+    }
+    
+    // Count overdue (pending/dikerjakan with targetSelesai < now)
+    final now = DateTime.now();
+    int overdueCount = 0;
+    for (final card in [...pending, ...dikerjakan]) {
+      if (card.targetSelesai != null && card.targetSelesai!.isBefore(now)) {
+        overdueCount++;
+      }
+    }
+    
+    return SpkStatistics(
+      totalSpk: total,
+      completionRate: completionRate,
+      avgTimeToComplete: avgTime,
+      overdueCount: overdueCount,
     );
   }
 }
