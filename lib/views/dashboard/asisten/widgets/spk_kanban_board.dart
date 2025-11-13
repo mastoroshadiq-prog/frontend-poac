@@ -20,12 +20,12 @@ class SpkKanbanBoard extends StatefulWidget {
   final Function(SpkCard)? onCardTap;
 
   const SpkKanbanBoard({
-    Key? key,
+    super.key,
     this.divisi,
     this.blok,
     this.tipeSpk,
     this.onCardTap,
-  }) : super(key: key);
+  });
 
   @override
   State<SpkKanbanBoard> createState() => _SpkKanbanBoardState();
@@ -452,9 +452,9 @@ class _SpkKanbanBoardState extends State<SpkKanbanBoard> {
           // Cards Area (DragTarget)
           Expanded(
             child: DragTarget<SpkCard>(
-              onWillAccept: (card) => card != null && card.status != title,
-              onAccept: (card) {
-                _updateSpkStatus(card, title);
+              onWillAcceptWithDetails: (details) => details.data.status != title,
+              onAcceptWithDetails: (details) {
+                _updateSpkStatus(details.data, title);
               },
               builder: (context, candidateData, rejectedData) {
                 return Container(

@@ -394,6 +394,10 @@ class ValidationService {
         'Threshold adjustment: 0.30 → 0.25 for Blok A5',
       ],
       totalTrees: 910,
+      accuracy: 0.948, // (TP + TN) / Total = (118 + 745) / 910
+      precision: 0.837, // TP / (TP + FP) = 118 / (118 + 23)
+      recall: 0.831, // TP / (TP + FN) = 118 / (118 + 24)
+      f1Score: 0.834, // 2 * (precision * recall) / (precision + recall)
     );
   }
 }
