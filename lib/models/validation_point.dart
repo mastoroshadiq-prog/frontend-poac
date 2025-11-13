@@ -53,7 +53,7 @@ class ValidationPoint {
           ? DateTime.parse(json['validation_date'])
           : null,
       gps: json['gps'] != null
-          ? GpsLocation.fromJson(json['gps'] as Map<String, dynamic>)
+          ? GpsLocation.fromJson((json['gps'] as Map<String, dynamic>?) ?? {})
           : null,
       photoUrl: json['photo_url'] as String?,
       divisi: json['divisi'] as String?,
@@ -120,8 +120,8 @@ class GpsLocation {
 
   factory GpsLocation.fromJson(Map<String, dynamic> json) {
     return GpsLocation(
-      latitude: (json['lat'] as num).toDouble(),
-      longitude: (json['lng'] as num).toDouble(),
+      latitude: (json['lat'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['lng'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -155,8 +155,8 @@ class FieldVsDroneData {
 
   factory FieldVsDroneData.fromJson(Map<String, dynamic> json) {
     return FieldVsDroneData(
-      distribution: (json['distribution'] as List<dynamic>)
-          .map((e) => ValidationDistribution.fromJson(e as Map<String, dynamic>))
+      distribution: ((json['distribution'] as List<dynamic>?) ?? [])
+          .map((e) => ValidationDistribution.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
       recommendations: (json['recommendations'] as List<dynamic>?)
               ?.map((e) => e.toString())
@@ -246,18 +246,18 @@ class ValidationDistribution {
 
   factory ValidationDistribution.fromJson(Map<String, dynamic> json) {
     return ValidationDistribution(
-      dronePrediction: json['drone_prediction'] as String,
-      fieldActual: json['field_actual'] as String,
-      count: json['count'] as int,
-      percentage: (json['percentage'] as num).toDouble(),
-      category: json['category'] as String,
-      avgNdre: (json['avg_ndre'] as num).toDouble(),
-      trees: (json['trees'] as List<dynamic>)
-          .map((e) => ValidationPoint.fromJson(e as Map<String, dynamic>))
+      dronePrediction: json['drone_prediction'] as String? ?? 'Unknown',
+      fieldActual: json['field_actual'] as String? ?? 'Unknown',
+      count: (json['count'] as num?)?.toInt() ?? 0,
+      percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
+      category: json['category'] as String? ?? 'UNKNOWN',
+      avgNdre: (json['avg_ndre'] as num?)?.toDouble() ?? 0.0,
+      trees: ((json['trees'] as List<dynamic>?) ?? [])
+          .map((e) => ValidationPoint.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
       commonCauses: json['common_causes'] != null
-          ? (json['common_causes'] as List<dynamic>)
-              .map((e) => CommonCause.fromJson(e as Map<String, dynamic>))
+          ? ((json['common_causes'] as List<dynamic>?) ?? [])
+              .map((e) => CommonCause.fromJson((e as Map<String, dynamic>?) ?? {}))
               .toList()
           : null,
     );
@@ -278,9 +278,9 @@ class CommonCause {
 
   factory CommonCause.fromJson(Map<String, dynamic> json) {
     return CommonCause(
-      cause: json['cause'] as String,
-      count: json['count'] as int,
-      percentage: (json['percentage'] as num).toDouble(),
+      cause: json['cause'] as String? ?? '',
+      count: (json['count'] as num?)?.toInt() ?? 0,
+      percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

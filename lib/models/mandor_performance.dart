@@ -14,12 +14,12 @@ class MandorPerformanceData {
   factory MandorPerformanceData.fromJson(Map<String, dynamic> json) {
     return MandorPerformanceData(
       summary:
-          PerformanceSummary.fromJson(json['summary'] as Map<String, dynamic>),
+          PerformanceSummary.fromJson((json['summary'] as Map<String, dynamic>?) ?? {}),
       mandors: ((json['mandors'] as List<dynamic>?) ?? [])
-          .map((e) => MandorPerformance.fromJson(e as Map<String, dynamic>))
+          .map((e) => MandorPerformance.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
       rankings: PerformanceRankings.fromJson(
-          json['rankings'] as Map<String, dynamic>),
+          (json['rankings'] as Map<String, dynamic>?) ?? {}),
     );
   }
 }
@@ -71,11 +71,11 @@ class MandorPerformance {
       name: json['name'] as String? ?? 'Unknown',
       afdeling: json['afdeling'] as String? ?? '',
       performance: PerformanceMetrics.fromJson(
-          json['performance'] as Map<String, dynamic>),
+          (json['performance'] as Map<String, dynamic>?) ?? {}),
       breakdown: PerformanceBreakdown.fromJson(
-          json['breakdown'] as Map<String, dynamic>),
+          (json['breakdown'] as Map<String, dynamic>?) ?? {}),
       issues: ((json['issues'] as List<dynamic>?) ?? [])
-          .map((e) => PerformanceIssue.fromJson(e as Map<String, dynamic>))
+          .map((e) => PerformanceIssue.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
       recommendations: ((json['recommendations'] as List<dynamic>?) ?? [])
           .map((e) => e.toString())
@@ -229,14 +229,14 @@ class PerformanceRankings {
 
   factory PerformanceRankings.fromJson(Map<String, dynamic> json) {
     return PerformanceRankings(
-      byCompletionRate: (json['by_completion_rate'] as List<dynamic>)
-          .map((e) => MandorRanking.fromJson(e as Map<String, dynamic>))
+      byCompletionRate: ((json['by_completion_rate'] as List<dynamic>?) ?? [])
+          .map((e) => MandorRanking.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
-      byQuality: (json['by_quality'] as List<dynamic>)
-          .map((e) => MandorRanking.fromJson(e as Map<String, dynamic>))
+      byQuality: ((json['by_quality'] as List<dynamic>?) ?? [])
+          .map((e) => MandorRanking.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
-      bySpeed: (json['by_speed'] as List<dynamic>)
-          .map((e) => MandorRanking.fromJson(e as Map<String, dynamic>))
+      bySpeed: ((json['by_speed'] as List<dynamic>?) ?? [])
+          .map((e) => MandorRanking.fromJson((e as Map<String, dynamic>?) ?? {}))
           .toList(),
     );
   }
@@ -256,9 +256,9 @@ class MandorRanking {
 
   factory MandorRanking.fromJson(Map<String, dynamic> json) {
     return MandorRanking(
-      mandorId: json['mandor_id'] as String,
-      name: json['name'] as String,
-      rate: (json['rate'] as num).toDouble(),
+      mandorId: json['mandor_id'] as String? ?? '',
+      name: json['name'] as String? ?? 'Unknown',
+      rate: (json['rate'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

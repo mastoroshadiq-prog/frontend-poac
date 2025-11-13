@@ -36,8 +36,8 @@ class ConfusionMatrixData {
   });
 
   factory ConfusionMatrixData.fromJson(Map<String, dynamic> json) {
-    final matrixData = json['matrix'] as Map<String, dynamic>;
-    final metricsData = json['metrics'] as Map<String, dynamic>;
+    final matrixData = (json['matrix'] as Map<String, dynamic>?) ?? {};
+    final metricsData = (json['metrics'] as Map<String, dynamic>?) ?? {};
     final summaryData = json['summary'] as Map<String, dynamic>?;
 
     return ConfusionMatrixData(
@@ -56,8 +56,8 @@ class ConfusionMatrixData {
               .toList() ??
           [],
       perDivisi: json['per_divisi'] != null
-          ? (json['per_divisi'] as List<dynamic>)
-              .map((e) => DivisiAccuracy.fromJson(e as Map<String, dynamic>))
+          ? ((json['per_divisi'] as List<dynamic>?) ?? [])
+              .map((e) => DivisiAccuracy.fromJson((e as Map<String, dynamic>?) ?? {}))
               .toList()
           : null,
       validationDateStart: summaryData?['validation_date_range']?['start'] != null
@@ -137,12 +137,12 @@ class DivisiAccuracy {
 
   factory DivisiAccuracy.fromJson(Map<String, dynamic> json) {
     return DivisiAccuracy(
-      divisi: json['divisi'] as String,
-      accuracy: (json['accuracy'] as num).toDouble(),
-      precision: (json['precision'] as num).toDouble(),
-      totalTrees: json['total_trees'] as int,
+      divisi: json['divisi'] as String? ?? '',
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
+      precision: (json['precision'] as num?)?.toDouble() ?? 0.0,
+      totalTrees: (json['total_trees'] as num?)?.toInt() ?? 0,
       blokTerburuk: json['blok_terburuk'] != null
-          ? BlokTerburuk.fromJson(json['blok_terburuk'] as Map<String, dynamic>)
+          ? BlokTerburuk.fromJson((json['blok_terburuk'] as Map<String, dynamic>?) ?? {})
           : null,
     );
   }
@@ -162,9 +162,9 @@ class BlokTerburuk {
 
   factory BlokTerburuk.fromJson(Map<String, dynamic> json) {
     return BlokTerburuk(
-      blok: json['blok'] as String,
-      accuracy: (json['accuracy'] as num).toDouble(),
-      issue: json['issue'] as String,
+      blok: json['blok'] as String? ?? '',
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
+      issue: json['issue'] as String? ?? '',
     );
   }
 }
