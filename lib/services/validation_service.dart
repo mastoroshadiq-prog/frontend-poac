@@ -62,7 +62,7 @@ class ValidationService {
             json['data'] as Map<String, dynamic>,
           );
           debugPrint('✅ [ValidationService] Confusion matrix loaded');
-          debugPrint('   Total: ${data.totalTrees}, Accuracy: ${data.accuracy.toStringAsFixed(1)}%');
+          debugPrint('   Total: ${data.totalTrees}, Accuracy: ${(data.accuracy * 100).toStringAsFixed(1)}%');
           return data;
         } else {
           throw Exception(json['message'] ?? 'Failed to load confusion matrix');

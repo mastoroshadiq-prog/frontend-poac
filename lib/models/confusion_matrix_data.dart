@@ -119,22 +119,22 @@ class ConfusionMatrixData {
   int get totalTrees => truePositive + falsePositive + trueNegative + falseNegative;
 
   /// Check if metrics meet target thresholds
-  /// Backend returns percentage (0-100), not decimal (0-1)
-  bool get meetsTargetAccuracy => accuracy >= 80.0; // 80% target
-  bool get meetsTargetPrecision => precision >= 75.0; // 75% target
-  bool get meetsTargetRecall => recall >= 80.0; // 80% target
+  /// Backend returns decimal (0-1), not percentage (0-100)
+  bool get meetsTargetAccuracy => accuracy >= 0.80; // 80% target
+  bool get meetsTargetPrecision => precision >= 0.75; // 75% target
+  bool get meetsTargetRecall => recall >= 0.80; // 80% target
 
   /// Get severity level based on FPR/FNR
-  /// Backend returns percentage (0-100), not decimal (0-1)
+  /// Backend returns decimal (0-1), not percentage (0-100)
   String get fprSeverity {
-    if (fpr > 10.0) return 'HIGH'; // > 10% false alarms
-    if (fpr > 5.0) return 'MEDIUM'; // > 5% false alarms
+    if (fpr > 0.10) return 'HIGH'; // > 10% false alarms
+    if (fpr > 0.05) return 'MEDIUM'; // > 5% false alarms
     return 'LOW';
   }
 
   String get fnrSeverity {
-    if (fnr > 20.0) return 'HIGH'; // > 20% missed detections
-    if (fnr > 10.0) return 'MEDIUM'; // > 10% missed detections
+    if (fnr > 0.20) return 'HIGH'; // > 20% missed detections
+    if (fnr > 0.10) return 'MEDIUM'; // > 10% missed detections
     return 'LOW';
   }
 }

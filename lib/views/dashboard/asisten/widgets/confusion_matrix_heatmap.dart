@@ -407,7 +407,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
             Expanded(
               child: _buildMetricCard(
                 'Accuracy',
-                '${data.accuracy.toStringAsFixed(1)}%',
+                '${(data.accuracy * 100).toStringAsFixed(1)}%',
                 Icons.check_circle,
                 data.meetsTargetAccuracy ? Colors.green : Colors.orange,
                 'Overall correctness\nTarget: ≥80%',
@@ -417,7 +417,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
             Expanded(
               child: _buildMetricCard(
                 'Precision',
-                '${data.precision.toStringAsFixed(1)}%',
+                '${(data.precision * 100).toStringAsFixed(1)}%',
                 Icons.analytics,
                 data.meetsTargetPrecision ? Colors.blue : Colors.orange,
                 'Positive prediction reliability\nTarget: ≥75%',
@@ -431,7 +431,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
             Expanded(
               child: _buildMetricCard(
                 'Recall',
-                '${data.recall.toStringAsFixed(1)}%',
+                '${(data.recall * 100).toStringAsFixed(1)}%',
                 Icons.radar,
                 data.meetsTargetRecall ? Colors.purple : Colors.orange,
                 'Detection completeness\nTarget: ≥80%',
@@ -441,7 +441,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
             Expanded(
               child: _buildMetricCard(
                 'F1-Score',
-                '${data.f1Score.toStringAsFixed(1)}%',
+                '${(data.f1Score * 100).toStringAsFixed(1)}%',
                 Icons.star,
                 Colors.amber,
                 'Balanced performance\n(Precision × Recall)',
