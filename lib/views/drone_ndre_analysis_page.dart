@@ -588,11 +588,30 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Tree Location Display (Priority 1 - Must Have)
+                  if (tree.nBaris != null && tree.nPokok != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: Colors.blue[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          tree.locationDisplayName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blue[800],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
                       Text('NDRE: ${tree.ndreValue.toStringAsFixed(2)}'),
-                      const SizedBox(width: 16),
-                      if (tree.blok != null) Text('Blok: ${tree.blok}'),
                       const SizedBox(width: 16),
                       if (tree.divisi != null) Text('Divisi: ${tree.divisi}'),
                     ],

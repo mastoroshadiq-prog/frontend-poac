@@ -155,14 +155,135 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
 
   String _getBlokSummary() {
     final bloks = widget.selectedTrees
-        .where((t) => t.blok != null)
-        .map((t) => t.blok!)
+        .where((t) => t.blokDetail != null || t.blok != null)
+        .map((t) => t.blokDetail ?? t.blok!)
         .toSet()
         .toList();
 
     if (bloks.isEmpty) return 'N/A';
     if (bloks.length <= 3) return bloks.join(', ');
     return '${bloks.take(3).join(', ')} +${bloks.length - 3} lainnya';
+  }
+
+  String _getLocationSummary() {
+    // Group by divisi and count
+    final divisiCounts = <String, int>{};
+    for (var tree in widget.selectedTrees) {
+      if (tree.divisi != null) {
+        divisiCounts[tree.divisi!] = (divisiCounts[tree.divisi!] ?? 0) + 1;
+      }
+    }
+
+    if (divisiCounts.isEmpty) return 'Lokasi tidak tersedia';
+
+    return divisiCounts.entries
+        .map((e) => '${e.key}: ${e.value} pohon')
+        .join(', ');
+  }
+
+  /// Build location breakdown widget (Priority 2 - Should Have)
+  /// Group trees by blok_detail and show tree count per location
+  Widget _buildLocationBreakdown() {
+    // Group trees by blok_detail
+    final Map<String, List<dynamic>> groupedByBlok = {};
+    
+    for (var tree in widget.selectedTrees) {
+      final blokKey = tree.blokDetail ?? tree.blok ?? 'N/A';
+      if (!groupedByBlok.containsKey(blokKey)) {
+        groupedByBlok[blokKey] = [];
+      }
+      groupedByBlok[blokKey]!.add({
+        'divisi': tree.divisi,
+        'n_baris': tree.nBaris,
+        'n_pokok': tree.nPokok,
+        'tree': tree,
+      });
+    }
+
+    if (groupedByBlok.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.green[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.location_on, color: Colors.green[700], size: 18),
+              const SizedBox(width: 8),
+              const Text(
+                'Location Breakdown',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...groupedByBlok.entries.map((entry) {
+            final blokDetail = entry.key;
+            final trees = entry.value;
+            final divisi = trees.first['divisi'] ?? 'N/A';
+            
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green[100],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '$divisi - Blok $blokDetail',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.green[900],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${trees.length} pohon',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      trees
+                          .where((t) => t['n_baris'] != null && t['n_pokok'] != null)
+                          .map((t) => 'B${t['n_baris']}-P${t['n_pokok']}')
+                          .join(', '),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[600],
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    );
   }
 
   Future<void> _submitCreateSPK() async {
@@ -265,55 +386,108 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
+        constraints: BoxConstraints(
+          maxWidth: 600,
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Fixed Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.add_task,
-                    color: Colors.green[700],
-                    size: 28,
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Create SPK Validasi Lapangan',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.add_task,
+                        color: Colors.green[700],
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'Create SPK Validasi Lapangan',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                // SOP Badge (Priority 2 - Should Have)
+                                Tooltip(
+                                  message: 'SOP Validasi Lapangan Ground Truth v1.0',
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[700],
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(
+                                          Icons.description,
+                                          size: 12,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          'SOP-VAL-001 v1.0',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            const Text(
+                              'Ground Truth Validation (G0-G4)',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Ground Truth Validation (G0-G4)',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                  const Divider(height: 24),
                 ],
               ),
-              const Divider(height: 24),
+            ),
 
-              // Info Box - Ground Truth Validation
-              Container(
+            // Scrollable Content
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Info Box - Ground Truth Validation
+                    Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.orange[50],
@@ -368,12 +542,20 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                       style: const TextStyle(fontSize: 13),
                     ),
                     Text(
+                      '• Lokasi: ${_getLocationSummary()}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    Text(
                       '• Blok: ${_getBlokSummary()}',
                       style: const TextStyle(fontSize: 13),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 12),
+
+              // Location Breakdown (Priority 2 - Should Have)
+              _buildLocationBreakdown(),
               const SizedBox(height: 20),
 
               // Mandor Selection
@@ -545,8 +727,11 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                   ),
                 ],
               ),
-            ],
-          ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

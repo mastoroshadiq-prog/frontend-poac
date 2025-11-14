@@ -10,7 +10,10 @@ class DroneNdreTree {
   final double ndreValue;
   final String stressLevel; // "Stres Berat", "Stres Sedang", "Sehat"
   final String? blok;
+  final String? blokDetail;
   final String? divisi;
+  final int? nBaris;
+  final int? nPokok;
   final DateTime? tanggalScan;
   final double? latitude;
   final double? longitude;
@@ -22,7 +25,10 @@ class DroneNdreTree {
     required this.ndreValue,
     required this.stressLevel,
     this.blok,
+    this.blokDetail,
     this.divisi,
+    this.nBaris,
+    this.nPokok,
     this.tanggalScan,
     this.latitude,
     this.longitude,
@@ -36,7 +42,10 @@ class DroneNdreTree {
       ndreValue: (json['ndre_value'] as num).toDouble(),
       stressLevel: json['stress_level'] as String,
       blok: json['blok'] as String?,
+      blokDetail: json['blok_detail'] as String?,
       divisi: json['divisi'] as String?,
+      nBaris: json['n_baris'] as int?,
+      nPokok: json['n_pokok'] as int?,
       tanggalScan: json['tanggal_scan'] != null
           ? DateTime.parse(json['tanggal_scan'] as String)
           : null,
@@ -53,12 +62,30 @@ class DroneNdreTree {
       'ndre_value': ndreValue,
       'stress_level': stressLevel,
       'blok': blok,
+      'blok_detail': blokDetail,
       'divisi': divisi,
+      'n_baris': nBaris,
+      'n_pokok': nPokok,
       'tanggal_scan': tanggalScan?.toIso8601String(),
       'latitude': latitude,
       'longitude': longitude,
       'confidence': confidence,
     };
+  }
+
+  /// Get tree location display name
+  /// Format: "Blok D001A, Baris 1, Pokok 5"
+  String get locationDisplayName {
+    if (nBaris == null || nPokok == null) return 'Lokasi tidak tersedia';
+    final blokText = blokDetail ?? blok ?? 'N/A';
+    return 'Blok $blokText, Baris $nBaris, Pokok $nPokok';
+  }
+
+  /// Get full location with divisi
+  /// Format: "AME II - Blok D001A, Baris 1, Pokok 5"
+  String get fullLocationDisplayName {
+    if (divisi == null) return locationDisplayName;
+    return '$divisi - $locationDisplayName';
   }
 
   /// Generate dummy data untuk development/testing
@@ -69,8 +96,11 @@ class DroneNdreTree {
         nomorPohon: 'T-001',
         ndreValue: 0.25,
         stressLevel: 'Stres Berat',
-        blok: 'D001A',
+        blok: 'D01',
+        blokDetail: 'D001A',
         divisi: 'AME II',
+        nBaris: 1,
+        nPokok: 1,
         tanggalScan: DateTime.now().subtract(const Duration(days: 1)),
         confidence: 92.5,
       ),
@@ -79,8 +109,11 @@ class DroneNdreTree {
         nomorPohon: 'T-002',
         ndreValue: 0.32,
         stressLevel: 'Stres Berat',
-        blok: 'D001B',
+        blok: 'D01',
+        blokDetail: 'D001B',
         divisi: 'AME II',
+        nBaris: 1,
+        nPokok: 2,
         tanggalScan: DateTime.now().subtract(const Duration(days: 1)),
         confidence: 88.3,
       ),
@@ -89,8 +122,11 @@ class DroneNdreTree {
         nomorPohon: 'T-003',
         ndreValue: 0.48,
         stressLevel: 'Stres Sedang',
-        blok: 'D002A',
+        blok: 'D02',
+        blokDetail: 'D002A',
         divisi: 'AME II',
+        nBaris: 2,
+        nPokok: 3,
         tanggalScan: DateTime.now().subtract(const Duration(days: 1)),
         confidence: 85.7,
       ),
@@ -99,8 +135,11 @@ class DroneNdreTree {
         nomorPohon: 'T-004',
         ndreValue: 0.42,
         stressLevel: 'Stres Sedang',
-        blok: 'D001A',
+        blok: 'D01',
+        blokDetail: 'D001A',
         divisi: 'AME I',
+        nBaris: 3,
+        nPokok: 2,
         tanggalScan: DateTime.now().subtract(const Duration(days: 2)),
         confidence: 90.1,
       ),
@@ -109,8 +148,11 @@ class DroneNdreTree {
         nomorPohon: 'T-005',
         ndreValue: 0.68,
         stressLevel: 'Sehat',
-        blok: 'D003A',
+        blok: 'D03',
+        blokDetail: 'D003A',
         divisi: 'AME I',
+        nBaris: 1,
+        nPokok: 5,
         tanggalScan: DateTime.now().subtract(const Duration(days: 2)),
         confidence: 94.2,
       ),
@@ -119,8 +161,11 @@ class DroneNdreTree {
         nomorPohon: 'T-006',
         ndreValue: 0.28,
         stressLevel: 'Stres Berat',
-        blok: 'D001B',
+        blok: 'D01',
+        blokDetail: 'D001B',
         divisi: 'AME II',
+        nBaris: 2,
+        nPokok: 1,
         tanggalScan: DateTime.now().subtract(const Duration(days: 3)),
         confidence: 91.8,
       ),
@@ -129,8 +174,11 @@ class DroneNdreTree {
         nomorPohon: 'T-007',
         ndreValue: 0.51,
         stressLevel: 'Stres Sedang',
-        blok: 'D002B',
+        blok: 'D02',
+        blokDetail: 'D002B',
         divisi: 'AME III',
+        nBaris: 4,
+        nPokok: 2,
         tanggalScan: DateTime.now().subtract(const Duration(days: 3)),
         confidence: 87.4,
       ),
@@ -139,8 +187,11 @@ class DroneNdreTree {
         nomorPohon: 'T-008',
         ndreValue: 0.35,
         stressLevel: 'Stres Berat',
-        blok: 'D001A',
+        blok: 'D01',
+        blokDetail: 'D001A',
         divisi: 'AME I',
+        nBaris: 5,
+        nPokok: 1,
         tanggalScan: DateTime.now().subtract(const Duration(days: 4)),
         confidence: 89.6,
       ),
