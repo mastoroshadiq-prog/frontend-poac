@@ -8,6 +8,7 @@ import 'views/dashboard_eksekutif_view.dart';
 import 'views/dashboard_operasional_view.dart';
 import 'views/dashboard_teknis_view.dart';
 import 'views/drone_ndre_analysis_page.dart';
+import 'views/dashboard/mandor/mandor_dashboard_page.dart';
 import 'models/user_session.dart';
 
 void main() async {
@@ -78,6 +79,15 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/drone-ndre-analysis') {
           return MaterialPageRoute(
             builder: (context) => const DroneNdreAnalysisPage(),
+          );
+        }
+        
+        // Mandor Dashboard
+        if (settings.name == '/mandor-dashboard') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          final String mandorId = args?['mandorId'] ?? 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12';
+          return MaterialPageRoute(
+            builder: (context) => MandorDashboardPage(mandorId: mandorId),
           );
         }
         

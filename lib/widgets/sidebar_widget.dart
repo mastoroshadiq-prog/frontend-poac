@@ -91,6 +91,11 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                     title: 'Dashboard Teknis',
                     route: '/dashboard-teknis',
                   ),
+                  _buildMenuItem(
+                    icon: Icons.supervisor_account,
+                    title: 'Dashboard Mandor',
+                    route: '/mandor-dashboard',
+                  ),
                   
                   const SizedBox(height: 16),
                   if (!_isCollapsed)
