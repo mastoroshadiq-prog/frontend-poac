@@ -208,74 +208,127 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.green[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.green[200]!),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green[300]!, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.green[700], size: 18),
-              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.green[700],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Icon(
+                  Icons.map_outlined,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+              const SizedBox(width: 10),
               const Text(
                 'Location Breakdown',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                  fontSize: 14,
+                  letterSpacing: 0.3,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           ...groupedByBlok.entries.map((entry) {
             final blokDetail = entry.key;
             final trees = entry.value;
             final divisi = trees.first['divisi'] ?? 'N/A';
             
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Row(
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green[100],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      '$divisi - Blok $blokDetail',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green[900],
+                  Row(
+                    children: [
+                      Icon(Icons.location_city, 
+                        size: 16, 
+                        color: Colors.green[700],
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${trees.length} pohon',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      trees
-                          .where((t) => t['n_baris'] != null && t['n_pokok'] != null)
-                          .map((t) => 'B${t['n_baris']}-P${t['n_pokok']}')
-                          .join(', '),
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey[600],
+                      const SizedBox(width: 6),
+                      Text(
+                        '$divisi - Blok $blokDetail',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[900],
+                        ),
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${trees.length} pohon',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green[800],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: trees
+                        .where((t) => t['n_baris'] != null && t['n_pokok'] != null)
+                        .map((t) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: Colors.blue[200]!),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.park,
+                                size: 12,
+                                color: Colors.blue[700],
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Baris ${t['n_baris']} - Pokok ${t['n_pokok']}',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.blue[900],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                        .toList(),
                   ),
                 ],
               ),

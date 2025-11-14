@@ -84,7 +84,17 @@ class DroneNdreService {
     } catch (e) {
       // Fallback to dummy data for development
       print('⚠️ [DroneNdreService] Using dummy data: $e');
-      return DroneNdreTree.dummyList();
+      var dummyData = DroneNdreTree.dummyList();
+      
+      // Apply stress level filter to dummy data
+      if (stressLevel != null && stressLevel.isNotEmpty) {
+        dummyData = dummyData
+            .where((tree) => tree.stressLevel == stressLevel)
+            .toList();
+        print('✅ [DroneNdreService] Filtered dummy data: ${dummyData.length} trees with stress level "$stressLevel"');
+      }
+      
+      return dummyData;
     }
   }
 
