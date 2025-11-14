@@ -3,15 +3,18 @@ import '../../models/drone_ndre_tree.dart';
 import '../../services/drone_ndre_service.dart';
 import '../../widgets/create_spk_validasi_dialog.dart';
 
-/// Drone NDRE Analysis Page
+/// Drone NDRE Analysis Page - Prediksi untuk Validasi Lapangan
 /// 
 /// Fitur:
-/// - List pohon dengan NDRE data
-/// - Filter berdasarkan stress level, divisi, blok
-/// - Selection-based Create SPK (checkbox + FAB)
-/// - Filter-based Create SPK
-/// - Statistics summary
+/// - List pohon dengan NDRE prediction dari drone
+/// - Filter berdasarkan stress level (prediksi), divisi, blok
+/// - Selection-based Create SPK Validasi Lapangan (checkbox + FAB)
+/// - Filter-based Create SPK untuk ground truth validation
+/// - Statistics summary (prediksi drone yang perlu konfirmasi surveyor)
 /// - Pagination
+/// 
+/// Context: Prediksi drone perlu validasi lapangan (ground truth) oleh surveyor
+/// untuk konfirmasi grading Ganoderma G0-G4 secara manual
 class DroneNdreAnalysisPage extends StatefulWidget {
   const DroneNdreAnalysisPage({super.key});
 
@@ -194,7 +197,7 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '🚁 Drone NDRE Analysis',
+              '🚁 Drone NDRE Prediction',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -202,7 +205,7 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
               ),
             ),
             Text(
-              'Analisis Kesehatan Pohon dari Scan Drone',
+              'Prediksi Drone - Perlu Validasi Lapangan (Ground Truth)',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.white70,
@@ -246,7 +249,7 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
           ? FloatingActionButton.extended(
               onPressed: _createSpkFromSelection,
               icon: const Icon(Icons.add_task),
-              label: Text('Create SPK (${_selectedTreeIds.length})'),
+              label: Text('Validasi Lapangan (${_selectedTreeIds.length})'),
               backgroundColor: Colors.green[700],
             )
           : null,
@@ -272,10 +275,19 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '📊 Statistics Summary',
+            '📊 Drone NDRE Prediction Summary',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '💡 Prediksi drone perlu validasi lapangan oleh surveyor (Ground Truth: G0-G4)',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+              fontStyle: FontStyle.italic,
             ),
           ),
           const SizedBox(height: 12),
@@ -315,6 +327,16 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
   }
 
   Widget _buildStatCard(String label, int count, Color color, IconData icon) {
+    // Determine urgency text based on stress level
+    String urgencyText = '';
+    if (label == 'Stres Berat') {
+      urgencyText = '(URGENT)';
+    } else if (label == 'Stres Sedang') {
+      urgencyText = '(Sampling)';
+    } else if (label == 'Sehat') {
+      urgencyText = '(Skip)';
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -332,7 +354,17 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
+            textAlign: TextAlign.center,
           ),
+          if (urgencyText.isNotEmpty)
+            Text(
+              urgencyText,
+              style: TextStyle(
+                fontSize: 9,
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           const SizedBox(height: 4),
           Text(
             count.toString(),
@@ -361,7 +393,7 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
           Icon(Icons.check_circle, color: Colors.green[700], size: 20),
           const SizedBox(width: 8),
           Text(
-            '${_selectedTreeIds.length} pohon selected',
+            '${_selectedTreeIds.length} pohon selected untuk validasi lapangan',
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: Colors.green[900],
@@ -453,7 +485,7 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
                 ElevatedButton.icon(
                   onPressed: _createSpkFromFilter,
                   icon: const Icon(Icons.add_task, size: 18),
-                  label: const Text('Create SPK from Filter'),
+                  label: const Text('Create SPK Validasi Lapangan'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[700],
                     foregroundColor: Colors.white,
@@ -553,13 +585,27 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
             ),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('NDRE: ${tree.ndreValue.toStringAsFixed(2)}'),
-                  const SizedBox(width: 16),
-                  if (tree.blok != null) Text('Blok: ${tree.blok}'),
-                  const SizedBox(width: 16),
-                  if (tree.divisi != null) Text('Divisi: ${tree.divisi}'),
+                  Row(
+                    children: [
+                      Text('NDRE: ${tree.ndreValue.toStringAsFixed(2)}'),
+                      const SizedBox(width: 16),
+                      if (tree.blok != null) Text('Blok: ${tree.blok}'),
+                      const SizedBox(width: 16),
+                      if (tree.divisi != null) Text('Divisi: ${tree.divisi}'),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Prediksi Drone - Perlu konfirmasi surveyor (Ground Truth)',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[600],
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 ],
               ),
             ),

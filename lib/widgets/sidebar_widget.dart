@@ -107,7 +107,7 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                   ),
                   _buildMenuItem(
                     icon: Icons.flight,
-                    title: 'Drone NDRE Analysis',
+                    title: 'Drone NDRE Prediction',
                     route: '/drone-ndre-analysis',
                   ),
                   _buildMenuItem(

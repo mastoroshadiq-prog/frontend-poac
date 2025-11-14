@@ -3,11 +3,17 @@ import '../models/drone_ndre_tree.dart';
 import '../services/spk_service.dart';
 import '../config/supabase_config.dart';
 
-/// Modal dialog untuk membuat SPK Validasi Drone
+/// Modal dialog untuk membuat SPK Validasi Lapangan (Ground Truth)
+/// 
+/// Context:
+/// Prediksi drone NDRE perlu konfirmasi surveyor lapangan untuk:
+/// - Grading Ganoderma G0-G4 (manual inspection)
+/// - Ground truth validation (actual vs predicted)
+/// - Confusion matrix data collection
 /// 
 /// Features:
-/// - Show selected trees summary
-/// - Mandor selection (dari Supabase users dengan role MANDOR)
+/// - Show selected trees summary (prediksi drone)
+/// - Mandor selection (assign ke tim surveyor)
 /// - Priority selection (URGENT/HIGH/NORMAL)
 /// - Target completion date
 /// - Optional notes
@@ -177,10 +183,10 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
 
     try {
       // Step 1: Create SPK Header
-      final namaSpk = 'SPK Validasi Drone - ${widget.selectedTrees.length} Pohon';
+      final namaSpk = 'SPK Validasi Lapangan (Ground Truth) - ${widget.selectedTrees.length} Pohon';
       final keterangan = _notesController.text.isNotEmpty
           ? _notesController.text
-          : 'Validasi ${widget.selectedTrees.length} pohon dari analisis drone NDRE';
+          : 'Validasi lapangan ${widget.selectedTrees.length} pohon - Konfirmasi grading Ganoderma (G0-G4) vs prediksi drone NDRE';
 
       final spkHeaderResponse = await _spkService.createSpkHeader(
         namaSpk: namaSpk,
@@ -200,7 +206,7 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
           'tipe_tugas': 'VALIDASI_LAPANGAN',
           'id_npokok': tree.idNpokok,
           'prioritas': _selectedPriority,
-          'catatan': 'NDRE Value: ${tree.ndreValue.toStringAsFixed(2)} - ${tree.stressLevel}',
+          'catatan': 'Ground Truth Validation - Prediksi Drone: ${tree.stressLevel} (NDRE: ${tree.ndreValue.toStringAsFixed(2)}) - Surveyor konfirmasi: Grading Ganoderma G0-G4',
         };
       }).toList();
 
@@ -276,12 +282,26 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                   ),
                   const SizedBox(width: 12),
                   const Expanded(
-                    child: Text(
-                      'Create SPK Validasi Drone',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Create SPK Validasi Lapangan',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Ground Truth Validation (G0-G4)',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   IconButton(
@@ -291,6 +311,32 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                 ],
               ),
               const Divider(height: 24),
+
+              // Info Box - Ground Truth Validation
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.orange[700], size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Surveyor akan validasi lapangan untuk konfirmasi grading Ganoderma (G0-G4) vs prediksi drone NDRE',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
 
               // Selected Trees Summary
               Container(
@@ -308,7 +354,7 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                         Icon(Icons.forest, color: Colors.green[700], size: 20),
                         const SizedBox(width: 8),
                         Text(
-                          'Selected Trees: ${widget.selectedTrees.length}',
+                          'Selected Trees (Prediksi Drone): ${widget.selectedTrees.length}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -484,7 +530,7 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                             ),
                           )
                         : const Icon(Icons.check),
-                    label: Text(_isLoading ? 'Creating...' : 'Create SPK'),
+                    label: Text(_isLoading ? 'Creating...' : 'Create SPK Validasi'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[700],
                       foregroundColor: Colors.white,

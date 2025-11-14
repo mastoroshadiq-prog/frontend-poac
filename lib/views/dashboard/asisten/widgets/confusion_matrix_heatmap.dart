@@ -5,7 +5,13 @@ import '../../../../services/validation_service.dart';
 import '../../../../widgets/create_spk_validasi_dialog.dart';
 
 /// Confusion Matrix Heatmap Widget untuk Dashboard Asisten
+/// 
+/// Membandingkan:
+/// - Prediksi Drone NDRE (Stress/Healthy)
+/// - Ground Truth Surveyor (Ganoderma G0-G4)
+/// 
 /// Menampilkan 2×2 grid (TP/FP/TN/FN) dengan metrics dan recommendations
+/// untuk improvement akurasi drone dan re-validasi lapangan
 class ConfusionMatrixHeatmap extends StatefulWidget {
   final String? divisi;
   final String? blok;
@@ -121,15 +127,28 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 ),
               ),
               const SizedBox(width: 10),
-              const Expanded(
-                child: Text(
-                  'Confusion Matrix - Drone Accuracy',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.3,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Confusion Matrix - Drone vs Ground Truth',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.3,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      'Prediksi NDRE vs Surveyor Lapangan (G0-G4)',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[600],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -565,15 +584,24 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Prediksi stress tapi sehat. Penyebab: bayangan, embun pagi, camera angle.',
+                  'Issue: Drone prediksi "Stress" → Surveyor cek lapangan: G0 (Sehat, tidak ada Ganoderma)',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Penyebab: Bayangan awan, embun pagi, camera angle ekstrem',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade600,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '🎯 Action: Naikkan NDRE threshold dari 0.45 ke 0.50 atau reschedule scan (hindari jam 06:00-08:00)',
+                  '🎯 Solution: Naikkan NDRE threshold 0.45→0.50, Reschedule scan (hindari 06:00-08:00), Re-validasi borderline (0.40-0.45)',
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.grey.shade800,
@@ -584,7 +612,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 ElevatedButton.icon(
                   onPressed: () => _createSpkFromMisclassified(context, 'FP'),
                   icon: const Icon(Icons.add_task, size: 16),
-                  label: const Text('Create SPK Validasi Ulang'),
+                  label: const Text('Create SPK Re-Validasi Lapangan'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange.shade700,
                     foregroundColor: Colors.white,
@@ -640,15 +668,24 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Prediksi sehat tapi stress. Missed detection drone.',
+                  'Issue: Drone prediksi "Healthy" → Surveyor: G1-G4 (Ada Ganoderma, tapi NDRE masih tinggi)',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Penyebab: Infeksi Ganoderma awal (daun belum kuning), pohon tetangga sehat, threshold terlalu tinggi',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade600,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '🎯 Action: Turunkan NDRE threshold dari 0.45 ke 0.40 atau tambahkan ground validation untuk borderline.',
+                  '🎯 Solution: Turunkan threshold 0.45→0.40, Ground validation borderline (0.45-0.50), Follow-up scan 2 minggu',
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.grey.shade800,
@@ -659,7 +696,7 @@ class _ConfusionMatrixHeatmapState extends State<ConfusionMatrixHeatmap> {
                 ElevatedButton.icon(
                   onPressed: () => _createSpkFromMisclassified(context, 'FN'),
                   icon: const Icon(Icons.add_task, size: 16),
-                  label: const Text('Create SPK Validasi Ulang'),
+                  label: const Text('Create SPK Re-Validasi Lapangan'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.shade700,
                     foregroundColor: Colors.white,
