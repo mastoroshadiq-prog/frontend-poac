@@ -333,7 +333,7 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -623,7 +623,7 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
               _isLoadingMandors
                   ? const Center(child: CircularProgressIndicator())
                   : DropdownButtonFormField<String>(
-                      value: _selectedMandorId,
+                      initialValue: _selectedMandorId,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),

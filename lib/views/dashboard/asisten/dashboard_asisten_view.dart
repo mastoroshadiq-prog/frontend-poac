@@ -20,7 +20,7 @@ import 'widgets/mandor_performance_table.dart';
 /// - Center (40%): FieldVsDroneScatter, SpkKanban
 /// - Right (30%): AnomalyAlerts, MandorPerformance
 class DashboardAsistenView extends StatefulWidget {
-  const DashboardAsistenView({Key? key}) : super(key: key);
+  const DashboardAsistenView({super.key});
 
   @override
   State<DashboardAsistenView> createState() => _DashboardAsistenViewState();
@@ -171,7 +171,7 @@ class _DashboardAsistenViewState extends State<DashboardAsistenView> {
                               value: divisi,
                               child: Text(divisi),
                             ))
-                        .toList(),
+                        ,
                   ],
                   onChanged: (value) {
                     setState(() {

@@ -48,7 +48,7 @@ class TreeLocation {
 
   /// Display format lengkap dengan divisi: "AME II - Blok D001A, Baris 1, Pokok 5"
   String get fullDisplayName {
-    return '$divisi - ${displayName}';
+    return '$divisi - $displayName';
   }
 
   /// Tree ID format: "P-D001A-01-01"

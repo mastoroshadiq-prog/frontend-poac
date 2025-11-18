@@ -437,7 +437,7 @@ class _DroneNdreAnalysisPageState extends State<DroneNdreAnalysisPage> {
           SizedBox(
             width: 200,
             child: DropdownButtonFormField<String>(
-              value: _filterStressLevel,
+              initialValue: _filterStressLevel,
               decoration: const InputDecoration(
                 labelText: 'Filter: Stress Level',
                 border: OutlineInputBorder(),
