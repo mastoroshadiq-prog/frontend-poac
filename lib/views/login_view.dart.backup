@@ -1,9 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../services/profile_service.dart';
 import '../models/user_session.dart';
 import 'home_menu_view.dart';
-import 'dashboard_mandor_view.dart';
 
 /// Halaman Login - Supabase Auth Integration
 class LoginView extends StatefulWidget {
@@ -18,7 +16,6 @@ class _LoginViewState extends State<LoginView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
-  final _profileService = ProfileService();
   
   bool _isLoading = false;
   String? _errorMessage;
@@ -41,77 +38,28 @@ class _LoginViewState extends State<LoginView> {
       _errorMessage = null;
     });
 
-     try {
-  // Step 1: Login via Supabase Auth (hanya untuk autentikasi)
-  final loginData = await _authService.loginWithSupabase(
-    _emailController.text.trim(),
-    _passwordController.text,
-  );
+    try {
+      final loginData = await _authService.loginWithSupabase(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
 
-  print('✅ Supabase Auth success - Email: ${loginData['email']}');
+      final userSession = UserSession.fromJson(loginData);
 
-  // Step 2: Get user profile & role dari backend (SUMBER UTAMA DATA)
-  final profile = await _profileService.getProfile();
-
-  print('📥 Profile from backend: $profile');
-
-  // Step 3: Validasi data dari backend
-  if (profile['role'] == null || profile['role'].toString().isEmpty) {
-    throw Exception('Backend tidak mengembalikan role. Silakan hubungi admin.');
-  }
-
-  // Step 4: Create UserSession HANYA dari data backend
-  final userSession = UserSession(
-    token: loginData['token'] as String,
-    idPihak: profile['id_pihak'] as String? ?? profile['id'] as String? ?? '',
-    namaPihak: profile['nama'] as String? ?? profile['username'] as String? ?? profile['email'] as String? ?? 'User',
-    role: profile['role'] as String,
-  );
-
-  print('✅ UserSession created:');
-  print('   - Role: ${userSession.role}');
-  print('   - Nama: ${userSession.namaPihak}');
-
-  if (!mounted) return;
-
-  // Step 5: Navigate berdasarkan role DARI BACKEND
-  Widget targetPage;
-  final role = userSession.role.toUpperCase().trim();
-  
-  print('🔀 Routing decision for role: $role');
-  
-  switch (role) {
-    case 'MANDOR':
-      // ✅ MANDOR → Dashboard Mandor (SPK mereka)
-      print('➡️ Navigating to DashboardMandorView');
-      targetPage = DashboardMandorView(session: userSession);
-      break;
-    case 'ASISTEN':
-    case 'ADMIN':
-    case 'MANAJER':
-      // ✅ ASISTEN/ADMIN → Home Menu (pilih dashboard)
-      print('➡️ Navigating to HomeMenuView');
-      targetPage = HomeMenuView(session: userSession);
-      break;
-    default:
-      print('⚠️ Unknown role: $role');
-      throw Exception('Role "$role" tidak dikenal. Silakan hubungi admin.');
-  }
-
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => targetPage),
-  );
-  
-  print('✅ Navigation complete!');
-  
-} catch (e) {
-  print('❌ Login error: $e');
-  setState(() {
-    _errorMessage = e.toString().replaceAll('Exception: ', '');
-    _isLoading = false;
-  });
-}
+      if (!mounted) return;
+      
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeMenuView(session: userSession),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString().replaceAll('Exception: ', '');
+        _isLoading = false;
+      });
+    }
   }
 
   @override

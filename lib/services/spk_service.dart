@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config/app_config.dart';
 import '../config/supabase_config.dart';
@@ -208,6 +208,79 @@ class SPKService {
       print('⚠️ [DEBUG] Using dummy SPK kanban data: $e');
       return SpkKanbanData.dummy();
     }
+  }
+
+
+  /// Mengambil daftar mandor untuk dropdown form SPK
+  /// 
+  /// Returns: List<Map> dengan struktur [{id_pihak, nama}, ...]
+  /// Backend endpoint: GET /api/v1/mandor/list
+  Future<List<Map<String, dynamic>>> getDaftarMandor() async {
+    try {
+      final session = SupabaseConfig.client.auth.currentSession;
+      if (session == null) {
+        throw Exception('Sesi login tidak ditemukan. Silakan login kembali.');
+      }
+      final token = session.accessToken;
+
+      print(' [SPKService] Fetching daftar mandor from /mandor/list...');
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/mandor/list'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+        },
+      ).timeout(AppConfig.requestTimeout);
+
+      print(' [SPKService] Response status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        
+        // Backend returns: {success: true, data: {mandor_list: [...]}}
+        if (jsonData['success'] == true && 
+            jsonData['data'] != null && 
+            jsonData['data']['mandor_list'] != null) {
+          final List<dynamic> mandorList = jsonData['data']['mandor_list'];
+          print(' [SPKService] Got ${mandorList.length} mandor');
+          return mandorList.cast<Map<String, dynamic>>();
+        } else {
+          print(' [SPKService] Backend returned no mandor_list, using fallback');
+          return _getFallbackMandor();
+        }
+      } else if (response.statusCode == 401) {
+        throw Exception('Sesi login tidak valid. Silakan login kembali.');
+      } else if (response.statusCode == 403) {
+        throw Exception('Akses ditolak. Hanya ASISTEN dan ADMIN yang dapat melihat daftar mandor.');
+      } else {
+        print(' [SPKService] HTTP error ${response.statusCode}, using fallback');
+        return _getFallbackMandor();
+      }
+    } catch (e) {
+      print(' [SPKService] Error loading mandors: $e');
+      print(' [SPKService] Using fallback dummy data');
+      return _getFallbackMandor();
+    }
+  }
+
+  /// Fallback dummy data untuk development (sesuai backend docs)
+  List<Map<String, dynamic>> _getFallbackMandor() {
+    return [
+      {
+        'id_pihak': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+        'nama': 'Agus (Mandor Sensus)',
+        'kode_unik': 'AGUS_MANDOR',
+        'tipe': 'INTERNAL',
+      },
+      {
+        'id_pihak': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+        'nama': 'Eko (Mandor APH)',
+        'kode_unik': 'EKO_MANDOR',
+        'tipe': 'INTERNAL',
+      },
+    ];
   }
 
   /// Update status SPK (untuk drag & drop kanban)

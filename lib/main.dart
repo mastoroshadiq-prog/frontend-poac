@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'config/supabase_config.dart';
 import 'config/app_theme.dart';
 import 'views/login_view.dart';
@@ -8,6 +8,7 @@ import 'views/dashboard_eksekutif_view.dart';
 import 'views/dashboard_operasional_view.dart';
 import 'views/dashboard_teknis_view.dart';
 import 'views/drone_ndre_analysis_page.dart';
+import 'views/dashboard_mandor_view.dart';
 import 'views/dashboard/mandor/mandor_dashboard_page.dart';
 import 'models/user_session.dart';
 
@@ -83,7 +84,19 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => const DroneNdreAnalysisPage(),
           );
+        }        
+        // MANDOR Dashboard (HANDOVER V2)
+        if (settings.name == '/mandor/dashboard') {
+          final session = settings.arguments as UserSession?;
+          if (session == null) {
+            return MaterialPageRoute(builder: (context) => const LoginView());
+          }
+          return MaterialPageRoute(
+            builder: (context) => DashboardMandorView(session: session),
+          );
         }
+
+
         
         // Mandor Dashboard
         if (settings.name == '/mandor-dashboard') {
@@ -137,3 +150,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

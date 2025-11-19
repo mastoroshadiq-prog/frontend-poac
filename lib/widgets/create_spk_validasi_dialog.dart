@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/drone_ndre_tree.dart';
 import '../services/spk_service.dart';
-import '../config/supabase_config.dart';
 
 /// Modal dialog untuk membuat SPK Validasi Lapangan (Ground Truth)
 /// 
@@ -60,44 +59,33 @@ class _CreateSpkValidasiDialogState extends State<CreateSpkValidasiDialog> {
 
   Future<void> _loadMandors() async {
     try {
-      // Query users dengan role MANDOR dari Supabase
-      // Try pihak_peran table first (as per schema)
-      final response = await SupabaseConfig.client
-          .from('pihak_peran')
-          .select('id_pihak, pihak!inner(nama_pihak)')
-          .eq('role', 'MANDOR');
+      final spkService = SPKService();
+      final mandorList = await spkService.getDaftarMandor();
 
       setState(() {
-        _mandorList = (response as List).map((item) {
-          final pihakData = item['pihak'] as Map<String, dynamic>;
+        _mandorList = mandorList.map((mandor) {
           return {
-            'id_pihak': item['id_pihak'] as String,
-            'nama_pihak': pihakData['nama_pihak'] as String,
+            'id_pihak': mandor['id_pihak'] as String,
+            'nama_pihak': mandor['nama'] as String,
             'role': 'MANDOR'
           };
         }).toList();
         _isLoadingMandors = false;
       });
 
-      print('✅ Loaded ${_mandorList.length} mandors');
+      print(' Loaded ${_mandorList.length} mandors from backend');
     } catch (e) {
-      print('❌ Error loading mandors: $e');
+      print(' Error loading mandors: $e');
       setState(() {
-        // Dummy data untuk development
         _mandorList = [
           {
-            'id_pihak': 'mandor-001',
-            'nama_pihak': 'Ahmad Supardi',
+            'id_pihak': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+            'nama_pihak': 'Agus (Mandor Sensus)',
             'role': 'MANDOR'
           },
           {
-            'id_pihak': 'mandor-002',
-            'nama_pihak': 'Budi Santoso',
-            'role': 'MANDOR'
-          },
-          {
-            'id_pihak': 'mandor-003',
-            'nama_pihak': 'Cahyo Wibowo',
+            'id_pihak': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+            'nama_pihak': 'Eko (Mandor APH)',
             'role': 'MANDOR'
           },
         ];
