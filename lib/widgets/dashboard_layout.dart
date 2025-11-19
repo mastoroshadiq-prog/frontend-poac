@@ -21,6 +21,7 @@ class DashboardLayout extends StatefulWidget {
   final List<Widget>? actions;
   final Widget? floatingActionButton;
   final Function(String route)? onNavigate;
+  final String? userRole; // User role untuk filtering sidebar menu
   
   const DashboardLayout({
     super.key,
@@ -31,6 +32,7 @@ class DashboardLayout extends StatefulWidget {
     this.actions,
     this.floatingActionButton,
     this.onNavigate,
+    this.userRole,
   });
 
   @override
@@ -77,6 +79,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
               currentRoute: widget.currentRoute,
               onNavigate: _handleNavigation,
               isCollapsed: false, // Never collapse in drawer
+              userRole: widget.userRole,
             ),
           )
         : null,
@@ -94,6 +97,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
                   _isSidebarCollapsed = collapsed;
                 });
               },
+              userRole: widget.userRole,
             ),
           
           // Main Content Area

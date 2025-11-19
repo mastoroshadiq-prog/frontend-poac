@@ -24,10 +24,12 @@ import '../widgets/dashboard_layout.dart';
 /// RBAC: Memerlukan role ASISTEN atau ADMIN
 class DashboardTeknisView extends StatefulWidget {
   final String token;
+  final String? userRole; // User role untuk filtering sidebar menu
 
   const DashboardTeknisView({
     super.key,
     required this.token,
+    this.userRole,
   });
 
   @override
@@ -81,6 +83,7 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
     return DashboardLayout(
       title: 'Dashboard Asisten (Tactical Operations)',
       currentRoute: '/dashboard-teknis',
+      userRole: widget.userRole, // Pass role for sidebar filtering
       breadcrumbs: const [
         BreadcrumbItem(label: 'Home'),
         BreadcrumbItem(label: 'Dashboard Asisten'),
@@ -172,7 +175,7 @@ class _DashboardTeknisViewState extends State<DashboardTeknisView> {
       onNavigate: (route) {
         Navigator.of(context).pushNamed(
           route,
-          arguments: {'token': widget.token},
+          arguments: {'token': widget.token, 'userRole': widget.userRole},
         );
       },
       child: LayoutBuilder(

@@ -24,10 +24,14 @@ class DashboardOperasionalView extends StatefulWidget {
   /// Untuk testing, bisa hardcode token dari generate-token-only.js
   /// Untuk production, token akan datang dari login/auth provider
   final String? token;
+  
+  /// User role untuk filtering sidebar menu
+  final String? userRole;
 
   const DashboardOperasionalView({
     super.key,
     this.token,
+    this.userRole,
   });
 
   @override
@@ -103,6 +107,7 @@ class _DashboardOperasionalViewState extends State<DashboardOperasionalView> {
     return DashboardLayout(
       title: 'Dashboard Operasional',
       currentRoute: '/dashboard-operasional',
+      userRole: widget.userRole, // Pass role for sidebar filtering
       breadcrumbs: const [
         BreadcrumbItem(label: 'Home'),
         BreadcrumbItem(label: 'Dashboard Operasional'),
@@ -115,11 +120,11 @@ class _DashboardOperasionalViewState extends State<DashboardOperasionalView> {
         ),
       ],
       onNavigate: (route) {
-        // Handle navigation with token
+        // Handle navigation with token and userRole
         final authToken = widget.token ?? _testToken;
         Navigator.of(context).pushNamed(
           route,
-          arguments: {'token': authToken},
+          arguments: {'token': authToken, 'userRole': widget.userRole},
         );
       },
       child: FutureBuilder<Map<String, dynamic>>(

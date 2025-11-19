@@ -49,8 +49,9 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/dashboard-eksekutif') {
           final args = settings.arguments;
           final String? token = args is Map ? args['token'] : args as String?;
+          final String? userRole = args is Map ? args['userRole'] : null;
           return MaterialPageRoute(
-            builder: (context) => DashboardEksekutifView(token: token),
+            builder: (context) => DashboardEksekutifView(token: token, userRole: userRole),
           );
         }
         
@@ -58,8 +59,9 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/dashboard-operasional') {
           final args = settings.arguments;
           final String? token = args is Map ? args['token'] : args as String?;
+          final String? userRole = args is Map ? args['userRole'] : null;
           return MaterialPageRoute(
-            builder: (context) => DashboardOperasionalView(token: token),
+            builder: (context) => DashboardOperasionalView(token: token, userRole: userRole),
           );
         }
         
@@ -67,11 +69,12 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/dashboard-teknis') {
           final args = settings.arguments;
           final String? token = args is Map ? args['token'] : args as String?;
+          final String? userRole = args is Map ? args['userRole'] : null;
           if (token == null) {
             return MaterialPageRoute(builder: (context) => const LoginView());
           }
           return MaterialPageRoute(
-            builder: (context) => DashboardTeknisView(token: token),
+            builder: (context) => DashboardTeknisView(token: token, userRole: userRole),
           );
         }
         

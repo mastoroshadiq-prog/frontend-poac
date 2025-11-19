@@ -101,6 +101,7 @@ class AuthService {
   /// - 'eksekutif': ASISTEN, ADMIN (BUKAN MANAJER!)
   /// - 'operasional': MANDOR, ASISTEN, ADMIN
   /// - 'teknis': MANDOR, ASISTEN, ADMIN
+  /// - 'mandor': MANDOR only (Dashboard Mandor khusus)
   bool hasAccess(String role, String dashboardType) {
     switch (dashboardType.toLowerCase()) {
       case 'eksekutif':
@@ -112,6 +113,9 @@ class AuthService {
       case 'teknis':
         // Sesuai backend: authorizeRole(['MANDOR', 'ASISTEN', 'ADMIN'])
         return ['MANDOR', 'ASISTEN', 'ADMIN'].contains(role);
+      case 'mandor':
+        // Dashboard Mandor khusus untuk role MANDOR saja
+        return role == 'MANDOR';
       default:
         return false;
     }
@@ -129,6 +133,9 @@ class AuthService {
     }
     if (hasAccess(role, 'teknis')) {
       accessible.add('teknis');
+    }
+    if (hasAccess(role, 'mandor')) {
+      accessible.add('mandor');
     }
     
     return accessible;

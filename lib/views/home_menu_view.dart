@@ -194,6 +194,7 @@ class HomeMenuView extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => DashboardEksekutifView(
                                   token: session.token,
+                                  userRole: session.role,
                                 ),
                               ),
                             );
@@ -212,6 +213,7 @@ class HomeMenuView extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => DashboardOperasionalView(
                                   token: session.token,
+                                  userRole: session.role,
                                 ),
                               ),
                             );
@@ -230,6 +232,7 @@ class HomeMenuView extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => DashboardTeknisView(
                                   token: session.token,
+                                  userRole: session.role,
                                 ),
                               ),
                             );

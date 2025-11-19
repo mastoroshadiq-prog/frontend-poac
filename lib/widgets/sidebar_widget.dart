@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/app_theme.dart';
 import '../config/responsive_helper.dart';
+import '../services/auth_service.dart';
 
 /// Sidebar Navigation Widget
 /// Sidebar dengan navigation menu yang responsive
@@ -15,6 +16,7 @@ class SidebarWidget extends StatefulWidget {
   final Function(String route) onNavigate;
   final bool isCollapsed;
   final Function(bool collapsed)? onCollapsedChanged;
+  final String? userRole; // User role untuk filtering menu
   
   const SidebarWidget({
     super.key,
@@ -22,6 +24,7 @@ class SidebarWidget extends StatefulWidget {
     required this.onNavigate,
     this.isCollapsed = false,
     this.onCollapsedChanged,
+    this.userRole,
   });
 
   @override
@@ -30,6 +33,7 @@ class SidebarWidget extends StatefulWidget {
 
 class _SidebarWidgetState extends State<SidebarWidget> {
   late bool _isCollapsed;
+  final AuthService _authService = AuthService();
   
   @override
   void initState() {
@@ -42,6 +46,12 @@ class _SidebarWidgetState extends State<SidebarWidget> {
       _isCollapsed = !_isCollapsed;
     });
     widget.onCollapsedChanged?.call(_isCollapsed);
+  }
+
+  /// Check if user has access to specific dashboard
+  bool _hasAccess(String dashboardType) {
+    if (widget.userRole == null) return false;
+    return _authService.hasAccess(widget.userRole!, dashboardType);
   }
 
   @override
@@ -76,26 +86,34 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                     title: 'Dashboard',
                     route: '/home',
                   ),
-                  _buildMenuItem(
-                    icon: Icons.business_center,
-                    title: 'Dashboard Eksekutif',
-                    route: '/dashboard-eksekutif',
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.agriculture,
-                    title: 'Dashboard Operasional',
-                    route: '/dashboard-operasional',
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.engineering,
-                    title: 'Dashboard Teknis',
-                    route: '/dashboard-teknis',
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.supervisor_account,
-                    title: 'Dashboard Mandor',
-                    route: '/mandor-dashboard',
-                  ),
+                  // Dashboard Eksekutif - ASISTEN, ADMIN only
+                  if (_hasAccess('eksekutif'))
+                    _buildMenuItem(
+                      icon: Icons.business_center,
+                      title: 'Dashboard Eksekutif',
+                      route: '/dashboard-eksekutif',
+                    ),
+                  // Dashboard Operasional - MANDOR, ASISTEN, ADMIN
+                  if (_hasAccess('operasional'))
+                    _buildMenuItem(
+                      icon: Icons.agriculture,
+                      title: 'Dashboard Operasional',
+                      route: '/dashboard-operasional',
+                    ),
+                  // Dashboard Teknis - MANDOR, ASISTEN, ADMIN
+                  if (_hasAccess('teknis'))
+                    _buildMenuItem(
+                      icon: Icons.engineering,
+                      title: 'Dashboard Teknis',
+                      route: '/dashboard-teknis',
+                    ),
+                  // Dashboard Mandor - MANDOR only
+                  if (_hasAccess('mandor'))
+                    _buildMenuItem(
+                      icon: Icons.supervisor_account,
+                      title: 'Dashboard Mandor',
+                      route: '/mandor-dashboard',
+                    ),
                   
                   const SizedBox(height: 16),
                   if (!_isCollapsed)

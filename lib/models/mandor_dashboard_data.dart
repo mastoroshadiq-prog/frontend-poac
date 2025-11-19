@@ -1,5 +1,6 @@
 /// Models untuk Mandor Dashboard
 /// Source: API_MANDOR_DASHBOARD_GUIDE.md
+library;
 
 /// Dashboard Overview Response
 class MandorDashboardData {

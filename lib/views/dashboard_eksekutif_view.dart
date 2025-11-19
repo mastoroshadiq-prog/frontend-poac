@@ -16,8 +16,11 @@ import '../widgets/stat_cards.dart';
 class DashboardEksekutifView extends StatefulWidget {
   /// JWT Token untuk autentikasi (opsional, akan diambil dari Supabase session)
   final String? token;
+  
+  /// User role untuk filtering sidebar menu
+  final String? userRole;
 
-  const DashboardEksekutifView({super.key, this.token});
+  const DashboardEksekutifView({super.key, this.token, this.userRole});
 
   @override
   State<DashboardEksekutifView> createState() => _DashboardEksekutifViewState();
